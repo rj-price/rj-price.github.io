@@ -1,18 +1,20 @@
 - title: General Information
   type: map
   contents:
-    - name: Full Name
-      value: Albert Einstein
-    - name: Date of Birth
-      value: 14th March 1879
-    - name: Languages
-      value: English, German
+    - name: Name
+      value: Jordan Price
+    - name: Position
+      value: Junior Group Leader in Functional Genomics
+    - name: Email
+      value: jordan.price@niab.com
+    - name: Summary
+      value: Junior group leader working on functional genomics of fungi.
 
 - title: Education
   type: time_table
   contents:
     - title: PhD
-      institution: University of Zurich, Zurich, Switzerland
+      institution: University of Portsmouth, UK
       year: 1905
       description:
         - Description 1.

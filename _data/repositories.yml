@@ -1,12 +1,10 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - rj-price
 
 github_repos:
-  - alshedivat/al-folio
-  - twbs/bootstrap
-  - jekyll/jekyll
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - jpswalsh/academicons
-  - mathjax/MathJax
+  - rj-price/ont_assembly_starter
+  - rj-price/rnaseq_starter
+  - rj-price/my_nf_pipelines
+  - rj-price/shell_scripts
+  - rj-price/rubus_genome
+  - rj-price/rhynchosporium_tree
