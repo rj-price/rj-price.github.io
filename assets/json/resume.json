@@ -1,24 +1,24 @@
 {
-  "basics": {
-    "name": "Albert Einstein",
-    "label": "Scientist",
+  "general information": {
+    "name": "Jordan Price",
+    "label": "Computational and Molecular Biologist",
     "image": "",
-    "email": "albert@einstein.de",
-    "phone": "(912) 123-4567",
-    "url": "https://alshedivat.github.io/al-folio/",
-    "summary": "A German-born theoretical physicist, widely ranked among the greatest and most influential scientists of all time",
+    "email": "jordan.price@niab.com",
+    "phone": "",
+    "url": "https://rj-price.github.io",
+    "summary": "Junior group leader working on functional genomics of fungi.",
     "location": {
-      "address": "2712 Broadway St",
-      "postalCode": "CA 94115",
-      "city": "San Francisco",
+      "address": "NIAB",
+      "postalCode": "CB3 0LE",
+      "city": "Cambridge",
       "countryCode": "US",
-      "region": "California"
+      "region": "Cambridgeshire"
     },
     "profiles": [
       {
         "network": "Twitter",
-        "username": "AlbertEinstein",
-        "url": "https://twitter.com/AlbertEinstein"
+        "username": "DrRJordanPrice",
+        "url": "https://twitter.com/DrRJordanPrice"
       }
     ]
   },
