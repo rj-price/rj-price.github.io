@@ -286,8 +286,8 @@ display_categories: ["blockquotes"] # these categories will be displayed on the 
 # -----------------------------------------------------------------------------
 
 scholar:
-  last_name: [Price]
-  first_name: [R. Jordan]
+  last_name: [Einstein]
+  first_name: [Albert, A.]
 
   style: apa
   locale: en
