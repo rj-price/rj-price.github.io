@@ -6,5 +6,7 @@ github_repos:
   - rj-price/rnaseq_starter
   - rj-price/my_nf_pipelines
   - rj-price/shell_scripts
+  - rj-price/ont_umi_pipeline
+  - rj-price/rj-price.github.io
   - rj-price/rubus_genome
   - rj-price/rhynchosporium_tree

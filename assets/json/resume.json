@@ -1,13 +1,21 @@
 {
     "basics": {
-      "name": "R. Jordan Price",
+      "name": "Jordan Price",
+      "label": "Computational and Molecular Biologist",
+      "summary": "I am currently a senior specialist in Plant Pathology department of NIAB, Cambridge, UK. My current work is focussed on functional and comparative genomics of fungi important for food, viticulture and agriculture.",
+      "email": "jordan.price@niab.com",
       "website": "https://rj-price.github.io/",
-      "profiles": [
-        {
-          "network": "LinkedIn",
-          "url": "https://www.linkedin.com/in/jordan-price-95429784/"
-        }
-      ]
+      "location": {
+        "address": "NIAB",
+        "postalCode": "CB3 0LE",
+        "city": "Cambridge",
+        "countryCode": "UK"
+      },
+      "profiles": [{
+        "network": "Twitter",
+        "username": "DrRJordanPrice",
+        "url": "https://twitter.com/DrRJordanPrice"
+      }]
     },
     "education": [
       {
@@ -15,7 +23,8 @@
         "area": "Developmental Biology",
         "studyType": "PhD",
         "startDate": "2008",
-        "endDate": "2012"
+        "endDate": "2012",
+        "summary": "The role of chromatin modifications on gene expression in early Xenopus development."
       },
       {
         "institution": "Lancaster University",
@@ -27,121 +36,46 @@
       {
         "institution": "Lancaster University",
         "area": "Biochemistry",
-        "studyType": "BSc",
+        "studyType": "BSc 2:1",
         "startDate": "2004",
-        "endDate": "2007",
-        "gpa": "2:1"
+        "endDate": "2007"
       }
     ],
     "work": [
       {
-        "company": "Cambridge Crop Research, NIAB",
+        "name": "NIAB, Plant Pathology, Cambridge",
         "position": "Senior Specialist",
         "startDate": "2022",
         "endDate": "Present",
         "summary": "Junior group leader working on collaborative project with Quorn. Utilizing whole genome sequencing and variant analysis pipelines, together with CRISPR based deletion and base editing, and phenotypic characterization."
       },
       {
-        "company": "Cambridge Crop Research, NIAB",
+        "name": "NIAB, Cambridge Crop Research, Cambridge",
         "position": "Specialist",
         "startDate": "2020",
         "endDate": "2022",
         "summary": "Worked on the Bill and Melinda Gates Foundation-funded ENSA project, using comparative genomics to investigate the evolutionary underpinnings of actinorhizal nitrogen fixing symbiosis."
       },
       {
-        "company": "NIAB EMR",
-        "position": "Specialist, Genetics, Genomics and Breeding",
+        "name": "NIAB, Genetics, Genomics and Breeding, East Malling",
+        "position": "Specialist",
         "startDate": "2019",
         "endDate": "2020",
         "summary": "Worked on the ENSA project, using comparative genomics to investigate the evolutionary underpinnings of actinorhizal nitrogen fixing symbiosis."
       },
       {
-        "company": "School of Biosciences, University of Kent",
+        "name": "University of Kent, School of Biosciences",
         "position": "Postdoctoral Research Associate",
         "startDate": "2015",
         "endDate": "2019",
         "summary": "Explored the genetic and genomic modifications underpinning the pathogenicity of the human fungal pathogen Candida albicans."
       },
       {
-        "company": "Faculty of Medicine, University of Southampton",
+        "name": "University of Southampton, Faculty of Medicine",
         "position": "Postdoctoral Research Fellow",
         "startDate": "2012",
         "endDate": "2015",
         "summary": "Designed and performed high throughput multiplex TaqMan qPCR assays, Western blot optimisation and analysis, and computational analysis of expression microarray and DNA methylation data."
-      }
-    ],
-    "managementResponsibilities": "Responsible for management of research project budgets, communication with project partners, and efficient allocation of resources. Line managed four research technicians and two postdoctoral research associates. Assisted with day-to-day supervision of postgraduate students and junior lab members.",
-    "publications": [
-      {
-        "title": "Long-read Oxford Nanopore data helps to resolve centromeric regions and identify cultivar-specific gene sequences in the development of genomic resources for the heterozygous perennial red raspberry (Rubus idaeus L.)",
-        "journal": "PLOS ONE",
-        "status": "In review",
-        "year": "2023"
-      },
-      {
-        "title": "Stress and loss of the Candida albicans SUMO protease Ulp2 triggers selection of aneuploidy via a two-step process",
-        "journal": "PLOS Genet",
-        "volume": "18",
-        "issue": "12",
-        "pages": "e1010576",
-        "year": "2022"
-      },
-      {
-        "title": "Chromatin profiling of the repetitive and non-repetitive genome of the human fungal pathogen Candida albicans",
-        "journal": "mBio",
-        "volume": "10",
-        "pages": "e01376-19",
-        "year": "2019"
-      },
-      {
-        "title": "The fungal-specific Hda2 and Hda3 proteins regulate morphological switches in the human fungal pathogen Candida albicans",
-        "journal": "bioRxiv",
-        "doi": "https://doi.org/10.1101/340364",
-        "year": "2018"
-      },
-      {
-        "title": "The chromatin of Candida albicans pericentromeric repeats bears features of both euchromatin and heterochromatin",
-        "journal": "Frontiers in Microbiology",
-        "volume": "7",
-        "pages": "759",
-        "year": "2016"
-      },
-      {
-        "title": "Candida albicans repetitive elements display epigenetic diversity and plasticity",
-        "journal": "Scientific Reports",
-        "volume": "6",
-        "pages": "22989",
-        "year": "2016"
-      },
-      {
-        "title": "Folic acid induces cell type-specific changes in the transcriptome of breast cancer cell lines: a proof-of-concept study",
-        "journal": "Journal of Nutritional Science",
-        "volume": "5",
-        "pages": "e17, 1-8",
-        "year": "2016"
-      },
-      {
-        "title": "Folic Acid Supplementation In Vitro Induces Cell Type-Specific Changes in BRCA1 and BRCA2 mRNA Expression but does not alter DNA Methylation of Their Promoters or DNA Repair",
-        "journal": "Nutrition Research",
-        "volume": "35",
-        "issue": "6",
-        "pages": "532-44",
-        "year": "2015"
-      },
-      {
-        "title": "The Link Between Early Life Nutrition and Cancer Risk",
-        "journal": "Current Nutrition Reports",
-        "volume": "4",
-        "issue": "1",
-        "pages": "6-12",
-        "year": "2015"
-      },
-      {
-        "title": "Depletion of Uhrf1 inhibits chromosomal DNA replication in Xenopus egg extracts",
-        "journal": "Nucleic Acids Research",
-        "volume": "41",
-        "pages": "7725-37",
-        "year": "2013"
       }
     ]
   }
