@@ -23,3 +23,4 @@ Hi! I'm Jordan 👋
 - I am currently a junior group leader at NIAB in Cambridge, UK.
 - My research focusses on functional genomics and biotechnology of fungi important for food, viticulture and agriculture.
 - I use a combination of molecular and computational approaches to try to understand biological traits and genome evolution.
+- Also known to dabble in plant genomics.
