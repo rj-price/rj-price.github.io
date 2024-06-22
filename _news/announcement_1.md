@@ -1,8 +1,0 @@
----
-layout: post
-date: 2022-09-01
-inline: true
-related_posts: false
----
-
-Pleased to announce that I have been promoted to Senior Specialist in the Plant Pathology department.

@@ -11,11 +11,13 @@
         "city": "Cambridge",
         "countryCode": "UK"
       },
-      "profiles": [{
-        "network": "Twitter",
-        "username": "DrRJordanPrice",
-        "url": "https://twitter.com/DrRJordanPrice"
-      }]
+      "profiles": [
+        {
+          "network": "Twitter",
+          "username": "DrRJordanPrice",
+          "url": "https://twitter.com/DrRJordanPrice"
+        }
+      ]
     },
     "education": [
       {
