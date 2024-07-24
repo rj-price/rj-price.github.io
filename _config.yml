@@ -122,8 +122,8 @@ bing_site_verification: # out your bing-site-verification ID (Bing Webmaster)
 # Blog
 # -----------------------------------------------------------------------------
 
-blog_name: Blog # blog_name will be displayed in your blog page
-blog_description: A collection of guides and posts to help you get started with Bioinformatics.
+blog_name: Getting Started with Bioinformatics # blog_name will be displayed in your blog page
+blog_description: A collection of guides and tutorials to help you get started with bioinformatics.
 permalink: /blog/:year/:title/
 
 # Pagination
