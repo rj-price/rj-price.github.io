@@ -1,84 +1,107 @@
 {
-    "basics": {
-      "name": "Jordan Price",
-      "label": "Computational and Molecular Biologist",
-      "summary": "I am currently a senior specialist in Plant Pathology department of NIAB, Cambridge, UK. My current work is focussed on functional and comparative genomics of fungi important for food, viticulture and agriculture.",
-      "email": "jordan.price@niab.com",
-      "website": "https://rj-price.github.io/",
-      "location": {
-        "address": "NIAB",
-        "postalCode": "CB3 0LE",
-        "city": "Cambridge",
-        "countryCode": "UK"
-      },
-      "profiles": [
-        {
-          "network": "Twitter",
-          "username": "DrRJordanPrice",
-          "url": "https://twitter.com/DrRJordanPrice"
-        }
-      ]
+  "basics": {
+    "name": "Jordan Price",
+    "label": "Computational and Molecular Biologist",
+    "summary": "I am currently a senior specialist in Plant Pathology department of NIAB, Cambridge, UK. My current work is focussed on functional and comparative genomics of fungi important for food, viticulture and agriculture.",
+    "email": "jordan.price@niab.com",
+    "website": "https://rj-price.github.io/",
+    "location": {
+      "address": "NIAB",
+      "postalCode": "CB3 0LE",
+      "city": "Cambridge",
+      "countryCode": "UK"
     },
-    "education": [
+    "profiles": [
       {
-        "institution": "University of Portsmouth",
-        "area": "Developmental Biology",
-        "studyType": "PhD",
-        "startDate": "2008",
-        "endDate": "2012",
-        "summary": "The role of chromatin modifications on gene expression in early Xenopus development."
-      },
-      {
-        "institution": "Lancaster University",
-        "area": "Biomedical Science",
-        "studyType": "MSc (by research)",
-        "startDate": "2007",
-        "endDate": "2008"
-      },
-      {
-        "institution": "Lancaster University",
-        "area": "Biochemistry",
-        "studyType": "BSc 2:1",
-        "startDate": "2004",
-        "endDate": "2007"
-      }
-    ],
-    "work": [
-      {
-        "name": "NIAB, Plant Pathology, Cambridge",
-        "position": "Senior Specialist",
-        "startDate": "2022",
-        "endDate": "Present",
-        "summary": "Junior group leader working on collaborative project with Quorn. Utilizing whole genome sequencing and variant analysis pipelines, together with CRISPR based deletion and base editing, and phenotypic characterization."
-      },
-      {
-        "name": "NIAB, Cambridge Crop Research, Cambridge",
-        "position": "Specialist",
-        "startDate": "2020",
-        "endDate": "2022",
-        "summary": "Worked on the Bill and Melinda Gates Foundation-funded ENSA project, using comparative genomics to investigate the evolutionary underpinnings of actinorhizal nitrogen fixing symbiosis."
-      },
-      {
-        "name": "NIAB, Genetics, Genomics and Breeding, East Malling",
-        "position": "Specialist",
-        "startDate": "2019",
-        "endDate": "2020",
-        "summary": "Worked on the ENSA project, using comparative genomics to investigate the evolutionary underpinnings of actinorhizal nitrogen fixing symbiosis."
-      },
-      {
-        "name": "University of Kent, School of Biosciences",
-        "position": "Postdoctoral Research Associate",
-        "startDate": "2015",
-        "endDate": "2019",
-        "summary": "Explored the genetic and genomic modifications underpinning the pathogenicity of the human fungal pathogen Candida albicans."
-      },
-      {
-        "name": "University of Southampton, Faculty of Medicine",
-        "position": "Postdoctoral Research Fellow",
-        "startDate": "2012",
-        "endDate": "2015",
-        "summary": "Designed and performed high throughput multiplex TaqMan qPCR assays, Western blot optimisation and analysis, and computational analysis of expression microarray and DNA methylation data."
+        "network": "Twitter",
+        "username": "DrRJordanPrice",
+        "url": "https://twitter.com/DrRJordanPrice"
       }
     ]
-  }
+  },
+  "education": [
+    {
+      "institution": "University of Portsmouth",
+      "area": "Developmental Biology",
+      "studyType": "PhD",
+      "startDate": "2008",
+      "endDate": "2012",
+      "summary": "The role of chromatin modifications on gene expression in early Xenopus development."
+    },
+    {
+      "institution": "Lancaster University",
+      "area": "Biomedical Science",
+      "studyType": "MSc (by research)",
+      "startDate": "2007",
+      "endDate": "2008"
+    },
+    {
+      "institution": "Lancaster University",
+      "area": "Biochemistry",
+      "studyType": "BSc 2:1",
+      "startDate": "2004",
+      "endDate": "2007"
+    }
+  ],
+  "work": [
+    {
+      "name": "NIAB, Plant Pathology, Cambridge",
+      "position": "Senior Specialist",
+      "startDate": "2022",
+      "endDate": "Present",
+      "summary": "Junior group leader working on collaborative project with Quorn. Utilizing whole genome sequencing and variant analysis pipelines, together with CRISPR based deletion and base editing, and phenotypic characterization."
+    },
+    {
+      "name": "NIAB, Cambridge Crop Research, Cambridge",
+      "position": "Specialist",
+      "startDate": "2020",
+      "endDate": "2022",
+      "summary": "Worked on the Bill and Melinda Gates Foundation-funded ENSA project, using comparative genomics to investigate the evolutionary underpinnings of actinorhizal nitrogen fixing symbiosis."
+    },
+    {
+      "name": "NIAB, Genetics, Genomics and Breeding, East Malling",
+      "position": "Specialist",
+      "startDate": "2019",
+      "endDate": "2020",
+      "summary": "Worked on the ENSA project, using comparative genomics to investigate the evolutionary underpinnings of actinorhizal nitrogen fixing symbiosis."
+    },
+    {
+      "name": "University of Kent, School of Biosciences",
+      "position": "Postdoctoral Research Associate",
+      "startDate": "2015",
+      "endDate": "2019",
+      "summary": "Explored the genetic and genomic modifications underpinning the pathogenicity of the human fungal pathogen Candida albicans."
+    },
+    {
+      "name": "University of Southampton, Faculty of Medicine",
+      "position": "Postdoctoral Research Fellow",
+      "startDate": "2012",
+      "endDate": "2015",
+      "summary": "Designed and performed high throughput multiplex TaqMan qPCR assays, Western blot optimisation and analysis, and computational analysis of expression microarray and DNA methylation data."
+    }
+  ],
+  "skills": [
+    {
+      "name": "Reviewer",
+      "keywords": [
+        "PLOS Genetics", 
+        "Plant Pathology", 
+        "PLOS ONE", 
+        "Synthetic and Systems Biotechnology",
+        "GFI Research Grants"
+      ]
+    },
+    {
+      "name": "Membership",
+      "keywords": [
+        "Elected Member of Eukaryotic Division of the Microbiology Society",
+        "Royal Society of Biology",
+        "British Mycological Society",
+        "Microbiology Society",
+        "British Society for Plant Pathology"
+      ]
+    }
+  ]
+}
+
   
