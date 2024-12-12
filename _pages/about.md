@@ -2,7 +2,7 @@
 layout: about
 title: about
 permalink: /
-subtitle: Computational and Molecular Biologist
+subtitle: Bioinformatician and Molecular Biologist
 
 profile:
   align: right
@@ -19,8 +19,8 @@ social: true # includes social icons at the bottom of the page
 
 Hi! I'm Jordan 👋
 
-- I'm a wet lab molecular biologist turned bioinformatician.
+- I'm a molecular biologist turned bioinformatician.
 - I am currently a junior group leader at NIAB in Cambridge, UK.
 - My research focusses on functional genomics and biotechnology of fungi important for food, viticulture and agriculture.
 - I use a combination of molecular and computational approaches to understand the links between genome evolution and biological traits.
-- I also occasionally dabble in plant genomics.
+- I also dabble in plant genomics.
