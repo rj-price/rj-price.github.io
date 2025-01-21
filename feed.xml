@@ -1,4 +1,100 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://rj-price.github.io/feed.xml" rel="self" type="application/atom+xml"/><link href="https://rj-price.github.io/" rel="alternate" type="text/html" hreflang="en"/><updated>2025-01-06T09:52:52+00:00</updated><id>https://rj-price.github.io/feed.xml</id><title type="html">Dr. R. Jordan Price</title><subtitle>Dr. R. Jordan Price, Bioinformatician and Molecular Biologist </subtitle><entry><title type="html">Visualising Gene Expression with a Heatmap using Python</title><link href="https://rj-price.github.io/blog/2024/heatmap/" rel="alternate" type="text/html" title="Visualising Gene Expression with a Heatmap using Python"/><published>2024-12-16T00:00:00+00:00</published><updated>2024-12-16T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/heatmap</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/heatmap/"><![CDATA[<p>Heatmaps are essential tools for exploring gene expression data, allowing us to visualise patterns across samples or conditions, revealing relationships and highlighting key trends.</p> <p>In our recent study published in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8">Plant Methods</a>, we used a heatmap to explore the expression of differentially expressed genes (DEGs) shared across four GRF-GIF chimera lines in the strawberry model organism, <em>Fragaria vesca</em>.</p> <p>In this post, I’ll explain how I generated the heatmap  (seen in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8/figures/4">Figure 4b</a>), which displays the expression profiles of shared DEGs identified in the <a href="https://rjprice.bio/blog/2024/venn/">4-way Venn diagram</a>, using a <a href="https://github.com/rj-price/h4_grf-gif_rna/blob/main/scripts/Shared%20DEGs%20Heatmap.ipynb">Python and Jupyter Notebook workflow</a>.</p> <p><br/></p> <h2 id="step-1-setting-up-the-environment">Step 1: Setting Up the Environment</h2> <p>First, the following Python libraries were imported:</p> <ul> <li><strong>numpy</strong> and <strong>pandas</strong> were used to import data and extract shared DEGs.</li> <li><strong>matplotlib</strong> and <strong>seaborn</strong> were used to generate the heatmap.</li> <li><strong>scipy.cluster.hierarchy</strong> was used to determine and reorientate sample clustering.</li> </ul> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.4">Jekyll</generator><link href="https://rj-price.github.io/feed.xml" rel="self" type="application/atom+xml"/><link href="https://rj-price.github.io/" rel="alternate" type="text/html" hreflang="en"/><updated>2025-01-21T15:11:19+00:00</updated><id>https://rj-price.github.io/feed.xml</id><title type="html">Dr. R. Jordan Price</title><subtitle>Dr. R. Jordan Price, Bioinformatician and Molecular Biologist </subtitle><entry><title type="html">Reconstructing a Phylogenetic Tree Using SNP Information from WGS Data</title><link href="https://rj-price.github.io/blog/2025/snp_tree/" rel="alternate" type="text/html" title="Reconstructing a Phylogenetic Tree Using SNP Information from WGS Data"/><published>2025-01-21T00:00:00+00:00</published><updated>2025-01-21T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2025/snp_tree</id><content type="html" xml:base="https://rj-price.github.io/blog/2025/snp_tree/"><![CDATA[<p>Phylogenetic analysis is a key part of evolutionary biology, allowing researchers to infer the relationships between species, populations, or strains.</p> <p>By using whole genome sequencing (WGS) data, we can identify single nucleotide polymorphisms (SNPs) and use them to construct high resolution phylogenetic trees.</p> <p>In this blog post, I’ll guide you through reconstructing the phylogenetic tree of <em>Rhynchosporium commune</em>, a significant fungal pathogen of barley crops, using SNP information obtained from WGS data. This tutorial provides a practical, step-by-step guide from raw data processing through to tree visualisation.</p> <p><br/></p> <h2 id="environment-setup">Environment Setup</h2> <p>Before we start, we’ll need to set up the environment and install all of the required software.</p> <p>The scripts used in this tutorial can be found in my <a href="https://github.com/rj-price/rhynchosporium_tree">GitHub repository</a>, and are written to be run on a Slurm-based HPC cluster. If you have Conda installed, you can install all of the software in a new environment as below:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clone repository</span>
+git clone https://github.com/rj-price/rhynchosporium_tree.git
+<span class="nb">cd </span>rhynchosporium_tree
+
+<span class="c"># Create conda environment</span>
+conda create <span class="nt">-n</span> snp_tree <span class="se">\</span>
+	ncbi-datasets-cli <span class="se">\</span>
+	fastqc <span class="se">\</span>
+	multiqc <span class="se">\</span>
+	trimmomatic <span class="se">\</span>
+	python <span class="se">\</span>
+	pandas <span class="se">\</span>
+	biopython <span class="se">\</span>
+	bwa <span class="se">\</span>
+	samtools <span class="se">\</span>
+	bcftools <span class="se">\</span>
+	raxml-ng
+
+<span class="c"># Activate conda environment</span>
+conda activate snp_tree
+</code></pre></div></div> <p><br/></p> <h2 id="data-preparation">Data Preparation</h2> <h3 id="download-wgs-data-and-reference-genome">Download WGS Data and Reference Genome</h3> <p>With the environment set up, the next step involves acquiring the raw sequencing data and a reference genome.</p> <p>For this analysis, I searched the Sequence Read Archive (SRA) for <em>Rhynchosporium</em> WGS data and downloaded the available metadata (<code class="language-plaintext highlighter-rouge">SraRunTable.txt</code>).</p> <p>I then used pre-generated scripts via the European Nucleotide Archive (ENA) to downloaded all of the <em>Rhynchosporium</em> reads from the BioProject accessions <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5972619">PRJNA327656</a> and PRJNA419548:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create directory for raw reads</span>
+<span class="nb">mkdir </span>reads <span class="o">&amp;&amp;</span> <span class="nb">cd </span>reads
+
+<span class="c"># Download WGS data using pre-generated scripts</span>
+bash ../scripts/ena-file-download-selected-files-20240216-1125.sh
+bash ../scripts/ena-file-download-selected-files-20240216-1138.sh
+</code></pre></div></div> <p>For the reference genome, the NCBI Datasets tool was used to download the <em>R. commune</em> UK7 genome:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create directory for reference genome</span>
+<span class="nb">mkdir </span>UK7 <span class="o">&amp;&amp;</span> <span class="nb">cd </span>UK7
+
+<span class="c"># Download UK7 genome</span>
+datasets download genome accession GCA_900074885.1 <span class="nt">--filename</span> GCA_900074885.1.zip
+
+<span class="c"># Unzip, move and rename</span>
+unzip GCA_900074885.1.zip
+<span class="nb">mv</span> <span class="se">\</span>
+	ncbi_dataset/data/GCA_900074885.1/GCA_900074885.1_version_1_genomic.fna <span class="se">\</span>
+	R_commune_UK7.fasta
+</code></pre></div></div> <p><br/></p> <h3 id="quality-control-of-sequencing-data">Quality Control of Sequencing Data</h3> <p>Downstream analyses rely on high quality sequencing data. To assess the quality of the raw reads, I used <strong>FastQC</strong>, followed by <strong>MultiQC</strong> to summarise the results:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run FastQC on raw data</span>
+<span class="nb">cd </span>reads
+<span class="k">for </span>file <span class="k">in</span> <span class="k">*</span>gz<span class="p">;</span> <span class="k">do
+    </span>sbatch ../scripts/fastqc.sh <span class="nv">$file</span>
+<span class="k">done</span>
+
+<span class="c"># Aggregate results with MultiQC</span>
+multiqc fastqc/
+</code></pre></div></div> <p>Adapters and low quality sequences were trimmed using <strong>Trimmomatic</strong> based on the QC report, followed by a second round of quality control:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create directory for trimmed reads</span>
+<span class="nb">mkdir </span>trimmed <span class="o">&amp;&amp;</span> <span class="nb">cd </span>trimmed
+
+<span class="c"># Trim reads using Trimmomatic</span>
+<span class="k">for </span>fwd <span class="k">in</span> ../reads/<span class="k">*</span>_1.fastq.gz<span class="p">;</span> <span class="k">do
+    </span><span class="nv">rev</span><span class="o">=</span><span class="si">$(</span><span class="nb">ls</span> <span class="nv">$fwd</span> | <span class="nb">sed</span> <span class="s1">'s/_1/_2/g'</span><span class="si">)</span>
+    sbatch ../scripts/trimmomatic_pe.sh <span class="nv">$fwd</span> <span class="nv">$rev</span>
+<span class="k">done</span>
+
+<span class="c"># QC on trimmed reads</span>
+<span class="k">for </span>file <span class="k">in</span> <span class="k">*</span>gz<span class="p">;</span> <span class="k">do
+    </span>sbatch ../scripts/fastqc.sh <span class="nv">$file</span>
+<span class="k">done
+
+</span>multiqc fastqc/
+</code></pre></div></div> <p>Finally, to facilitate easy comparisons across samples, a custom python script was used to rename the reads using a custom naming convention based on the available SRA metadata:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir </span>renamed_reads
+python scripts/rename_reads.py SraRunTable.txt trimmed/ renamed_reads/
+</code></pre></div></div> <p><br/></p> <h2 id="phylogenetic-tree-reconstruction">Phylogenetic Tree Reconstruction</h2> <h3 id="mapping-reads-to-the-reference-genome">Mapping Reads to the Reference Genome</h3> <p>To identify SNPs, the reads were aligned to the UK7 reference genome using <strong>BWA</strong>. After indexing the genome, the reads were mapped, and the alignments were sorted and indexed using <strong>Samtools</strong>:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Index the genome</span>
+bwa index UK7/R_commune_UK7.fasta
+
+<span class="c"># Map reads to the genome</span>
+<span class="nb">mkdir </span>alignment <span class="o">&amp;&amp;</span> <span class="nb">cd </span>alignment
+<span class="k">for </span>fwd <span class="k">in</span> ../renamed_reads/<span class="k">*</span>_F.fastq.gz<span class="p">;</span> <span class="k">do
+    </span><span class="nv">rev</span><span class="o">=</span><span class="si">$(</span><span class="nb">ls</span> <span class="nv">$fwd</span> | <span class="nb">sed</span> <span class="s1">'s/_F/_R/g'</span><span class="si">)</span>
+    sbatch ../scripts/bwa-mem.sh ../UK7/R_commune_UK7.fasta <span class="nv">$fwd</span> <span class="nv">$rev</span>
+<span class="k">done</span>
+
+<span class="c"># Sort and index alignments</span>
+<span class="k">for </span>file <span class="k">in</span> <span class="k">*</span>sam<span class="p">;</span> <span class="k">do
+    </span>sbatch ../scripts/samtools_sort.sh <span class="nv">$file</span>
+<span class="k">done</span>
+</code></pre></div></div> <p><br/></p> <h3 id="variant-calling-and-filtering">Variant Calling and Filtering</h3> <p>After generating a pileup of aligned reads, variants were called using <strong>bcftools</strong>. These were then filtered for high-quality SNPs based on quality scores, retaining only the highest-confidence SNPs for phylogenetic analysis:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Index genome</span>
+samtools faidx UK7/R_commune_UK7.fasta
+
+<span class="c"># Generate pileup and call variants</span>
+<span class="nb">mkdir </span>variant_calling <span class="o">&amp;&amp;</span> <span class="nb">cd </span>variant_calling
+<span class="k">for </span>file <span class="k">in</span> ../alignment/<span class="k">*</span>bam<span class="p">;</span> <span class="k">do
+    </span><span class="nb">realpath</span> <span class="nv">$file</span> <span class="o">&gt;&gt;</span> rhynchosporium.list
+<span class="k">done
+</span>sbatch ../scripts/bcftools_call.sh ../UK7/R_commune_UK7.fasta rhynchosporium.list
+
+<span class="c"># Filter variants</span>
+bcftools view <span class="se">\</span>
+	rhynchosporium.vcf <span class="nt">-e</span> <span class="s1">'QUAL&lt;800'</span> <span class="nt">--types</span> snps <span class="se">\</span>
+	<span class="o">&gt;</span> rhynchosporium_highqual.vcf
+</code></pre></div></div> <p><br/></p> <h3 id="preparing-data-for-phylogenetic-analysis">Preparing Data for Phylogenetic Analysis</h3> <p>The filtered SNP data in VCF format was converted to PHYLIP format using the <code class="language-plaintext highlighter-rouge">vcf2phylip.py</code> script from https://github.com/edgardomortiz/vcf2phylip and invariant sites were removed using the <code class="language-plaintext highlighter-rouge">ascbias.py</code> script from https://github.com/btmartin721/raxml_ascbias:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Convert VCF to PHYLIP</span>
+python ../scripts/vcf2phylip.py <span class="nt">-i</span> ./rhynchosporium_highqual.vcf
+
+<span class="c"># Remove invariant sites</span>
+python ../scripts/ascbias.py <span class="nt">-p</span> ./rhynchosporium_highqual.min4.phy <span class="nt">-o</span> rhynchosporium_highqual.phy
+</code></pre></div></div> <p><br/></p> <h3 id="building-the-phylogenetic-tree">Building the Phylogenetic Tree</h3> <p>With the prepared dataset, I used <strong>RAxML-ng</strong> for phylogenetic inference:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbatch ../scripts/raxml.sh rhynchosporium_highqual.phy
+</code></pre></div></div> <p><br/></p> <h2 id="visualising-the-tree">Visualising the Tree</h2> <p>The final phylogenetic tree was visualised using <a href="https://itol.embl.de/">iTOL</a>, a useful online tool for exploring and annotating trees. Below are examples of the visualisations generated:</p> <p><br/></p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/rhyncho_tree_branch-480.webp 480w,/assets/img/rhyncho_tree_branch-800.webp 800w,/assets/img/rhyncho_tree_branch-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/rhyncho_tree_branch.jpg" class="img-fluid" width="100%" height="auto" title="Phylogenetic Tree with Branch Distances" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/rhyncho_tree_no-branch-480.webp 480w,/assets/img/rhyncho_tree_no-branch-800.webp 800w,/assets/img/rhyncho_tree_no-branch-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/rhyncho_tree_no-branch.jpg" class="img-fluid" width="100%" height="auto" title="Phylogenetic Tree without Branch Distances" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <div class="caption"> Phylogenetic tree of <i>Rhynchosporium commune</i> SNPs with and without branch lengths. Samples are coloured by country of origin. </div> <p><br/></p> <h2 id="summary">Summary</h2> <p>Reconstructing a phylogenetic tree from WGS data is a multi-step process involving data preparation, SNP calling, and tree inference. This guide outlines the workflow for analysing <em>Rhynchosporium commune</em> WGS data but can be adapted for other species or datasets.</p> <p>By following these steps, you can uncover evolutionary insights and explore the genetic diversity of your own organisms of interest.</p>]]></content><author><name></name></author><category term="getting-started"/><category term="bioinformatics"/><category term="genomics"/><category term="visualisation"/><category term="phylogeny"/><summary type="html"><![CDATA[A guide to generating a phylogenetic tree from whole genome sequencing data.]]></summary></entry><entry><title type="html">Visualising Gene Expression with a Heatmap using Python</title><link href="https://rj-price.github.io/blog/2024/heatmap/" rel="alternate" type="text/html" title="Visualising Gene Expression with a Heatmap using Python"/><published>2024-12-16T00:00:00+00:00</published><updated>2024-12-16T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/heatmap</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/heatmap/"><![CDATA[<p>Heatmaps are essential tools for exploring gene expression data, allowing us to visualise patterns across samples or conditions, revealing relationships and highlighting key trends.</p> <p>In our recent study published in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8">Plant Methods</a>, we used a heatmap to explore the expression of differentially expressed genes (DEGs) shared across four GRF-GIF chimera lines in the strawberry model organism, <em>Fragaria vesca</em>.</p> <p>In this post, I’ll explain how I generated the heatmap  (seen in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8/figures/4">Figure 4b</a>), which displays the expression profiles of shared DEGs identified in the <a href="https://rjprice.bio/blog/2024/venn/">4-way Venn diagram</a>, using a <a href="https://github.com/rj-price/h4_grf-gif_rna/blob/main/scripts/Shared%20DEGs%20Heatmap.ipynb">Python and Jupyter Notebook workflow</a>.</p> <p><br/></p> <h2 id="step-1-setting-up-the-environment">Step 1: Setting Up the Environment</h2> <p>First, the following Python libraries were imported:</p> <ul> <li><strong>numpy</strong> and <strong>pandas</strong> were used to import data and extract shared DEGs.</li> <li><strong>matplotlib</strong> and <strong>seaborn</strong> were used to generate the heatmap.</li> <li><strong>scipy.cluster.hierarchy</strong> was used to determine and reorientate sample clustering.</li> </ul> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
 <span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
 <span class="kn">import</span> <span class="n">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
 <span class="kn">import</span> <span class="n">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
