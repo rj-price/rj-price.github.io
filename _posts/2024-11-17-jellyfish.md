@@ -4,7 +4,6 @@ title: Estimating Genome Size Using Jellyfish and GenomeScope2
 date: 2024-11-17
 description: A guide to estimating genome size using k-mer distributions.
 tags: bioinformatics genomics visualisation kmer
-categories: getting-started
 ---
 
 Understanding genome size is a fundamental step in genomics. It provides crucial insights into an organism's biology, helps in planning sequencing projects, and is essential for interpreting downstream analyses. 
