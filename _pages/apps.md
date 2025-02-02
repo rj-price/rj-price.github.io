@@ -6,11 +6,10 @@ nav_order: 6
 permalink: /apps/
 ---
 
-### [EDA Dashboard](https://rj-price-eda-dashboard.streamlit.app/?embed_options=light_theme)
+### EDA Dashboard
 <div class="row">
-    <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/eda_dashboard_capture.jpg" title="Screenshot of EDA Dashboard web app" class="img-fluid" %}
-    </div>
+    <iframe
+        src="https://rj-price-eda-dashboard.streamlit.app?embed=true"
+        style="height: 450px; width: 100%;"
+    ></iframe>
 </div>
-
-https://rj-price-eda-dashboard.streamlit.app/?embed_options=light_theme
