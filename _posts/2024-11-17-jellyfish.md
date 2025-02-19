@@ -164,3 +164,15 @@ The GenomeScope2 output includes:
 <br>
 
 By integrating Jellyfish and GenomeScope2, you can quickly estimate genome size and other critical genomic properties. This workflow is especially useful for non-model organisms or projects in the early stages of genomic analysis.
+
+<br>
+
+## Support  
+
+If you find this blog post helpful, please consider [buying me a coffee on Ko-fi](https://ko-fi.com/jordanprice). Your support is very much appreciated!  
+
+<p style='text-align: center'>
+    <a href='https://ko-fi.com/jordanprice' target='_blank'>
+        <img height='36' style='border:0px;height:36px;' src='https://storage.ko-fi.com/cdn/kofi2.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' />
+    </a>  
+</p> 
