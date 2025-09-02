@@ -11,6 +11,7 @@ Red raspberry (_Rubus idaeus_) is an economically important soft fruit crop, but
 
 This research programme uses genomics to overcome these hurdles, creating foundational resources for the community and using them to dissect the genetic basis of key agricultural traits.
 
+<br>
 
 ## Building the Genomic Toolkit 
 
@@ -20,6 +21,8 @@ By using long-read sequencing technologies like Oxford Nanopore, we can generate
 
 This approach is particularly effective at resolving complex, highly repetitive DNA regions, such as the centromeres, which were not well-defined in previous genome sequences. These vastly improved and well-annotated genomes, serve as an essential toolkit for both fundamental research and applied breeding efforts.
 
+<br>
+
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
         {% include figure.liquid loading="eager" path="assets/img/raspberry_01.jpg" title="Circos plot of Malling Jewel and Anitra" class="img-fluid" %}
@@ -28,6 +31,8 @@ This approach is particularly effective at resolving complex, highly repetitive 
 <div class="caption">
     Synteny between two raspberry cultivars, Malling Jewel and Anitra.
 </div>
+
+<br>
 
 
 ## Uncovering the Genes Behind Key Traits
@@ -40,6 +45,8 @@ We confirmed that 'Varnes' carries two copies of this mutated gene, while also d
 
 This work not only solves a long-standing question in raspberry genetics but also provides breeders with a precise molecular marker to select for fruit colour in their programmes. This demonstrates how foundational genomics work directly enables the discovery of genes controlling valuable agronomic traits.
 
+<br>
+
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
         {% include figure.liquid loading="eager" path="assets/img/raspberry_02.jpg" title="Schematic of Ans gene" class="img-fluid" %}
@@ -48,3 +55,5 @@ This work not only solves a long-standing question in raspberry genetics but als
 <div class="caption">
     A CACTA-like insertion disrupts the Ans gene in 'Varnes'.
 </div>
+
+<br>
