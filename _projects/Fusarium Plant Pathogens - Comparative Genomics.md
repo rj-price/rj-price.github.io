@@ -1,11 +1,13 @@
 ---
 layout: page
 title: Fusarium Plant Pathogens - Comparative Genomics
-description: 
-img: 
+description: Uncovering the molecular toolkit of lettuce wilt pathogens.
+img: assets/img/fola_00.jpg
 importance: 1
 category: current
 ---
+
+<br>
 
 Fusarium oxysporum f. sp. lactucae (Fola) is the causal agent of lettuce Fusarium wilt, a devastating disease that poses a significant threat to production worldwide. While Race 1 (Fola1) has long been a problem in warmer climates, the recent emergence and spread of the highly aggressive Race 4 (Fola4) across Northern Europe has created a new and urgent challenge for the industry. Our work uses comparative genomics and transcriptomics to dissect the genetic differences between these economically important races, revealing how they have evolved and identifying the molecular tools they use to cause disease.
 

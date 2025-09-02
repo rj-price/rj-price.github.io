@@ -7,6 +7,8 @@ importance: 2
 category: previous
 ---
 
+<br>
+
 Red raspberry (_Rubus idaeus_) is an economically important soft fruit crop, but breeding new varieties with improved traits is a slow and complex process. This is largely due to the species' highly heterozygous genome, which has historically made genetic analysis challenging. 
 
 This research programme uses genomics to overcome these hurdles, creating foundational resources for the community and using them to dissect the genetic basis of key agricultural traits.

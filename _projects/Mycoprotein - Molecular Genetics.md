@@ -7,6 +7,8 @@ importance: 2
 category: current
 ---
 
+<br>
+
 Quorn mycoprotein is a globally recognised, sustainable meat alternative derived from the filamentous fungus _Fusarium venenatum_. A major challenge in its large-scale industrial production is the spontaneous and consistent appearance of highly branched mutant strains, known as "colonial variants" or "**C-variants**". 
 
 This dense, irregular growth pattern negatively affects the texture of the final product and forces the early termination of the fermentation process, limiting efficiency and sustainability. Despite being a long-standing problem for the industry, the precise genetic cause of this undesirable morphology was previously unknown. This project aimed to pinpoint the specific mutation responsible for the C-variant phenotype.
