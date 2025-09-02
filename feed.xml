@@ -1,12 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://rj-price.github.io/feed.xml" rel="self" type="application/atom+xml"/><link href="https://rj-price.github.io/" rel="alternate" type="text/html" hreflang="en"/><updated>2025-07-15T09:14:53+00:00</updated><id>https://rj-price.github.io/feed.xml</id><title type="html">Dr. R. Jordan Price</title><subtitle>Dr. R. Jordan Price, Bioinformatician and Molecular Biologist </subtitle><entry><title type="html">Visualising Differentially Expressed Genes with Upset Plots</title><link href="https://rj-price.github.io/blog/2025/upset_plot/" rel="alternate" type="text/html" title="Visualising Differentially Expressed Genes with Upset Plots"/><published>2025-03-24T00:00:00+00:00</published><updated>2025-03-24T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2025/upset_plot</id><content type="html" xml:base="https://rj-price.github.io/blog/2025/upset_plot/"><![CDATA[<p>Upset plots are a useful alternative to <a href="https://rjprice.bio/blog/2024/venn/">Venn diagrams</a> for visualising intersections between multiple sets of data.</p> <p>In our recent study published in <a href="https://doi.org/10.1186/s40694-025-00195-8">Fungal Biology and Biotechnology</a>, we used an Upset plot to explore the overlaps in differentially expressed genes (DEGs) across 12 isolates of the mycoprotein fungus <em>Fusarium venenatum</em>. </p> <p>In this post, I’ll explain how I generated the plot (seen in Figure 3A) using R, which displays the shared DEGs identified by our RNA-seq analysis.</p> <p><br/></p> <h2 id="when-to-use-an-upset-plot-over-a-venn-diagram">When to Use an Upset Plot Over a Venn Diagram</h2> <p>While <a href="https://rjprice.bio/blog/2024/venn/">Venn diagrams</a> work well for a small number of datasets (typically up to 3-4), they become increasingly complex and unreadable with additional sets. That’s where Upset plots come in!</p> <p>Upset plots display the size of each set and the frequency of overlapping elements in a clear and structured way, making them particularly useful when dealing with more than 4 sets.</p> <p><br/></p> <h2 id="generating-upset-plots-using-r">Generating Upset Plots Using R</h2> <p>Below is an example workflow for generating Upset plots using DESeq2 results.</p> <p>This process involves loading in the DEG lists from multiple conditions, structuring them into a format suitable for visualisation, and finally generating the Upset plot.</p> <p><br/></p> <h3 id="1-install-and-load-required-packages">1. Install and Load Required Packages</h3> <p>First, you’ll need to install and load the required R packages. These include <code class="language-plaintext highlighter-rouge">plyr</code> and <code class="language-plaintext highlighter-rouge">reshape2</code> for data manipulation, and <code class="language-plaintext highlighter-rouge">UpSetR</code> for visualisation. The <code class="language-plaintext highlighter-rouge">sessionInfo()</code> function can be used to check the currently loaded packages and ensure all dependencies are available.</p> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BiocManager</span><span class="o">::</span><span class="n">install</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s2">"plyr"</span><span class="p">,</span><span class="w"> </span><span class="s2">"reshape2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"UpSetR"</span><span class="p">))</span><span class="w">
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://rj-price.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://rj-price.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2025-09-02T14:41:29+00:00</updated><id>https://rj-price.github.io/feed.xml</id><title type="html">Dr. R. Jordan Price</title><subtitle>Dr. R. Jordan Price, Bioinformatician and Molecular Biologist
+</subtitle><entry><title type="html">Visualising Differentially Expressed Genes with Upset Plots</title><link href="https://rj-price.github.io/blog/2025/upset_plot/" rel="alternate" type="text/html" title="Visualising Differentially Expressed Genes with Upset Plots" /><published>2025-03-24T00:00:00+00:00</published><updated>2025-03-24T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2025/upset_plot</id><content type="html" xml:base="https://rj-price.github.io/blog/2025/upset_plot/"><![CDATA[<p>Upset plots are a useful alternative to <a href="https://rjprice.bio/blog/2024/venn/">Venn diagrams</a> for visualising intersections between multiple sets of data.</p>
+
+<p>In our recent study published in <a href="https://doi.org/10.1186/s40694-025-00195-8">Fungal Biology and Biotechnology</a>, we used an Upset plot to explore the overlaps in differentially expressed genes (DEGs) across 12 isolates of the mycoprotein fungus <em>Fusarium venenatum</em>. </p>
+
+<p>In this post, I’ll explain how I generated the plot (seen in Figure 3A) using R, which displays the  shared DEGs identified by our RNA-seq analysis.</p>
+
+<p><br /></p>
+
+<h2 id="when-to-use-an-upset-plot-over-a-venn-diagram">When to Use an Upset Plot Over a Venn Diagram</h2>
+
+<p>While <a href="https://rjprice.bio/blog/2024/venn/">Venn diagrams</a> work well for a small number of datasets (typically up to 3-4), they become increasingly complex and unreadable with additional sets. That’s where Upset plots come in!</p>
+
+<p>Upset plots display the size of each set and the frequency of overlapping elements in a clear and structured way, making them particularly useful when dealing with more than 4 sets.</p>
+
+<p><br /></p>
+
+<h2 id="generating-upset-plots-using-r">Generating Upset Plots Using R</h2>
+
+<p>Below is an example workflow for generating Upset plots using DESeq2 results.</p>
+
+<p>This process involves loading in the DEG lists from multiple conditions, structuring them into a format suitable for visualisation, and finally generating the Upset plot.</p>
+
+<p><br /></p>
+
+<h3 id="1-install-and-load-required-packages">1. Install and Load Required Packages</h3>
+
+<p>First, you’ll need to install and load the required R packages. These include <code class="language-plaintext highlighter-rouge">plyr</code> and <code class="language-plaintext highlighter-rouge">reshape2</code> for data manipulation, and <code class="language-plaintext highlighter-rouge">UpSetR</code> for visualisation. The <code class="language-plaintext highlighter-rouge">sessionInfo()</code> function can be used to check the currently loaded packages and ensure all dependencies are available.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">BiocManager</span><span class="o">::</span><span class="n">install</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s2">"plyr"</span><span class="p">,</span><span class="w"> </span><span class="s2">"reshape2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"UpSetR"</span><span class="p">))</span><span class="w">
 
 </span><span class="n">library</span><span class="p">(</span><span class="n">plyr</span><span class="p">)</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">reshape2</span><span class="p">)</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">UpSetR</span><span class="p">)</span><span class="w">
 
 </span><span class="n">sessionInfo</span><span class="p">()</span><span class="w">
-</span></code></pre></div></div> <p><br/></p> <h3 id="2-import-and-process-data">2. Import and Process Data</h3> <p>Next, we load the DEG lists extracted from DESeq2 results. These lists contain gene names from the different isolates filtered based on an FDR threshold (i.e. FDR &lt; 0.05).</p> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filelist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list.files</span><span class="p">(</span><span class="n">pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"*names.txt"</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div> <p>We then create a structured table containing set names, gene identifiers, and a binary presence indicator.</p> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lapply</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+</span></code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="2-import-and-process-data">2. Import and Process Data</h3>
+
+<p>Next, we load the DEG lists extracted from DESeq2 results. These lists contain gene names from the different isolates filtered based on an FDR threshold (i.e. FDR &lt; 0.05).</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">filelist</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">list.files</span><span class="p">(</span><span class="n">pattern</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"*names.txt"</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>We then create a structured table containing set names, gene identifiers, and a binary presence indicator.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lapply</span><span class="p">(</span><span class="n">filelist</span><span class="p">,</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
  </span><span class="n">data.frame</span><span class="p">(</span><span class="w">
   </span><span class="n">set</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">x</span><span class="p">,</span><span class="w">
   </span><span class="n">geneID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">as.character</span><span class="p">(</span><span class="n">read.table</span><span class="p">(</span><span class="n">x</span><span class="p">)[,</span><span class="m">1</span><span class="p">]),</span><span class="w">
@@ -14,21 +55,360 @@
 </span><span class="p">})</span><span class="w">
 
 </span><span class="n">res</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ldply</span><span class="p">(</span><span class="n">res</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div> <p>The data is transformed from long format to wide format, ensuring gene names are row identifiers and removing file extensions from column names.</p> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">acast</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">geneID</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">set</span><span class="p">,</span><span class="w"> </span><span class="n">value.var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"val"</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The data is transformed from long format to wide format, ensuring gene names are row identifiers and removing file extensions from column names.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">res1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">acast</span><span class="p">(</span><span class="n">res</span><span class="p">,</span><span class="w"> </span><span class="n">geneID</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">set</span><span class="p">,</span><span class="w"> </span><span class="n">value.var</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"val"</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w">
 </span><span class="n">res1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">res1</span><span class="p">)</span><span class="w">
 </span><span class="n">res1</span><span class="o">$</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rownames</span><span class="p">(</span><span class="n">res1</span><span class="p">)</span><span class="w">
 </span><span class="n">colnames</span><span class="p">(</span><span class="n">res1</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">gsub</span><span class="p">(</span><span class="s2">"_DEG_names.txt$"</span><span class="p">,</span><span class="w"> </span><span class="s2">""</span><span class="p">,</span><span class="w"> </span><span class="n">colnames</span><span class="p">(</span><span class="n">res1</span><span class="p">))</span><span class="w">
-</span></code></pre></div></div> <p><br/></p> <h3 id="3-generate-upset-plot">3. Generate Upset Plot</h3> <p>We then generate the Upset plot that combines data from all 12 isolates (six from the <code class="language-plaintext highlighter-rouge">pfWT</code> condition and six from the <code class="language-plaintext highlighter-rouge">Cv</code> condition). The <code class="language-plaintext highlighter-rouge">upset()</code> function is used with the following arguments:</p> <ul> <li><code class="language-plaintext highlighter-rouge">sets</code> specifies which datasets to include in the plot.</li> <li><code class="language-plaintext highlighter-rouge">sets.bar.color</code> defines the colour of the set size bars.</li> <li><code class="language-plaintext highlighter-rouge">mainbar.y.label</code> and <code class="language-plaintext highlighter-rouge">sets.x.label</code> customise axis labels.</li> <li><code class="language-plaintext highlighter-rouge">order.by</code> ensures intersections are sorted by frequency.</li> <li><code class="language-plaintext highlighter-rouge">empty.intersections</code> determines whether empty intersections are displayed.</li> <li><code class="language-plaintext highlighter-rouge">mb.ratio</code> controls the relative size of the intersection and set size bars.</li> <li><code class="language-plaintext highlighter-rouge">keep.order</code> maintains the order of sets as specified.</li> <li><code class="language-plaintext highlighter-rouge">text.scale</code> adjusts the size of various text elements in the plot.</li> </ul> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">upset_all</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">upset</span><span class="p">(</span><span class="n">res1</span><span class="p">,</span><span class="w"> </span><span class="n">sets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rev</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s2">"pfWT1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT3"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT6"</span><span class="p">,</span><span class="w">
+</span></code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="3-generate-upset-plot">3. Generate Upset Plot</h3>
+
+<p>We then generate the Upset plot that combines data from all 12 isolates (six from the <code class="language-plaintext highlighter-rouge">pfWT</code> condition and six from the <code class="language-plaintext highlighter-rouge">Cv</code> condition). The <code class="language-plaintext highlighter-rouge">upset()</code> function is used with the following arguments:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">sets</code> specifies which datasets to include in the plot.</li>
+  <li><code class="language-plaintext highlighter-rouge">sets.bar.color</code> defines the colour of the set size bars.</li>
+  <li><code class="language-plaintext highlighter-rouge">mainbar.y.label</code> and <code class="language-plaintext highlighter-rouge">sets.x.label</code> customise axis labels.</li>
+  <li><code class="language-plaintext highlighter-rouge">order.by</code> ensures intersections are sorted by frequency.</li>
+  <li><code class="language-plaintext highlighter-rouge">empty.intersections</code> determines whether empty intersections are displayed.</li>
+  <li><code class="language-plaintext highlighter-rouge">mb.ratio</code> controls the relative size of the intersection and set size bars.</li>
+  <li><code class="language-plaintext highlighter-rouge">keep.order</code> maintains the order of sets as specified.</li>
+  <li><code class="language-plaintext highlighter-rouge">text.scale</code> adjusts the size of various text elements in the plot.</li>
+</ul>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">upset_all</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">upset</span><span class="p">(</span><span class="n">res1</span><span class="p">,</span><span class="w"> </span><span class="n">sets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rev</span><span class="p">(</span><span class="nf">c</span><span class="p">(</span><span class="s2">"pfWT1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT3"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"pfWT6"</span><span class="p">,</span><span class="w">
                    </span><span class="s2">"Cv1"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Cv2"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Cv3"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Cv4"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Cv5"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Cv6"</span><span class="p">)),</span><span class="w"> </span><span class="n">sets.bar.color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"#56B4E9"</span><span class="p">,</span><span class="w">
                    </span><span class="n">mainbar.y.label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"DEG Intersections"</span><span class="p">,</span><span class="w"> </span><span class="n">sets.x.label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"DEGs Per Isolate"</span><span class="p">,</span><span class="w">
                    </span><span class="n">order.by</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"freq"</span><span class="p">,</span><span class="w"> </span><span class="n">empty.intersections</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"off"</span><span class="p">,</span><span class="w"> </span><span class="n">mb.ratio</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0.55</span><span class="p">,</span><span class="w"> </span><span class="m">0.45</span><span class="p">),</span><span class="w"> 
                    </span><span class="n">keep.order</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">text.scale</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">1.3</span><span class="p">,</span><span class="w"> </span><span class="m">1.3</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="m">1.2</span><span class="p">,</span><span class="w"> </span><span class="m">0.85</span><span class="p">))</span><span class="w">
 
 </span><span class="n">print</span><span class="p">(</span><span class="n">upset_all</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div> <p><br/></p> <h3 id="4-export-upset-plots">4. Export Upset Plots</h3> <p>Finally, export the plot as a high resolution PNG files.</p> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">png</span><span class="p">(</span><span class="s2">"upset_plot_all.png"</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"in"</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="4-export-upset-plots">4. Export Upset Plots</h3>
+
+<p>Finally, export the plot as a high resolution PNG files.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">png</span><span class="p">(</span><span class="s2">"upset_plot_all.png"</span><span class="p">,</span><span class="w"> </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">10</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">8</span><span class="p">,</span><span class="w"> </span><span class="n">units</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"in"</span><span class="p">,</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">300</span><span class="p">)</span><span class="w">
 </span><span class="n">print</span><span class="p">(</span><span class="n">upset_all</span><span class="p">)</span><span class="w">
 </span><span class="n">dev.off</span><span class="p">()</span><span class="w">
-</span></code></pre></div></div> <p><br/></p> <h3 id="results">Results</h3> <p>The resulting Upset plot revealed a minimal overlap in differentially expressed genes across the two groups of isolates. This allowed us to then perform gene ontology analysis on these groups separately to identify specific enriched pathways in each group.</p> <p><br/></p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/upset_plot_all-480.webp 480w,/assets/img/upset_plot_all-800.webp 800w,/assets/img/upset_plot_all-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/upset_plot_all.jpg" class="img-fluid" width="100%" height="auto" title="Upset plot" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <div class="caption"> Upset plot showing the intersections of shared DEGs across pfWT and Cv isolates in <i>F. venenatum</i>. </div> <p><br/></p> <h2 id="summary">Summary</h2> <p>Upset plots provide a clear visualisation of DEG overlap across multiple conditions, overcoming the limitations of <a href="https://rjprice.bio/blog/2024/venn/">Venn diagrams</a> for complex datasets. This approach allows us to better understand patterns of gene expression changes across multiple experimental conditions.</p> <p>If you’re interested in learning more about our results, you can read the full paper in <a href="https://doi.org/10.1186/s40694-025-00195-8">Fungal Biology and Biotechnology</a>. Otherwise, feel free to adapt the visualisation for your own datasets and explore the intersections within your gene sets.</p> <p><br/></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"/> </a> </p>]]></content><author><name></name></author><category term="bioinformatics"/><category term="rnaseq"/><category term="visualisation"/><category term="upset"/><summary type="html"><![CDATA[A guide to plotting an upset plot of differentially expressed genes (DEGs) in R.]]></summary></entry><entry><title type="html">A Streamlit App for Rapid Exploratory Data Analysis and Visualisation</title><link href="https://rj-price.github.io/blog/2025/eda_app/" rel="alternate" type="text/html" title="A Streamlit App for Rapid Exploratory Data Analysis and Visualisation"/><published>2025-02-17T00:00:00+00:00</published><updated>2025-02-17T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2025/eda_app</id><content type="html" xml:base="https://rj-price.github.io/blog/2025/eda_app/"><![CDATA[<p>Exploratory Data Analysis (EDA) is a critical first step when working with any kind of data, helping to uncover patterns, spot anomalies, and gain valuable insights.</p> <p>To make this process faster and more interactive, I’ve built an <strong>EDA Dashboard</strong> using <a href="https://streamlit.io/">Streamlit</a> and <a href="https://plotly.com/">Plotly</a>.</p> <p>In this blog post, I’ll walk you through the app, show you how to use it, and highlight key features.</p> <p><br/></p> <h2 id="what-is-the-eda-dashboard">What is the EDA Dashboard?</h2> <p>The <strong>EDA Dashboard</strong> is a web based tool for rapid data exploration and visualisation.</p> <p>You can upload a CSV file and immediately get summary statistics, correlation analysis, and interactive plots, all without writing a single line of code!</p> <p>My aim was to open up data analysis and visualisation for those unfamiliar with R/Python, or those of us just wanting a super quick look at our data.</p> <p><br/></p> <h2 id="key-features">Key Features</h2> <p>Here’s a quick overview of what the EDA Dashboard can do:</p> <ul> <li>Upload and analyse CSV files with automatic data type detection.</li> <li>View data, summary statistics and missing value counts.</li> <li>Generate an interactive correlation heatmap.</li> <li>Visualise data distributions with histograms.</li> <li>Create bar charts and scatter plots to explore relationships.</li> <li>Export visualisations as PNG files.</li> </ul> <p><br/></p> <h2 id="upload-your-data">Upload Your Data</h2> <p>The app comes pre-loaded with an example dataset (<code class="language-plaintext highlighter-rouge">assemblies.csv</code>), but you can upload your own file to get started with your data. Just drag and drop or click <strong>Browse files</strong> to upload your data, and the app will automatically process it.</p> <blockquote> <p><strong>Pro tip:</strong> Ensure your CSV has a header row and clean, consistent numeric data for the best results.</p> </blockquote> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/eda_01-480.webp 480w,/assets/img/eda_01-800.webp 800w,/assets/img/eda_01-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/eda_01.jpg" class="img-fluid" width="100%" height="auto" title="EDA Upload Data" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <p><br/></p> <h2 id="explore-your-data">Explore Your Data</h2> <p>After uploading your dataset, the <strong>View Data and Summary Metrics</strong> section provides several ways to explore it:</p> <ul> <li><strong>Show Data</strong> – View the full dataset with row and column counts.</li> <li><strong>Show Summary</strong> – See descriptive statistics for each numeric column.</li> <li><strong>Show Data Types</strong> – Check the data type of each column.</li> <li><strong>Show Missing Values</strong> – Identify columns with missing values and their percentages.</li> </ul> <p>Here’s what the summary view looks like:</p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/eda_02-480.webp 480w,/assets/img/eda_02-800.webp 800w,/assets/img/eda_02-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/eda_02.jpg" class="img-fluid" width="100%" height="auto" title="EDA Summary Statistics" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <p><br/></p> <h2 id="visualisation-options">Visualisation Options</h2> <p>The visualisation section lets you generate several types of plots to better understand your data.</p> <h3 id="correlation-analysis">Correlation Analysis</h3> <p>Click <strong>Generate Correlation Matrix</strong> to visualise pairwise Pearson correlation coefficients between numeric columns. The heatmap uses a red-blue colour scale, with tooltips showing exact correlation values when you hover over each cell.</p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/eda_03-480.webp 480w,/assets/img/eda_03-800.webp 800w,/assets/img/eda_03-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/eda_03.jpg" class="img-fluid" width="100%" height="auto" title="EDA Correlation Matrix Heatmap" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <p><br/></p> <h3 id="distribution-analysis">Distribution Analysis</h3> <p>Select a column from the dropdown menu to generate a histogram of its values. This is a quick and easy way to spot outliers or skewed distributions.</p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/eda_04-480.webp 480w,/assets/img/eda_04-800.webp 800w,/assets/img/eda_04-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/eda_04.jpg" class="img-fluid" width="100%" height="auto" title="EDA Histogram" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <p><br/></p> <h3 id="bar-charts">Bar Charts</h3> <p>Want to compare values across samples or categories? The bar chart option lets you visualise any column interactively.</p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/eda_05-480.webp 480w,/assets/img/eda_05-800.webp 800w,/assets/img/eda_05-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/eda_05.jpg" class="img-fluid" width="100%" height="auto" title="EDA Bar Chart" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <p><br/></p> <h3 id="scatter-plots">Scatter Plots</h3> <p>Explore relationships between two variables by plotting them on a scatter plot. Select different columns for the X and Y axes, then zoom and pan to explore specific regions.</p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/eda_06-480.webp 480w,/assets/img/eda_06-800.webp 800w,/assets/img/eda_06-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/eda_06.jpg" class="img-fluid" width="100%" height="auto" title="EDA Scatter Plot" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <p><br/></p> <h2 id="exporting-visualisations">Exporting Visualisations</h2> <p>Every plot in the app can be exported as a PNG file. Just hover over the plot, click the camera icon in the top-right corner, and save it to your computer.</p> <p><br/></p> <h2 id="try-it-out">Try it Out!</h2> <p>Head over to the <a href="https://rj-price-eda-dashboard.streamlit.app/">EDA Dashboard</a> and give it a try. I’d love to hear your feedback!</p> <p><br/></p> <h2 id="support">Support</h2> <p>If you find this tool helpful, consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support helps me keep building tools like this!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"/> </a> </p>]]></content><author><name></name></author><category term="bioinformatics"/><category term="genomics"/><category term="rnaseq"/><category term="visualisation"/><summary type="html"><![CDATA[A how to guide for using my EDA web app for quick data analysis and visualisation.]]></summary></entry><entry><title type="html">Reconstructing a Phylogenetic Tree Using SNP Information from WGS Data</title><link href="https://rj-price.github.io/blog/2025/snp_tree/" rel="alternate" type="text/html" title="Reconstructing a Phylogenetic Tree Using SNP Information from WGS Data"/><published>2025-01-21T00:00:00+00:00</published><updated>2025-01-21T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2025/snp_tree</id><content type="html" xml:base="https://rj-price.github.io/blog/2025/snp_tree/"><![CDATA[<p>Phylogenetic analysis is a key part of evolutionary biology, allowing researchers to infer the relationships between species, populations, or strains.</p> <p>By using whole genome sequencing (WGS) data, we can identify single nucleotide polymorphisms (SNPs) and use them to construct high resolution phylogenetic trees.</p> <p>In this blog post, I’ll guide you through reconstructing the phylogenetic tree of <em>Rhynchosporium commune</em>, a significant fungal pathogen of barley crops, using SNP information obtained from WGS data. This tutorial provides a practical, step-by-step guide from raw data processing through to tree visualisation.</p> <p><br/></p> <h2 id="environment-setup">Environment Setup</h2> <p>Before we start, we’ll need to set up the environment and install all of the required software.</p> <p>The scripts used in this tutorial can be found in my <a href="https://github.com/rj-price/rhynchosporium_tree">GitHub repository</a>, and are written to be run on a Slurm-based HPC cluster. If you have Conda installed, you can install all of the software in a new environment as below:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clone repository</span>
+</span></code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="results">Results</h3>
+
+<p>The resulting Upset plot revealed a minimal overlap in differentially expressed genes across the two groups of isolates. This allowed us to then perform gene ontology analysis on these groups separately to identify specific enriched pathways in each group.</p>
+
+<p><br /></p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/upset_plot_all-480.webp 480w,/assets/img/upset_plot_all-800.webp 800w,/assets/img/upset_plot_all-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/upset_plot_all.jpg" class="img-fluid" width="100%" height="auto" title="Upset plot" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    Upset plot showing the intersections of shared DEGs across pfWT and Cv isolates in <i>F. venenatum</i>.
+</div>
+
+<p><br /></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Upset plots provide a clear visualisation of DEG overlap across multiple conditions, overcoming the limitations of <a href="https://rjprice.bio/blog/2024/venn/">Venn diagrams</a> for complex datasets. This approach allows us to better understand patterns of gene expression changes across multiple experimental conditions.</p>
+
+<p>If you’re interested in learning more about our results, you can read the full paper in <a href="https://doi.org/10.1186/s40694-025-00195-8">Fungal Biology and Biotechnology</a>. Otherwise, feel free to adapt the visualisation for your own datasets and explore the intersections within your gene sets.</p>
+
+<p><br /></p>
+
+<h2 id="support">Support</h2>
+
+<p>If you find this blog post helpful, consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p>
+
+<p style="text-align: center">
+    <a href="https://ko-fi.com/jordanprice" target="_blank">
+        <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>  
+</p>]]></content><author><name></name></author><category term="bioinformatics" /><category term="rnaseq" /><category term="visualisation" /><category term="upset" /><summary type="html"><![CDATA[A guide to plotting an upset plot of differentially expressed genes (DEGs) in R.]]></summary></entry><entry><title type="html">A Streamlit App for Rapid Exploratory Data Analysis and Visualisation</title><link href="https://rj-price.github.io/blog/2025/eda_app/" rel="alternate" type="text/html" title="A Streamlit App for Rapid Exploratory Data Analysis and Visualisation" /><published>2025-02-17T00:00:00+00:00</published><updated>2025-02-17T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2025/eda_app</id><content type="html" xml:base="https://rj-price.github.io/blog/2025/eda_app/"><![CDATA[<p>Exploratory Data Analysis (EDA) is a critical first step when working with any kind of data, helping to uncover patterns, spot anomalies, and gain valuable insights.</p>
+
+<p>To make this process faster and more interactive, I’ve built an <strong>EDA Dashboard</strong> using <a href="https://streamlit.io/">Streamlit</a> and <a href="https://plotly.com/">Plotly</a>.</p>
+
+<p>In this blog post, I’ll walk you through the app, show you how to use it, and highlight key features.</p>
+
+<p><br /></p>
+
+<h2 id="what-is-the-eda-dashboard">What is the EDA Dashboard?</h2>
+
+<p>The <strong>EDA Dashboard</strong> is a web based tool for rapid data exploration and visualisation.</p>
+
+<p>You can upload a CSV file and immediately get summary statistics, correlation analysis, and interactive plots, all without writing a single line of code!</p>
+
+<p>My aim was to open up data analysis and visualisation for those unfamiliar with R/Python, or those of us just wanting a super quick look at our data.</p>
+
+<p><br /></p>
+
+<h2 id="key-features">Key Features</h2>
+
+<p>Here’s a quick overview of what the EDA Dashboard can do:</p>
+
+<ul>
+  <li>Upload and analyse CSV files with automatic data type detection.</li>
+  <li>View data, summary statistics and missing value counts.</li>
+  <li>Generate an interactive correlation heatmap.</li>
+  <li>Visualise data distributions with histograms.</li>
+  <li>Create bar charts and scatter plots to explore relationships.</li>
+  <li>Export visualisations as PNG files.</li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="upload-your-data">Upload Your Data</h2>
+
+<p>The app comes pre-loaded with an example dataset (<code class="language-plaintext highlighter-rouge">assemblies.csv</code>), but you can upload your own file to get started with your data. Just drag and drop or click <strong>Browse files</strong> to upload your data, and the app will automatically process it.</p>
+
+<blockquote>
+  <p><strong>Pro tip:</strong> Ensure your CSV has a header row and clean, consistent numeric data for the best results.</p>
+</blockquote>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/eda_01-480.webp 480w,/assets/img/eda_01-800.webp 800w,/assets/img/eda_01-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/eda_01.jpg" class="img-fluid" width="100%" height="auto" title="EDA Upload Data" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<p><br /></p>
+
+<h2 id="explore-your-data">Explore Your Data</h2>
+
+<p>After uploading your dataset, the <strong>View Data and Summary Metrics</strong> section provides several ways to explore it:</p>
+
+<ul>
+  <li><strong>Show Data</strong> – View the full dataset with row and column counts.</li>
+  <li><strong>Show Summary</strong> – See descriptive statistics for each numeric column.</li>
+  <li><strong>Show Data Types</strong> – Check the data type of each column.</li>
+  <li><strong>Show Missing Values</strong> – Identify columns with missing values and their percentages.</li>
+</ul>
+
+<p>Here’s what the summary view looks like:</p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/eda_02-480.webp 480w,/assets/img/eda_02-800.webp 800w,/assets/img/eda_02-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/eda_02.jpg" class="img-fluid" width="100%" height="auto" title="EDA Summary Statistics" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<p><br /></p>
+
+<h2 id="visualisation-options">Visualisation Options</h2>
+
+<p>The visualisation section lets you generate several types of plots to better understand your data.</p>
+
+<h3 id="correlation-analysis">Correlation Analysis</h3>
+<p>Click <strong>Generate Correlation Matrix</strong> to visualise pairwise Pearson correlation coefficients between numeric columns. The heatmap uses a red-blue colour scale, with tooltips showing exact correlation values when you hover over each cell.</p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/eda_03-480.webp 480w,/assets/img/eda_03-800.webp 800w,/assets/img/eda_03-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/eda_03.jpg" class="img-fluid" width="100%" height="auto" title="EDA Correlation Matrix Heatmap" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<p><br /></p>
+
+<h3 id="distribution-analysis">Distribution Analysis</h3>
+<p>Select a column from the dropdown menu to generate a histogram of its values. This is a quick and easy way to spot outliers or skewed distributions.</p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/eda_04-480.webp 480w,/assets/img/eda_04-800.webp 800w,/assets/img/eda_04-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/eda_04.jpg" class="img-fluid" width="100%" height="auto" title="EDA Histogram" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<p><br /></p>
+
+<h3 id="bar-charts">Bar Charts</h3>
+<p>Want to compare values across samples or categories? The bar chart option lets you visualise any column interactively.</p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/eda_05-480.webp 480w,/assets/img/eda_05-800.webp 800w,/assets/img/eda_05-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/eda_05.jpg" class="img-fluid" width="100%" height="auto" title="EDA Bar Chart" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<p><br /></p>
+
+<h3 id="scatter-plots">Scatter Plots</h3>
+<p>Explore relationships between two variables by plotting them on a scatter plot. Select different columns for the X and Y axes, then zoom and pan to explore specific regions.</p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/eda_06-480.webp 480w,/assets/img/eda_06-800.webp 800w,/assets/img/eda_06-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/eda_06.jpg" class="img-fluid" width="100%" height="auto" title="EDA Scatter Plot" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+
+<p><br /></p>
+
+<h2 id="exporting-visualisations">Exporting Visualisations</h2>
+
+<p>Every plot in the app can be exported as a PNG file. Just hover over the plot, click the camera icon in the top-right corner, and save it to your computer.</p>
+
+<p><br /></p>
+
+<h2 id="try-it-out">Try it Out!</h2>
+
+<p>Head over to the <a href="https://rj-price-eda-dashboard.streamlit.app/">EDA Dashboard</a> and give it a try. I’d love to hear your feedback!</p>
+
+<p><br /></p>
+
+<h2 id="support">Support</h2>
+
+<p>If you find this tool helpful, consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support helps me keep building tools like this!</p>
+
+<p style="text-align: center">
+    <a href="https://ko-fi.com/jordanprice" target="_blank">
+        <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>  
+</p>]]></content><author><name></name></author><category term="bioinformatics" /><category term="genomics" /><category term="rnaseq" /><category term="visualisation" /><summary type="html"><![CDATA[A how to guide for using my EDA web app for quick data analysis and visualisation.]]></summary></entry><entry><title type="html">Reconstructing a Phylogenetic Tree Using SNP Information from WGS Data</title><link href="https://rj-price.github.io/blog/2025/snp_tree/" rel="alternate" type="text/html" title="Reconstructing a Phylogenetic Tree Using SNP Information from WGS Data" /><published>2025-01-21T00:00:00+00:00</published><updated>2025-01-21T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2025/snp_tree</id><content type="html" xml:base="https://rj-price.github.io/blog/2025/snp_tree/"><![CDATA[<p>Phylogenetic analysis is a key part of evolutionary biology, allowing researchers to infer the relationships between species, populations, or strains.</p>
+
+<p>By using whole genome sequencing (WGS) data, we can identify single nucleotide polymorphisms (SNPs) and use them to construct high resolution phylogenetic trees.</p>
+
+<p>In this blog post, I’ll guide you through reconstructing the phylogenetic tree of <em>Rhynchosporium commune</em>, a significant fungal pathogen of barley crops, using SNP information obtained from WGS data. This tutorial provides a practical, step-by-step guide from raw data processing through to tree visualisation.</p>
+
+<p><br /></p>
+
+<h2 id="environment-setup">Environment Setup</h2>
+
+<p>Before we start, we’ll need to set up the environment and install all of the required software.</p>
+
+<p>The scripts used in this tutorial can be found in my <a href="https://github.com/rj-price/rhynchosporium_tree">GitHub repository</a>, and are written to be run on a Slurm-based HPC cluster. If you have Conda installed, you can install all of the software in a new environment as below:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Clone repository</span>
 git clone https://github.com/rj-price/rhynchosporium_tree.git
 <span class="nb">cd </span>rhynchosporium_tree
 
@@ -48,13 +428,31 @@ conda create <span class="nt">-n</span> snp_tree <span class="se">\</span>
 
 <span class="c"># Activate conda environment</span>
 conda activate snp_tree
-</code></pre></div></div> <p><br/></p> <h2 id="data-preparation">Data Preparation</h2> <h3 id="download-wgs-data-and-reference-genome">Download WGS Data and Reference Genome</h3> <p>With the environment set up, the next step involves acquiring the raw sequencing data and a reference genome.</p> <p>For this analysis, I searched the Sequence Read Archive (SRA) for <em>Rhynchosporium</em> WGS data and downloaded the available metadata (<code class="language-plaintext highlighter-rouge">SraRunTable.txt</code>).</p> <p>I then used pre-generated scripts via the European Nucleotide Archive (ENA) to downloaded all of the <em>Rhynchosporium</em> reads from the BioProject accessions <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5972619">PRJNA327656</a> and PRJNA419548:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create directory for raw reads</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="data-preparation">Data Preparation</h2>
+
+<h3 id="download-wgs-data-and-reference-genome">Download WGS Data and Reference Genome</h3>
+
+<p>With the environment set up, the next step involves acquiring the raw sequencing data and a reference genome.</p>
+
+<p>For this analysis, I searched the Sequence Read Archive (SRA) for <em>Rhynchosporium</em> WGS data and downloaded the available metadata (<code class="language-plaintext highlighter-rouge">SraRunTable.txt</code>).</p>
+
+<p>I then used pre-generated scripts via the European Nucleotide Archive (ENA) to downloaded all of the <em>Rhynchosporium</em> reads from the BioProject accessions <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5972619">PRJNA327656</a> and PRJNA419548:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create directory for raw reads</span>
 <span class="nb">mkdir </span>reads <span class="o">&amp;&amp;</span> <span class="nb">cd </span>reads
 
 <span class="c"># Download WGS data using pre-generated scripts</span>
 bash ../scripts/ena-file-download-selected-files-20240216-1125.sh
 bash ../scripts/ena-file-download-selected-files-20240216-1138.sh
-</code></pre></div></div> <p>For the reference genome, the NCBI Datasets tool was used to download the <em>R. commune</em> UK7 genome:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create directory for reference genome</span>
+</code></pre></div></div>
+
+<p>For the reference genome, the NCBI Datasets tool was used to download the <em>R. commune</em> UK7 genome:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create directory for reference genome</span>
 <span class="nb">mkdir </span>UK7 <span class="o">&amp;&amp;</span> <span class="nb">cd </span>UK7
 
 <span class="c"># Download UK7 genome</span>
@@ -65,7 +463,15 @@ unzip GCA_900074885.1.zip
 <span class="nb">mv</span> <span class="se">\</span>
 	ncbi_dataset/data/GCA_900074885.1/GCA_900074885.1_version_1_genomic.fna <span class="se">\</span>
 	R_commune_UK7.fasta
-</code></pre></div></div> <p><br/></p> <h3 id="quality-control-of-sequencing-data">Quality Control of Sequencing Data</h3> <p>Downstream analyses rely on high quality sequencing data. To assess the quality of the raw reads, I used <strong>FastQC</strong>, followed by <strong>MultiQC</strong> to summarise the results:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run FastQC on raw data</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="quality-control-of-sequencing-data">Quality Control of Sequencing Data</h3>
+
+<p>Downstream analyses rely on high quality sequencing data. To assess the quality of the raw reads, I used <strong>FastQC</strong>, followed by <strong>MultiQC</strong> to summarise the results:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Run FastQC on raw data</span>
 <span class="nb">cd </span>reads
 <span class="k">for </span>file <span class="k">in</span> <span class="k">*</span>gz<span class="p">;</span> <span class="k">do
     </span>sbatch ../scripts/fastqc.sh <span class="nv">$file</span>
@@ -73,7 +479,11 @@ unzip GCA_900074885.1.zip
 
 <span class="c"># Aggregate results with MultiQC</span>
 multiqc fastqc/
-</code></pre></div></div> <p>Adapters and low quality sequences were trimmed using <strong>Trimmomatic</strong> based on the QC report, followed by a second round of quality control:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create directory for trimmed reads</span>
+</code></pre></div></div>
+
+<p>Adapters and low quality sequences were trimmed using <strong>Trimmomatic</strong> based on the QC report, followed by a second round of quality control:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Create directory for trimmed reads</span>
 <span class="nb">mkdir </span>trimmed <span class="o">&amp;&amp;</span> <span class="nb">cd </span>trimmed
 
 <span class="c"># Trim reads using Trimmomatic</span>
@@ -88,9 +498,23 @@ multiqc fastqc/
 <span class="k">done
 
 </span>multiqc fastqc/
-</code></pre></div></div> <p>Finally, to facilitate easy comparisons across samples, a custom python script was used to rename the reads using a custom naming convention based on the available SRA metadata:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir </span>renamed_reads
+</code></pre></div></div>
+
+<p>Finally, to facilitate easy comparisons across samples, a custom python script was used to rename the reads using a custom naming convention based on the available SRA metadata:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir </span>renamed_reads
 python scripts/rename_reads.py SraRunTable.txt trimmed/ renamed_reads/
-</code></pre></div></div> <p><br/></p> <h2 id="phylogenetic-tree-reconstruction">Phylogenetic Tree Reconstruction</h2> <h3 id="mapping-reads-to-the-reference-genome">Mapping Reads to the Reference Genome</h3> <p>To identify SNPs, the reads were aligned to the UK7 reference genome using <strong>BWA</strong>. After indexing the genome, the reads were mapped, and the alignments were sorted and indexed using <strong>Samtools</strong>:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Index the genome</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="phylogenetic-tree-reconstruction">Phylogenetic Tree Reconstruction</h2>
+
+<h3 id="mapping-reads-to-the-reference-genome">Mapping Reads to the Reference Genome</h3>
+
+<p>To identify SNPs, the reads were aligned to the UK7 reference genome using <strong>BWA</strong>. After indexing the genome, the reads were mapped, and the alignments were sorted and indexed using <strong>Samtools</strong>:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Index the genome</span>
 bwa index UK7/R_commune_UK7.fasta
 
 <span class="c"># Map reads to the genome</span>
@@ -104,7 +528,15 @@ bwa index UK7/R_commune_UK7.fasta
 <span class="k">for </span>file <span class="k">in</span> <span class="k">*</span>sam<span class="p">;</span> <span class="k">do
     </span>sbatch ../scripts/samtools_sort.sh <span class="nv">$file</span>
 <span class="k">done</span>
-</code></pre></div></div> <p><br/></p> <h3 id="variant-calling-and-filtering">Variant Calling and Filtering</h3> <p>After generating a pileup of aligned reads, variants were called using <strong>bcftools</strong>. These were then filtered for high-quality SNPs based on quality scores, retaining only the highest-confidence SNPs for phylogenetic analysis:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Index genome</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="variant-calling-and-filtering">Variant Calling and Filtering</h3>
+
+<p>After generating a pileup of aligned reads, variants were called using <strong>bcftools</strong>. These were then filtered for high-quality SNPs based on quality scores, retaining only the highest-confidence SNPs for phylogenetic analysis:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Index genome</span>
 samtools faidx UK7/R_commune_UK7.fasta
 
 <span class="c"># Generate pileup and call variants</span>
@@ -118,23 +550,149 @@ samtools faidx UK7/R_commune_UK7.fasta
 bcftools view <span class="se">\</span>
 	rhynchosporium.vcf <span class="nt">-e</span> <span class="s1">'QUAL&lt;800'</span> <span class="nt">--types</span> snps <span class="se">\</span>
 	<span class="o">&gt;</span> rhynchosporium_highqual.vcf
-</code></pre></div></div> <p><br/></p> <h3 id="preparing-data-for-phylogenetic-analysis">Preparing Data for Phylogenetic Analysis</h3> <p>The filtered SNP data in VCF format was converted to PHYLIP format using the <code class="language-plaintext highlighter-rouge">vcf2phylip.py</code> script from https://github.com/edgardomortiz/vcf2phylip and invariant sites were removed using the <code class="language-plaintext highlighter-rouge">ascbias.py</code> script from https://github.com/btmartin721/raxml_ascbias:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Convert VCF to PHYLIP</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="preparing-data-for-phylogenetic-analysis">Preparing Data for Phylogenetic Analysis</h3>
+
+<p>The filtered SNP data in VCF format was converted to PHYLIP format using the <code class="language-plaintext highlighter-rouge">vcf2phylip.py</code> script from https://github.com/edgardomortiz/vcf2phylip and invariant sites were removed using the <code class="language-plaintext highlighter-rouge">ascbias.py</code> script from https://github.com/btmartin721/raxml_ascbias:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Convert VCF to PHYLIP</span>
 python ../scripts/vcf2phylip.py <span class="nt">-i</span> ./rhynchosporium_highqual.vcf
 
 <span class="c"># Remove invariant sites</span>
 python ../scripts/ascbias.py <span class="nt">-p</span> ./rhynchosporium_highqual.min4.phy <span class="nt">-o</span> rhynchosporium_highqual.phy
-</code></pre></div></div> <p><br/></p> <h3 id="building-the-phylogenetic-tree">Building the Phylogenetic Tree</h3> <p>With the prepared dataset, I used <strong>RAxML-ng</strong> for phylogenetic inference:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbatch ../scripts/raxml.sh rhynchosporium_highqual.phy
-</code></pre></div></div> <p><br/></p> <h2 id="visualising-the-tree">Visualising the Tree</h2> <p>The final phylogenetic tree was visualised using <a href="https://itol.embl.de/">iTOL</a>, a useful online tool for exploring and annotating trees. Below are examples of the visualisations generated:</p> <p><br/></p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/rhyncho_tree_branch-480.webp 480w,/assets/img/rhyncho_tree_branch-800.webp 800w,/assets/img/rhyncho_tree_branch-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/rhyncho_tree_branch.jpg" class="img-fluid" width="100%" height="auto" title="Phylogenetic Tree with Branch Distances" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/rhyncho_tree_no-branch-480.webp 480w,/assets/img/rhyncho_tree_no-branch-800.webp 800w,/assets/img/rhyncho_tree_no-branch-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/rhyncho_tree_no-branch.jpg" class="img-fluid" width="100%" height="auto" title="Phylogenetic Tree without Branch Distances" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <div class="caption"> Phylogenetic tree of <i>Rhynchosporium commune</i> SNPs with and without branch lengths. Samples are coloured by country of origin. </div> <p><br/></p> <h2 id="summary">Summary</h2> <p>Reconstructing a phylogenetic tree from WGS data is a multi-step process involving data preparation, SNP calling, and tree inference. This guide outlines the workflow for analysing <em>Rhynchosporium commune</em> WGS data but can be adapted for other species or datasets.</p> <p>By following these steps, you can uncover evolutionary insights and explore the genetic diversity of your own organisms of interest.</p> <p><br/></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"/> </a> </p>]]></content><author><name></name></author><category term="bioinformatics"/><category term="genomics"/><category term="visualisation"/><category term="phylogeny"/><summary type="html"><![CDATA[A guide to generating a phylogenetic tree from whole genome sequencing data.]]></summary></entry><entry><title type="html">Visualising Gene Expression with a Heatmap using Python</title><link href="https://rj-price.github.io/blog/2024/heatmap/" rel="alternate" type="text/html" title="Visualising Gene Expression with a Heatmap using Python"/><published>2024-12-16T00:00:00+00:00</published><updated>2024-12-16T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/heatmap</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/heatmap/"><![CDATA[<p>Heatmaps are essential tools for exploring gene expression data, allowing us to visualise patterns across samples or conditions, revealing relationships and highlighting key trends.</p> <p>In our recent study published in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8">Plant Methods</a>, we used a heatmap to explore the expression of differentially expressed genes (DEGs) shared across four GRF-GIF chimera lines in the strawberry model organism, <em>Fragaria vesca</em>.</p> <p>In this post, I’ll explain how I generated the heatmap  (seen in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8/figures/4">Figure 4b</a>), which displays the expression profiles of shared DEGs identified in the <a href="https://rjprice.bio/blog/2024/venn/">4-way Venn diagram</a>, using a <a href="https://github.com/rj-price/h4_grf-gif_rna/blob/main/scripts/Shared%20DEGs%20Heatmap.ipynb">Python and Jupyter Notebook workflow</a>.</p> <p><br/></p> <h2 id="step-1-setting-up-the-environment">Step 1: Setting Up the Environment</h2> <p>First, the following Python libraries were imported:</p> <ul> <li><strong>numpy</strong> and <strong>pandas</strong> were used to import data and extract shared DEGs.</li> <li><strong>matplotlib</strong> and <strong>seaborn</strong> were used to generate the heatmap.</li> <li><strong>scipy.cluster.hierarchy</strong> was used to determine and reorientate sample clustering.</li> </ul> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="building-the-phylogenetic-tree">Building the Phylogenetic Tree</h3>
+
+<p>With the prepared dataset, I used <strong>RAxML-ng</strong> for phylogenetic inference:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbatch ../scripts/raxml.sh rhynchosporium_highqual.phy
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="visualising-the-tree">Visualising the Tree</h2>
+
+<p>The final phylogenetic tree was visualised using <a href="https://itol.embl.de/">iTOL</a>, a useful online tool for exploring and annotating trees. Below are examples of the visualisations generated:</p>
+
+<p><br /></p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/rhyncho_tree_branch-480.webp 480w,/assets/img/rhyncho_tree_branch-800.webp 800w,/assets/img/rhyncho_tree_branch-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/rhyncho_tree_branch.jpg" class="img-fluid" width="100%" height="auto" title="Phylogenetic Tree with Branch Distances" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/rhyncho_tree_no-branch-480.webp 480w,/assets/img/rhyncho_tree_no-branch-800.webp 800w,/assets/img/rhyncho_tree_no-branch-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/rhyncho_tree_no-branch.jpg" class="img-fluid" width="100%" height="auto" title="Phylogenetic Tree without Branch Distances" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    Phylogenetic tree of <i>Rhynchosporium commune</i> SNPs with and without branch lengths. Samples are coloured by country of origin.
+</div>
+
+<p><br /></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>Reconstructing a phylogenetic tree from WGS data is a multi-step process involving data preparation, SNP calling, and tree inference. This guide outlines the workflow for analysing <em>Rhynchosporium commune</em> WGS data but can be adapted for other species or datasets.</p>
+
+<p>By following these steps, you can uncover evolutionary insights and explore the genetic diversity of your own organisms of interest.</p>
+
+<p><br /></p>
+
+<h2 id="support">Support</h2>
+
+<p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p>
+
+<p style="text-align: center">
+    <a href="https://ko-fi.com/jordanprice" target="_blank">
+        <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>  
+</p>]]></content><author><name></name></author><category term="bioinformatics" /><category term="genomics" /><category term="visualisation" /><category term="phylogeny" /><summary type="html"><![CDATA[A guide to generating a phylogenetic tree from whole genome sequencing data.]]></summary></entry><entry><title type="html">Visualising Gene Expression with a Heatmap using Python</title><link href="https://rj-price.github.io/blog/2024/heatmap/" rel="alternate" type="text/html" title="Visualising Gene Expression with a Heatmap using Python" /><published>2024-12-16T00:00:00+00:00</published><updated>2024-12-16T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/heatmap</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/heatmap/"><![CDATA[<p>Heatmaps are essential tools for exploring gene expression data, allowing us to visualise patterns across samples or conditions, revealing relationships and highlighting key trends.</p>
+
+<p>In our recent study published in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8">Plant Methods</a>, we used a heatmap to explore the expression of differentially expressed genes (DEGs) shared across four GRF-GIF chimera lines in the strawberry model organism, <em>Fragaria vesca</em>.</p>
+
+<p>In this post, I’ll explain how I generated the heatmap  (seen in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8/figures/4">Figure 4b</a>), which displays the expression profiles of shared DEGs identified in the <a href="https://rjprice.bio/blog/2024/venn/">4-way Venn diagram</a>, using a <a href="https://github.com/rj-price/h4_grf-gif_rna/blob/main/scripts/Shared%20DEGs%20Heatmap.ipynb">Python and Jupyter Notebook workflow</a>.</p>
+
+<p><br /></p>
+
+<h2 id="step-1-setting-up-the-environment">Step 1: Setting Up the Environment</h2>
+
+<p>First, the following Python libraries were imported:</p>
+
+<ul>
+  <li><strong>numpy</strong> and <strong>pandas</strong> were used to import data and extract shared DEGs.</li>
+  <li><strong>matplotlib</strong> and <strong>seaborn</strong> were used to generate the heatmap.</li>
+  <li><strong>scipy.cluster.hierarchy</strong> was used to determine and reorientate sample clustering.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">pandas</span> <span class="k">as</span> <span class="n">pd</span>
 <span class="kn">import</span> <span class="n">numpy</span> <span class="k">as</span> <span class="n">np</span>
 <span class="kn">import</span> <span class="n">seaborn</span> <span class="k">as</span> <span class="n">sns</span>
 <span class="kn">import</span> <span class="n">matplotlib.pyplot</span> <span class="k">as</span> <span class="n">plt</span>
 <span class="kn">from</span> <span class="n">scipy.cluster.hierarchy</span> <span class="kn">import</span> <span class="n">linkage</span><span class="p">,</span> <span class="n">dendrogram</span>
-</code></pre></div></div> <p><br/></p> <h2 id="step-2-gather-data">Step 2: Gather Data</h2> <p>Our analysis focussed on DEGs from <em>F. vesca</em> lines transformed with GRF-GIF chimeras from citrus (Cc GRF-GIF), grape (Vv GRF-GIF), grape with microRNA perturbation (Vv miR GRF-GIF), and wheat (Ta GRF-GIF).</p> <p>Following differential expression analysis, I defined variables for each output file containing the log2 fold-change (log2FC) values, as well as the list of shared DEGs identified using a <a href="https://rjprice.bio/blog/2024/venn/">4-way Venn diagram</a>.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">condition1_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">GRF-GIF_Citris_vs_Control.tsv</span><span class="sh">"</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="step-2-gather-data">Step 2: Gather Data</h2>
+
+<p>Our analysis focussed on DEGs from <em>F. vesca</em> lines transformed with GRF-GIF chimeras from citrus (Cc GRF-GIF), grape (Vv GRF-GIF), grape with microRNA perturbation (Vv miR GRF-GIF), and wheat (Ta GRF-GIF).</p>
+
+<p>Following differential expression analysis, I defined variables for each output file containing the log2 fold-change (log2FC) values, as well as the list of shared DEGs identified using a <a href="https://rjprice.bio/blog/2024/venn/">4-way Venn diagram</a>.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">condition1_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">GRF-GIF_Citris_vs_Control.tsv</span><span class="sh">"</span>
 <span class="n">condition2_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">GRF-GIF_Vitis_miR_vs_Control.tsv</span><span class="sh">"</span>
 <span class="n">condition3_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">GRF-GIF_Vitis_vs_Control.tsv</span><span class="sh">"</span>
 <span class="n">condition4_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">GRF-GIF_Wheat_vs_Control.tsv</span><span class="sh">"</span>
 <span class="n">subset_file</span> <span class="o">=</span> <span class="sh">"</span><span class="s">shared_DEG_names.txt</span><span class="sh">"</span>
-</code></pre></div></div> <p><br/></p> <h2 id="step-3-extracting-and-organising-data">Step 3: Extracting and Organising Data</h2> <p>Next, I loaded the shared DEG names and iterated through the condition files to extract log2FC values for these genes. The extracted data was compiled into a single dataframe, where rows represented genes and columns represented conditions.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a set of shared DEG identifiers
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="step-3-extracting-and-organising-data">Step 3: Extracting and Organising Data</h2>
+
+<p>Next, I loaded the shared DEG names and iterated through the condition files to extract log2FC values for these genes. The extracted data was compiled into a single dataframe, where rows represented genes and columns represented conditions.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Create a set of shared DEG identifiers
 </span><span class="k">with</span> <span class="nf">open</span><span class="p">(</span><span class="n">subset_file</span><span class="p">,</span> <span class="sh">"</span><span class="s">r</span><span class="sh">"</span><span class="p">)</span> <span class="k">as</span> <span class="n">subset</span><span class="p">:</span>
     <span class="n">subset_genes</span> <span class="o">=</span> <span class="nf">set</span><span class="p">(</span><span class="n">line</span><span class="p">.</span><span class="nf">strip</span><span class="p">()</span> <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">subset</span><span class="p">)</span>
 
@@ -155,14 +713,39 @@ python ../scripts/ascbias.py <span class="nt">-p</span> ./rhynchosporium_highqua
 <span class="c1"># Reorder columns and set GeneID as index
 </span><span class="n">output_df</span> <span class="o">=</span> <span class="n">output_df</span><span class="p">[[</span><span class="sh">"</span><span class="s">GeneID</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Cc GRF-GIF</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Vv GRF-GIF</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Vv miR GRF-GIF</span><span class="sh">"</span><span class="p">,</span> <span class="sh">"</span><span class="s">Ta GRF-GIF</span><span class="sh">"</span><span class="p">]]</span>
 <span class="n">output_df</span><span class="p">.</span><span class="nf">set_index</span><span class="p">(</span><span class="sh">"</span><span class="s">GeneID</span><span class="sh">"</span><span class="p">,</span> <span class="n">inplace</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
-</code></pre></div></div> <p><br/></p> <h2 id="step-4-sample-hierarchy-visualisation">Step 4: Sample Hierarchy Visualisation</h2> <p>To better understand the relationships between conditions, I performed hierarchical clustering on the samples. This clustering helps to visualise how similar or distinct the conditions are based on DEG expression. It also allowed me to reorientate the sample order for consistent visualisation across all panels of the figure.</p> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Use hierarchical clustering to establish sample relationships
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="step-4-sample-hierarchy-visualisation">Step 4: Sample Hierarchy Visualisation</h2>
+
+<p>To better understand the relationships between conditions, I performed hierarchical clustering on the samples. This clustering helps to visualise how similar or distinct the conditions are based on DEG expression. It also allowed me to reorientate the sample order for consistent visualisation across all panels of the figure.</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Use hierarchical clustering to establish sample relationships
 </span><span class="n">link</span> <span class="o">=</span> <span class="nf">linkage</span><span class="p">(</span><span class="n">output_df</span><span class="p">.</span><span class="n">T</span><span class="p">)</span>
 <span class="n">_</span> <span class="o">=</span> <span class="nf">dendrogram</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
 
 <span class="c1"># Adjust sample order for intuitive visualisation
 </span><span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">][[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span> <span class="o">=</span> <span class="n">link</span><span class="p">[</span><span class="mi">2</span><span class="p">][[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]</span>
 <span class="n">_</span> <span class="o">=</span> <span class="nf">dendrogram</span><span class="p">(</span><span class="n">link</span><span class="p">)</span>
-</code></pre></div></div> <p><br/></p> <h2 id="step-5-generating-the-heatmap">Step 5: Generating the Heatmap</h2> <p>Finally, I visualised the shared DEG expression profiles using a clustered heatmap. The heatmap provides insights into expression patterns, highlighting upregulated and downregulated clusters.</p> <p><strong>Key parameters:</strong></p> <ul> <li><strong><code class="language-plaintext highlighter-rouge">cmap="vlag"</code>:</strong> Divergent color scheme for highlighting up/downregulation.</li> <li><strong><code class="language-plaintext highlighter-rouge">center=0</code>:</strong> Center the color scale at zero to distinguish positive and negative log2FC values.</li> <li><strong><code class="language-plaintext highlighter-rouge">dendrogram_ratio</code>:</strong> Adjust the ratio of dendrogram to heatmap size for readability.</li> <li><strong><code class="language-plaintext highlighter-rouge">row_cluster=True</code></strong>: Cluster genes to reveal groups with similar expression patterns.</li> </ul> <div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sns</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="step-5-generating-the-heatmap">Step 5: Generating the Heatmap</h2>
+
+<p>Finally, I visualised the shared DEG expression profiles using a clustered heatmap. The heatmap provides insights into expression patterns, highlighting upregulated and downregulated clusters.</p>
+
+<p><strong>Key parameters:</strong></p>
+
+<ul>
+  <li><strong><code class="language-plaintext highlighter-rouge">cmap="vlag"</code>:</strong> Divergent color scheme for highlighting up/downregulation.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">center=0</code>:</strong> Center the color scale at zero to distinguish positive and negative log2FC values.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">dendrogram_ratio</code>:</strong> Adjust the ratio of dendrogram to heatmap size for readability.</li>
+  <li><strong><code class="language-plaintext highlighter-rouge">row_cluster=True</code></strong>: Cluster genes to reveal groups with similar expression patterns.</li>
+</ul>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sns</span><span class="p">.</span><span class="nf">set</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)</span>
 <span class="n">shared_heatmap</span> <span class="o">=</span> <span class="n">sns</span><span class="p">.</span><span class="nf">clustermap</span><span class="p">(</span>
     <span class="n">output_df</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="sh">"</span><span class="s">vlag</span><span class="sh">"</span><span class="p">,</span> <span class="n">vmin</span><span class="o">=-</span><span class="mi">3</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">dendrogram_ratio</span><span class="o">=</span><span class="p">(.</span><span class="mi">1</span><span class="p">,</span> <span class="p">.</span><span class="mi">05</span><span class="p">),</span>
@@ -176,7 +759,93 @@ python ../scripts/ascbias.py <span class="nt">-p</span> ./rhynchosporium_highqua
 <span class="n">shared_heatmap</span><span class="p">.</span><span class="n">ax_heatmap</span><span class="p">.</span><span class="nf">set_xticklabels</span><span class="p">(</span><span class="n">shared_heatmap</span><span class="p">.</span><span class="n">ax_heatmap</span><span class="p">.</span><span class="nf">get_xticklabels</span><span class="p">(),</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">18</span><span class="p">)</span>
 
 <span class="n">shared_heatmap</span><span class="p">.</span><span class="nf">savefig</span><span class="p">(</span><span class="sh">'</span><span class="s">Shared DEGs Heatmap.tif</span><span class="sh">'</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">300</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="sh">"</span><span class="s">tight</span><span class="sh">"</span><span class="p">)</span>
-</code></pre></div></div> <p><br/></p> <h2 id="results">Results</h2> <p>The resulting heatmap revealed distinct clusters of genes with differentially shared expression across the four GRF-GIF lines. This visualisation provided a critical bridge between the <a href="https://rjprice.bio/blog/2024/venn/">4-way Venn analysis</a> and functional characterisation of shared DEGs.</p> <p><br/></p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/heatmap-480.webp 480w,/assets/img/heatmap-800.webp 800w,/assets/img/heatmap-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/heatmap.jpg" class="img-fluid" width="100%" height="auto" title="4-way Venn diagram" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <div class="caption"> Heatmap showing the log2FC expression of shared DEGs across citrus, grape, grape with miRNA perturbation, and wheat GRF-GIF lines in <i>F. vesca</i>. </div> <p><br/></p> <h2 id="summary">Summary</h2> <p>This step-by-step approach demonstrates how Python can streamline the process of DEG visualisation, from raw data to polished heatmaps. The insights gained through this analysis helped drive our understanding of GRF-GIF-mediated gene regulation.</p> <p>Explore the full notebook and other code from our paper in my <a href="https://github.com/rj-price/h4_grf-gif_rna">GitHub repository</a>.</p> <p><br/></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"/> </a> </p>]]></content><author><name></name></author><category term="bioinformatics"/><category term="rnaseq"/><category term="visualisation"/><category term="heatmap"/><summary type="html"><![CDATA[A guide to plotting a heatmap of differentially expressed genes (DEGs) in Python.]]></summary></entry><entry><title type="html">Estimating Genome Size Using Jellyfish and GenomeScope2</title><link href="https://rj-price.github.io/blog/2024/jellyfish/" rel="alternate" type="text/html" title="Estimating Genome Size Using Jellyfish and GenomeScope2"/><published>2024-11-17T00:00:00+00:00</published><updated>2024-11-17T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/jellyfish</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/jellyfish/"><![CDATA[<p>Understanding genome size is a fundamental step in genomics. It provides crucial insights into an organism’s biology, helps in planning sequencing projects, and is essential for interpreting downstream analyses.</p> <p>Estimating genome size from sequencing data is an efficient and cost-effective method that uses k-mer distributions to infer genome characteristics, including size, heterozygosity, and repeat content.</p> <p>In this blog post, we’ll walk through a workflow for genome size estimation using <strong>Jellyfish</strong> and <strong>GenomeScope2</strong>.</p> <p><br/></p> <h2 id="background">Background</h2> <h3 id="why-estimate-genome-size">Why Estimate Genome Size?</h3> <p>Genome size, most commonly measured in base pairs, varies widely across organisms. Accurate estimates guide sequencing depth requirements, inform assembly strategies, and provide insights into evolutionary biology, such as genome duplication or repeat content.</p> <p><br/></p> <h3 id="theory-behind-the-tools">Theory Behind the Tools</h3> <p><strong>K-mers</strong> are sequences of length <em>k</em> bases (e.g., 21 bases for <em>k = 21</em>). If <em>k</em> is sufficiently large to ensure uniqueness and the genome length greatly exceeds <em>k</em>, the total number of k-mers approximately equals the genome size. Sequencing errors and repeats influence k-mer counts, creating distinct patterns in k-mer frequency histograms.</p> <p><strong>Jellyfish</strong> efficiently counts k-mers in sequencing reads, producing a k-mer histogram that reflects the genome’s complexity. The peak of the histogram corresponds to the most frequent k-mer coverage, while the distribution of peaks reveals features such as heterozygosity, repeats, and sequencing errors.</p> <p><strong>GenomeScope2</strong> interprets k-mer histograms to estimate genome size, heterozygosity, and repeat content. It uses a statistical model to fit the histogram, assuming a specific ploidy. The output includes plots visualising the k-mer frequency distribution, estimated genome size, heterozygosity, and repeat content, providing an intuitive overview of the genome’s structure and complexity.</p> <p><br/></p> <h2 id="the-workflow">The Workflow</h2> <p>As an example, we’ll use a script that I wrote for analysing sequencing data from haploid fungal isolates, which is optimised for execution on a Slurm-based HPC cluster.</p> <p>Here is the script we’ll use:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="results">Results</h2>
+
+<p>The resulting heatmap revealed distinct clusters of genes with differentially shared expression across the four GRF-GIF lines. This visualisation provided a critical bridge between the <a href="https://rjprice.bio/blog/2024/venn/">4-way Venn analysis</a> and functional characterisation of shared DEGs.</p>
+
+<p><br /></p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/heatmap-480.webp 480w,/assets/img/heatmap-800.webp 800w,/assets/img/heatmap-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/heatmap.jpg" class="img-fluid" width="100%" height="auto" title="4-way Venn diagram" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    Heatmap showing the log2FC expression of shared DEGs across citrus, grape, grape with miRNA perturbation, and wheat GRF-GIF lines in <i>F. vesca</i>.
+</div>
+
+<p><br /></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>This step-by-step approach demonstrates how Python can streamline the process of DEG visualisation, from raw data to polished heatmaps. The insights gained through this analysis helped drive our understanding of GRF-GIF-mediated gene regulation.</p>
+
+<p>Explore the full notebook and other code from our paper in my <a href="https://github.com/rj-price/h4_grf-gif_rna">GitHub repository</a>.</p>
+
+<p><br /></p>
+
+<h2 id="support">Support</h2>
+
+<p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p>
+
+<p style="text-align: center">
+    <a href="https://ko-fi.com/jordanprice" target="_blank">
+        <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>  
+</p>]]></content><author><name></name></author><category term="bioinformatics" /><category term="rnaseq" /><category term="visualisation" /><category term="heatmap" /><summary type="html"><![CDATA[A guide to plotting a heatmap of differentially expressed genes (DEGs) in Python.]]></summary></entry><entry><title type="html">Estimating Genome Size Using Jellyfish and GenomeScope2</title><link href="https://rj-price.github.io/blog/2024/jellyfish/" rel="alternate" type="text/html" title="Estimating Genome Size Using Jellyfish and GenomeScope2" /><published>2024-11-17T00:00:00+00:00</published><updated>2024-11-17T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/jellyfish</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/jellyfish/"><![CDATA[<p>Understanding genome size is a fundamental step in genomics. It provides crucial insights into an organism’s biology, helps in planning sequencing projects, and is essential for interpreting downstream analyses.</p>
+
+<p>Estimating genome size from sequencing data is an efficient and cost-effective method that uses k-mer distributions to infer genome characteristics, including size, heterozygosity, and repeat content.</p>
+
+<p>In this blog post, we’ll walk through a workflow for genome size estimation using <strong>Jellyfish</strong> and <strong>GenomeScope2</strong>.</p>
+
+<p><br /></p>
+
+<h2 id="background">Background</h2>
+
+<h3 id="why-estimate-genome-size">Why Estimate Genome Size?</h3>
+
+<p>Genome size, most commonly measured in base pairs, varies widely across organisms. Accurate estimates guide sequencing depth requirements, inform assembly strategies, and provide insights into evolutionary biology, such as genome duplication or repeat content.</p>
+
+<p><br /></p>
+
+<h3 id="theory-behind-the-tools">Theory Behind the Tools</h3>
+
+<p><strong>K-mers</strong> are sequences of length <em>k</em> bases (e.g., 21 bases for <em>k = 21</em>). If <em>k</em> is sufficiently large to ensure uniqueness and the genome length greatly exceeds <em>k</em>, the total number of k-mers approximately equals the genome size. Sequencing errors and repeats influence k-mer counts, creating distinct patterns in k-mer frequency histograms.</p>
+
+<p><strong>Jellyfish</strong> efficiently counts k-mers in sequencing reads, producing a k-mer histogram that reflects the genome’s complexity. The peak of the histogram corresponds to the most frequent k-mer coverage, while the distribution of peaks reveals features such as heterozygosity, repeats, and sequencing errors.</p>
+
+<p><strong>GenomeScope2</strong> interprets k-mer histograms to estimate genome size, heterozygosity, and repeat content. It uses a statistical model to fit the histogram, assuming a specific ploidy. The output includes plots visualising the k-mer frequency distribution, estimated genome size, heterozygosity, and repeat content, providing an intuitive overview of the genome’s structure and complexity.</p>
+
+<p><br /></p>
+
+<h2 id="the-workflow">The Workflow</h2>
+
+<p>As an example, we’ll use a script that I wrote for analysing sequencing data from haploid fungal isolates, which is optimised for execution on a Slurm-based HPC cluster.</p>
+
+<p>Here is the script we’ll use:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
 <span class="c">#SBATCH -J jellyfish</span>
 <span class="c">#SBATCH --partition=short</span>
 <span class="c">#SBATCH --mem=4G</span>
@@ -208,9 +877,143 @@ genomescope2 <span class="nt">--input</span> <span class="nv">$OutDir</span>/<sp
 <span class="nb">echo</span> <span class="s2">"Run complete."</span>
 <span class="c"># If you're organism is a diploid, you can also upload $Prefix.histo to &lt;http://genomescope.org/&gt; to determine estimated genome size and heterozygosity rate.</span>
 
-</code></pre></div></div> <p><br/></p> <h3 id="inputs-and-parameters">Inputs and Parameters</h3> <ol> <li><strong>Reads:</strong> Path to the gzipped sequencing reads.</li> <li><strong>Prefix:</strong> Name prefix for output files.</li> <li><strong>OutDir:</strong> Directory to store output files.</li> <li><strong>KMER:</strong> K-mer size, typically 21-31 for most genomes.</li> </ol> <p><br/></p> <h3 id="outputs">Outputs</h3> <ul> <li><code class="language-plaintext highlighter-rouge">Prefix.jf</code>: Jellyfish database of k-mers.</li> <li><code class="language-plaintext highlighter-rouge">Prefix.histo</code>: K-mer frequency histogram.</li> <li>GenomeScope2 results, including plots and summary files documenting genome size estimate, heterozygosity, and repeat content.</li> </ul> <p><br/></p> <h2 id="step-by-step-breakdown">Step-by-Step Breakdown</h2> <h3 id="step-1-k-mer-counting-with-jellyfish">Step 1: K-mer Counting with Jellyfish</h3> <p>Jellyfish efficiently counts k-mers from sequencing reads. The script uses:</p> <ul> <li><code class="language-plaintext highlighter-rouge">C</code>: Counts canonical k-mers (ignores reverse complements).</li> <li><code class="language-plaintext highlighter-rouge">m</code>: Specifies the k-mer length.</li> <li><code class="language-plaintext highlighter-rouge">s</code>: Sets the hash size (1G here).</li> <li><code class="language-plaintext highlighter-rouge">t</code>: Threads for parallel processing.</li> </ul> <p><br/></p> <h3 id="step-2-generate-k-mer-histogram">Step 2: Generate K-mer Histogram</h3> <p>The histogram shows k-mer frequencies. A typical histogram includes:</p> <ul> <li>A sharp peak at low frequencies (sequencing errors).</li> <li>A main peak (true genomic k-mers).</li> <li>Secondary peaks (repeats or heterozygous k-mers).</li> </ul> <p><br/></p> <h3 id="step-3-analyze-with-genomescope2">Step 3: Analyze with GenomeScope2</h3> <p>GenomeScope2 fits a model to the k-mer histogram:</p> <ul> <li>Estimates genome size.</li> <li>Identifies heterozygosity and repeat content.</li> <li>Supports different ploidies.</li> </ul> <p>The results include detailed plots, such as the k-mer frequency distribution, and numerical summaries, making it easy to interpret the genome’s complexity and structure.</p> <p><br/></p> <h2 id="running-the-script">Running the Script</h2> <h3 id="example-command">Example Command</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbatch genome_size_estimation.sh reads.fq.gz sample_name ./output_dir 21
+</code></pre></div></div>
 
-</code></pre></div></div> <ul> <li><code class="language-plaintext highlighter-rouge">reads.fq.gz</code>: Input sequencing reads.</li> <li><code class="language-plaintext highlighter-rouge">sample_name</code>: Prefix for output files.</li> <li><code class="language-plaintext highlighter-rouge">./output_dir</code>: Directory for results.</li> <li><code class="language-plaintext highlighter-rouge">21</code>: K-mer size.</li> </ul> <p><br/></p> <h3 id="interpreting-results">Interpreting Results</h3> <p>The GenomeScope2 output includes:</p> <ul> <li><strong>Genome Size:</strong> Estimated size in base pairs.</li> <li><strong>Heterozygosity:</strong> Proportion of heterozygous sites.</li> <li><strong>Repeat Content:</strong> Percentage of the genome that is repetitive.</li> </ul> <p><br/></p> <h2 id="additional-tips">Additional Tips</h2> <ol> <li><strong>Choosing K-mer Size:</strong> <ul> <li>Smaller k-mers capture more data but may inflate error peaks.</li> <li>Larger k-mers reduce errors but require higher coverage.</li> </ul> </li> <li><strong>Quality Control:</strong> Ensure input reads are high quality and adapter-trimmed.</li> <li><strong>Ploidy Consideration:</strong> For diploid organisms, adjust <code class="language-plaintext highlighter-rouge">-ploidy</code> to 2 in GenomeScope2.</li> </ol> <p><br/></p> <p>By integrating Jellyfish and GenomeScope2, you can quickly estimate genome size and other critical genomic properties. This workflow is especially useful for non-model organisms or projects in the early stages of genomic analysis.</p> <p><br/></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"/> </a> </p>]]></content><author><name></name></author><category term="bioinformatics"/><category term="genomics"/><category term="visualisation"/><category term="kmer"/><summary type="html"><![CDATA[A guide to estimating genome size using k-mer distributions.]]></summary></entry><entry><title type="html">4-Way Venn Diagram of Overlapping Gene Expression in R</title><link href="https://rj-price.github.io/blog/2024/venn/" rel="alternate" type="text/html" title="4-Way Venn Diagram of Overlapping Gene Expression in R"/><published>2024-10-07T00:00:00+00:00</published><updated>2024-10-07T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/venn</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/venn/"><![CDATA[<p>Visualising the overlap between differentially expressed genes (DEGs) across conditions or species is key to uncovering shared biological pathways from transcriptomics data.</p> <p>In our recent study published in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8">Plant Methods</a>, we analysed RNAseq data to investigate the impact of GRF-GIF developmental regulator chimeras on gene expression in the strawberry model organism <em>Fragaria vesca</em>.</p> <p>In this blog post, we’ll take a quick walk through how I created the 4-way Venn diagram (seen in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8/figures/4">Figure 4c</a>) that compares DEGs between four different lines using R.</p> <p><br/></p> <h2 id="data">Data</h2> <p>Our analysis focussed on DEGs from <em>F. vesca</em> lines transformed with GRF-GIF chimeras from citrus (Cc GRF-GIF), grape (Vv GRF-GIF), grape with microRNA perturbation (Vv miR GRF-GIF), and wheat (Ta GRF-GIF).</p> <p>Following differential expression testing using DESeq2, I exported the DEG names for each line to a new file, imported these into R and created a list of the data for the Venn diagram.</p> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import DEG gene names</span><span class="w">
+<p><br /></p>
+
+<h3 id="inputs-and-parameters">Inputs and Parameters</h3>
+
+<ol>
+  <li><strong>Reads:</strong> Path to the gzipped sequencing reads.</li>
+  <li><strong>Prefix:</strong> Name prefix for output files.</li>
+  <li><strong>OutDir:</strong> Directory to store output files.</li>
+  <li><strong>KMER:</strong> K-mer size, typically 21-31 for most genomes.</li>
+</ol>
+
+<p><br /></p>
+
+<h3 id="outputs">Outputs</h3>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">Prefix.jf</code>: Jellyfish database of k-mers.</li>
+  <li><code class="language-plaintext highlighter-rouge">Prefix.histo</code>: K-mer frequency histogram.</li>
+  <li>GenomeScope2 results, including plots and summary files documenting genome size estimate, heterozygosity, and repeat content.</li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="step-by-step-breakdown">Step-by-Step Breakdown</h2>
+
+<h3 id="step-1-k-mer-counting-with-jellyfish">Step 1: K-mer Counting with Jellyfish</h3>
+
+<p>Jellyfish efficiently counts k-mers from sequencing reads. The script uses:</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">C</code>: Counts canonical k-mers (ignores reverse complements).</li>
+  <li><code class="language-plaintext highlighter-rouge">m</code>: Specifies the k-mer length.</li>
+  <li><code class="language-plaintext highlighter-rouge">s</code>: Sets the hash size (1G here).</li>
+  <li><code class="language-plaintext highlighter-rouge">t</code>: Threads for parallel processing.</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="step-2-generate-k-mer-histogram">Step 2: Generate K-mer Histogram</h3>
+
+<p>The histogram shows k-mer frequencies. A typical histogram includes:</p>
+
+<ul>
+  <li>A sharp peak at low frequencies (sequencing errors).</li>
+  <li>A main peak (true genomic k-mers).</li>
+  <li>Secondary peaks (repeats or heterozygous k-mers).</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="step-3-analyze-with-genomescope2">Step 3: Analyze with GenomeScope2</h3>
+
+<p>GenomeScope2 fits a model to the k-mer histogram:</p>
+
+<ul>
+  <li>Estimates genome size.</li>
+  <li>Identifies heterozygosity and repeat content.</li>
+  <li>Supports different ploidies.</li>
+</ul>
+
+<p>The results include detailed plots, such as the k-mer frequency distribution, and numerical summaries, making it easy to interpret the genome’s complexity and structure.</p>
+
+<p><br /></p>
+
+<h2 id="running-the-script">Running the Script</h2>
+
+<h3 id="example-command">Example Command</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sbatch genome_size_estimation.sh reads.fq.gz sample_name ./output_dir 21
+
+</code></pre></div></div>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">reads.fq.gz</code>: Input sequencing reads.</li>
+  <li><code class="language-plaintext highlighter-rouge">sample_name</code>: Prefix for output files.</li>
+  <li><code class="language-plaintext highlighter-rouge">./output_dir</code>: Directory for results.</li>
+  <li><code class="language-plaintext highlighter-rouge">21</code>: K-mer size.</li>
+</ul>
+
+<p><br /></p>
+
+<h3 id="interpreting-results">Interpreting Results</h3>
+
+<p>The GenomeScope2 output includes:</p>
+
+<ul>
+  <li><strong>Genome Size:</strong> Estimated size in base pairs.</li>
+  <li><strong>Heterozygosity:</strong> Proportion of heterozygous sites.</li>
+  <li><strong>Repeat Content:</strong> Percentage of the genome that is repetitive.</li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="additional-tips">Additional Tips</h2>
+
+<ol>
+  <li><strong>Choosing K-mer Size:</strong>
+    <ul>
+      <li>Smaller k-mers capture more data but may inflate error peaks.</li>
+      <li>Larger k-mers reduce errors but require higher coverage.</li>
+    </ul>
+  </li>
+  <li><strong>Quality Control:</strong> Ensure input reads are high quality and adapter-trimmed.</li>
+  <li><strong>Ploidy Consideration:</strong> For diploid organisms, adjust <code class="language-plaintext highlighter-rouge">-ploidy</code> to 2 in GenomeScope2.</li>
+</ol>
+
+<p><br /></p>
+
+<p>By integrating Jellyfish and GenomeScope2, you can quickly estimate genome size and other critical genomic properties. This workflow is especially useful for non-model organisms or projects in the early stages of genomic analysis.</p>
+
+<p><br /></p>
+
+<h2 id="support">Support</h2>
+
+<p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p>
+
+<p style="text-align: center">
+    <a href="https://ko-fi.com/jordanprice" target="_blank">
+        <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>  
+</p>]]></content><author><name></name></author><category term="bioinformatics" /><category term="genomics" /><category term="visualisation" /><category term="kmer" /><summary type="html"><![CDATA[A guide to estimating genome size using k-mer distributions.]]></summary></entry><entry><title type="html">4-Way Venn Diagram of Overlapping Gene Expression in R</title><link href="https://rj-price.github.io/blog/2024/venn/" rel="alternate" type="text/html" title="4-Way Venn Diagram of Overlapping Gene Expression in R" /><published>2024-10-07T00:00:00+00:00</published><updated>2024-10-07T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/venn</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/venn/"><![CDATA[<p>Visualising the overlap between differentially expressed genes (DEGs) across conditions or species is key to uncovering shared biological pathways from transcriptomics data.</p>
+
+<p>In our recent study published in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8">Plant Methods</a>, we analysed RNAseq data to investigate the impact of GRF-GIF developmental regulator chimeras on gene expression in the strawberry model organism <em>Fragaria vesca</em>.</p>
+
+<p>In this blog post, we’ll take a quick walk through how I created the 4-way Venn diagram (seen in <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8/figures/4">Figure 4c</a>) that compares DEGs between four different lines using R.</p>
+
+<p><br /></p>
+
+<h2 id="data">Data</h2>
+
+<p>Our analysis focussed on DEGs from <em>F. vesca</em> lines transformed with GRF-GIF chimeras from citrus (Cc GRF-GIF), grape (Vv GRF-GIF), grape with microRNA perturbation (Vv miR GRF-GIF), and wheat (Ta GRF-GIF).</p>
+
+<p>Following differential expression testing using DESeq2, I exported the DEG names for each line to a new file, imported these into R and created a list of the data for the Venn diagram.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Import DEG gene names</span><span class="w">
 </span><span class="n">citris</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readLines</span><span class="p">(</span><span class="s2">"GRF-GIF_Citris_vs_Control_SigDEGs_names.txt"</span><span class="p">)</span><span class="w">
 </span><span class="n">vitis</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readLines</span><span class="p">(</span><span class="s2">"GRF-GIF_Vitis_vs_Control_SigDEGs_names.txt"</span><span class="p">)</span><span class="w">
 </span><span class="n">vitis_miR</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readLines</span><span class="p">(</span><span class="s2">"GRF-GIF_Vitis_miR_vs_Control_SigDEGs_names.txt"</span><span class="p">)</span><span class="w">
@@ -222,34 +1025,164 @@ genomescope2 <span class="nt">--input</span> <span class="nv">$OutDir</span>/<sp
   </span><span class="s2">"Vv GRF-GIF"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vitis</span><span class="p">,</span><span class="w"> 
   </span><span class="s2">"Vv miR GRF-GIF"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">vitis_miR</span><span class="p">,</span><span class="w">
   </span><span class="s2">"Ta GRF-GIF"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wheat</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div> <p><br/></p> <h2 id="visualization">Visualization</h2> <p>For the Venn diagram visualisation, I used the R package <a href="https://github.com/yanlinlin82/ggvenn">ggvenn</a>. If you haven’t already installed the <strong>ggvenn</strong> package, you can do so with the following commands:</p> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Install package</span><span class="w">
+</span></code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="visualization">Visualization</h2>
+
+<p>For the Venn diagram visualisation, I used the R package <a href="https://github.com/yanlinlin82/ggvenn">ggvenn</a>. If you haven’t already installed the <strong>ggvenn</strong> package, you can do so with the following commands:</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Install package</span><span class="w">
 </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">require</span><span class="p">(</span><span class="n">devtools</span><span class="p">))</span><span class="w"> </span><span class="n">install.packages</span><span class="p">(</span><span class="s2">"devtools"</span><span class="p">)</span><span class="w">
 </span><span class="n">devtools</span><span class="o">::</span><span class="n">install_github</span><span class="p">(</span><span class="s2">"yanlinlin82/ggvenn"</span><span class="p">)</span><span class="w">
 
 </span><span class="c1"># Load library</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">ggvenn</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div> <p>I created a 4-way Venn diagram using custom color coding for each GRF-GIF line, making it easy to discern the contribution of each set. I also customised the plot by decreasing the line width, increasing the font size for the name of each line, and disabling the percentage visualisation.</p> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot 4-way venn diagram</span><span class="w">
+</span></code></pre></div></div>
+
+<p>I created a 4-way Venn diagram using custom color coding for each GRF-GIF line, making it easy to discern the contribution of each set. I also customised the plot by decreasing the line width, increasing the font size for the name of each line, and disabling the percentage visualisation.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Plot 4-way venn diagram</span><span class="w">
 </span><span class="n">ggvenn</span><span class="p">(</span><span class="w">
   </span><span class="n">venndata</span><span class="p">,</span><span class="w"> 
   </span><span class="n">fill_color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"#0073C2FF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"#EFC000FF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"#868686FF"</span><span class="p">,</span><span class="w"> </span><span class="s2">"#CD534CFF"</span><span class="p">),</span><span class="w">
   </span><span class="n">stroke_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">,</span><span class="w"> </span><span class="n">set_name_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">5</span><span class="p">,</span><span class="w"> </span><span class="n">show_percentage</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="w">
 </span><span class="p">)</span><span class="w">
-</span></code></pre></div></div> <p>The resulting diagram (below) provides a clear visual representation of shared and unique gene sets, aiding in the identification of conserved and species-specific responses to GRF-GIF expression.</p> <p><br/></p> <div class="row"> <div class="col-sm mt-3 mt-md-0"> <figure> <picture> <source class="responsive-img-srcset" srcset="/assets/img/venn_diagram-480.webp 480w,/assets/img/venn_diagram-800.webp 800w,/assets/img/venn_diagram-1400.webp 1400w," sizes="95vw" type="image/webp"/> <img src="/assets/img/venn_diagram.jpg" class="img-fluid" width="100%" height="auto" title="4-way Venn diagram" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();"/> </picture> </figure> </div> </div> <div class="caption"> 4-way Venn diagram showing the overlap of DEGs across citrus, grape, grape with miRNA perturbation, and wheat GRF-GIF lines in <i>F. vesca</i>. </div> <p><br/></p> <h2 id="key-insights">Key Insights</h2> <p>Beyond visualisation, I used the <strong>gplots</strong> library to extract a table of the overlapping gene names for downstream analysis.</p> <div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Extract overlapping genes</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The resulting diagram (below) provides a clear visual representation of shared and unique gene sets, aiding in the identification of conserved and species-specific responses to GRF-GIF expression.</p>
+
+<p><br /></p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+  <picture>
+    <!-- Auto scaling with imagemagick -->
+    <!--
+      See https://www.debugbear.com/blog/responsive-images#w-descriptors-and-the-sizes-attribute and
+      https://developer.mozilla.org/en-US/docs/Learn/HTML/Multimedia_and_embedding/Responsive_images for info on defining 'sizes' for responsive images
+    -->
+    
+      <source class="responsive-img-srcset" srcset="/assets/img/venn_diagram-480.webp 480w,/assets/img/venn_diagram-800.webp 800w,/assets/img/venn_diagram-1400.webp 1400w," sizes="95vw" type="image/webp" />
+    
+    <img src="/assets/img/venn_diagram.jpg" class="img-fluid" width="100%" height="auto" title="4-way Venn diagram" loading="eager" onerror="this.onerror=null; $('.responsive-img-srcset').remove();" />
+  </picture>
+
+  
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    4-way Venn diagram showing the overlap of DEGs across citrus, grape, grape with miRNA perturbation, and wheat GRF-GIF lines in <i>F. vesca</i>.
+</div>
+
+<p><br /></p>
+
+<h2 id="key-insights">Key Insights</h2>
+
+<p>Beyond visualisation, I used the <strong>gplots</strong> library to extract a table of the overlapping gene names for downstream analysis.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Extract overlapping genes</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">gplots</span><span class="p">)</span><span class="w">
 </span><span class="n">v.table</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">venn</span><span class="p">(</span><span class="n">venndata</span><span class="p">)</span><span class="w">
 </span><span class="n">print</span><span class="p">(</span><span class="n">v.table</span><span class="p">)</span><span class="w">
-</span></code></pre></div></div> <p>By exporting and analysing the intersection of gene sets, we were able to identify clusters of genes that were consistently regulated across certain groups of lines. These conserved gene clusters may represent fundamental mechanisms by which GRF-GIF chimeras regulate growth and development across species, providing a basis for future functional studies.</p> <p><br/></p> <h2 id="summary">Summary</h2> <p>A 4-way Venn diagram is a powerful tool to explore cross-sample gene expression. It underscores the utility of comparative transcriptomics in understanding conserved genetic responses and tailoring biotechnological interventions.</p> <p>If you’re interested in learning more about our study, you can read the full paper <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8">here</a>. Otherwise, feel free to adapt the visualisation for your own datasets and explore the intersections within your gene sets.</p> <p><br/></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"/> </a> </p>]]></content><author><name></name></author><category term="bioinformatics"/><category term="rnaseq"/><category term="visualisation"/><category term="venn"/><summary type="html"><![CDATA[A guide to visualising the overlap between differentially expressed genes (DEGs) in R.]]></summary></entry><entry><title type="html">Useful Bash Aliases and Functions</title><link href="https://rj-price.github.io/blog/2024/dotfiles/" rel="alternate" type="text/html" title="Useful Bash Aliases and Functions"/><published>2024-09-20T00:00:00+00:00</published><updated>2024-09-20T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/dotfiles</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/dotfiles/"><![CDATA[<p>Working efficiently on the command line can significantly enhance your productivity, especially when you’re frequently performing repetitive tasks.</p> <p>In this post, I’ll share some of my favorite bash aliases and functions that I’ve accumulated from around the web and find incredibly useful. These shortcuts and helpers streamline various tasks, from file operations to Git commands, making your workflow smoother and more efficient.</p> <p><br/></p> <h2 id="general-shortcuts">General Shortcuts</h2> <h3 id="date-and-job-queue">Date and Job Queue</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">Q</span><span class="o">=</span><span class="s2">"date &amp;&amp; squeue --user jnprice"</span>
-</code></pre></div></div> <p>This is probably my most used shortcut. When running jobs on our Slurm-based HPC, I like to be able to see the current date and time, as well as the status of my jobs in the queue using <code class="language-plaintext highlighter-rouge">squeue</code>. It’s really handy for keeping track of the time of your job submissions without needing to run multiple commands.</p> <p><br/></p> <h3 id="listing-files">Listing Files</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">lh</span><span class="o">=</span><span class="s2">"ls -lh"</span>
-</code></pre></div></div> <p>I often want to list the contents of a directory in the long format so that I can check file sizes and modification time. The <code class="language-plaintext highlighter-rouge">ls -lh</code> command lists files in the current directory with human-readable file sizes. Using this alias makes it easier to quickly see file sizes without needing to interpret byte counts.</p> <p><br/></p> <h3 id="directory-operations">Directory Operations</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">md</span><span class="o">=</span><span class="s2">"mkdir"</span>
+</span></code></pre></div></div>
+
+<p>By exporting and analysing the intersection of gene sets, we were able to identify clusters of genes that were consistently regulated across certain groups of lines. These conserved gene clusters may represent fundamental mechanisms by which GRF-GIF chimeras regulate growth and development across species, providing a basis for future functional studies.</p>
+
+<p><br /></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>A 4-way Venn diagram is a powerful tool to explore cross-sample gene expression. It underscores the utility of comparative transcriptomics in understanding conserved genetic responses and tailoring biotechnological interventions.</p>
+
+<p>If you’re interested in learning more about our study, you can read the full paper <a href="https://plantmethods.biomedcentral.com/articles/10.1186/s13007-024-01270-8">here</a>. Otherwise, feel free to adapt the visualisation for your own datasets and explore the intersections within your gene sets.</p>
+
+<p><br /></p>
+
+<h2 id="support">Support</h2>
+
+<p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p>
+
+<p style="text-align: center">
+    <a href="https://ko-fi.com/jordanprice" target="_blank">
+        <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>  
+</p>]]></content><author><name></name></author><category term="bioinformatics" /><category term="rnaseq" /><category term="visualisation" /><category term="venn" /><summary type="html"><![CDATA[A guide to visualising the overlap between differentially expressed genes (DEGs) in R.]]></summary></entry><entry><title type="html">Useful Bash Aliases and Functions</title><link href="https://rj-price.github.io/blog/2024/dotfiles/" rel="alternate" type="text/html" title="Useful Bash Aliases and Functions" /><published>2024-09-20T00:00:00+00:00</published><updated>2024-09-20T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/dotfiles</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/dotfiles/"><![CDATA[<p>Working efficiently on the command line can significantly enhance your productivity, especially when you’re frequently performing repetitive tasks.</p>
+
+<p>In this post, I’ll share some of my favorite bash aliases and functions that I’ve accumulated from around the web and find incredibly useful. These shortcuts and helpers streamline various tasks, from file operations to Git commands, making your workflow smoother and more efficient.</p>
+
+<p><br /></p>
+
+<h2 id="general-shortcuts">General Shortcuts</h2>
+
+<h3 id="date-and-job-queue">Date and Job Queue</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">Q</span><span class="o">=</span><span class="s2">"date &amp;&amp; squeue --user jnprice"</span>
+</code></pre></div></div>
+
+<p>This is probably my most used shortcut. When running jobs on our Slurm-based HPC, I like to be able to see the current date and time, as well as the status of my jobs in the queue using <code class="language-plaintext highlighter-rouge">squeue</code>. It’s really handy for keeping track of the time of your job submissions without needing to run multiple commands.</p>
+
+<p><br /></p>
+
+<h3 id="listing-files">Listing Files</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">lh</span><span class="o">=</span><span class="s2">"ls -lh"</span>
+</code></pre></div></div>
+
+<p>I often want to list the contents of a directory in the long format so that I can check file sizes and modification time. The <code class="language-plaintext highlighter-rouge">ls -lh</code> command lists files in the current directory with human-readable file sizes. Using this alias makes it easier to quickly see file sizes without needing to interpret byte counts.</p>
+
+<p><br /></p>
+
+<h3 id="directory-operations">Directory Operations</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">md</span><span class="o">=</span><span class="s2">"mkdir"</span>
 <span class="nb">alias </span><span class="nv">rd</span><span class="o">=</span><span class="s2">"rmdir"</span>
-</code></pre></div></div> <p>I’m extremely <del>lazy</del> efficient and these aliases simplify the creation and removal of directories. <code class="language-plaintext highlighter-rouge">md</code> for making directories and <code class="language-plaintext highlighter-rouge">rd</code> for removing them. Intuitive and saves me a few keystrokes.</p> <p><br/></p> <h3 id="create-and-navigate">Create and Navigate</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>mkcd<span class="o">()</span> <span class="o">{</span>
+</code></pre></div></div>
+
+<p>I’m extremely <del>lazy</del> efficient and these aliases simplify the creation and removal of directories. <code class="language-plaintext highlighter-rouge">md</code> for making directories and <code class="language-plaintext highlighter-rouge">rd</code> for removing them. Intuitive and saves me a few keystrokes.</p>
+
+<p><br /></p>
+
+<h3 id="create-and-navigate">Create and Navigate</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>mkcd<span class="o">()</span> <span class="o">{</span>
     <span class="nb">mkdir</span> <span class="nt">-p</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="o">&amp;&amp;</span> <span class="nb">cd</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
 <span class="o">}</span>
-</code></pre></div></div> <p>I’m constantly creating directories to keep my analyses organised. This function creates a directory (and any necessary parent directories) and then navigates into it. It’s perfect for when you want to create a new directory and start working in it immediately.</p> <p><br/></p> <h3 id="interactive-file-operations">Interactive File Operations</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias rm</span><span class="o">=</span><span class="s2">"rm -i"</span>
+</code></pre></div></div>
+
+<p>I’m constantly creating directories to keep my analyses organised. This function creates a directory (and any necessary parent directories) and then navigates into it. It’s perfect for when you want to create a new directory and start working in it immediately.</p>
+
+<p><br /></p>
+
+<h3 id="interactive-file-operations">Interactive File Operations</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias rm</span><span class="o">=</span><span class="s2">"rm -i"</span>
 <span class="nb">alias mv</span><span class="o">=</span><span class="s1">'mv -i'</span>
 <span class="nb">alias cp</span><span class="o">=</span><span class="s1">'cp -i'</span>
-</code></pre></div></div> <p>Like many others, I’ve had some bad experiences using <code class="language-plaintext highlighter-rouge">rm</code> with wildcards. These aliases have saved me several times and make the <code class="language-plaintext highlighter-rouge">rm</code>, <code class="language-plaintext highlighter-rouge">mv</code>, and <code class="language-plaintext highlighter-rouge">cp</code> commands interactive by prompting you before making any changes, preventing accidental deletions or overwrites. If you’re feeling brave, these can be overridden with the <code class="language-plaintext highlighter-rouge">-f</code> flag.</p> <p><br/></p> <h3 id="disk-usage">Disk Usage</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">duh</span><span class="o">=</span><span class="s1">'du -sh ./* ./.*'</span>
-</code></pre></div></div> <p>When using a shared system, it’s important to be a considerate user and keep an eye on how much disk space you’re using. This alias calculates disk usage for all files and directories in the current directory, including hidden ones, and presents the information in a human-readable format. It’s very handy for identifying what’s taking up space before a quick tidy up.</p> <p><br/></p> <h2 id="universal-extractor">Universal Extractor</h2> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract <span class="o">()</span> <span class="o">{</span>
+</code></pre></div></div>
+
+<p>Like many others, I’ve had some bad experiences using <code class="language-plaintext highlighter-rouge">rm</code> with wildcards. These aliases have saved me several times and make the <code class="language-plaintext highlighter-rouge">rm</code>, <code class="language-plaintext highlighter-rouge">mv</code>, and <code class="language-plaintext highlighter-rouge">cp</code> commands interactive by prompting you before making any changes, preventing accidental deletions or overwrites. If you’re feeling brave, these can be overridden with the <code class="language-plaintext highlighter-rouge">-f</code> flag.</p>
+
+<p><br /></p>
+
+<h3 id="disk-usage">Disk Usage</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">duh</span><span class="o">=</span><span class="s1">'du -sh ./* ./.*'</span>
+</code></pre></div></div>
+
+<p>When using a shared system, it’s important to be a considerate user and keep an eye on how much disk space you’re using. This alias calculates disk usage for all files and directories in the current directory, including hidden ones, and presents the information in a human-readable format. It’s very handy for identifying what’s taking up space before a quick tidy up.</p>
+
+<p><br /></p>
+
+<h2 id="universal-extractor">Universal Extractor</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>extract <span class="o">()</span> <span class="o">{</span>
   <span class="k">if</span> <span class="o">[</span> <span class="nv">$# </span><span class="nt">-ne</span> 1 <span class="o">]</span>
   <span class="k">then
     </span><span class="nb">echo</span> <span class="s2">"Error: No file specified."</span>
@@ -274,41 +1207,446 @@ genomescope2 <span class="nt">--input</span> <span class="nv">$OutDir</span>/<sp
     </span><span class="nb">echo</span> <span class="s2">"'</span><span class="nv">$1</span><span class="s2">' is not a valid file"</span>
   <span class="k">fi</span>
 <span class="o">}</span>
-</code></pre></div></div> <p>Whether you’ve generated it yourself or you’ve downloaded it from a public database, lots of data is compressed to save space. This versatile function handles the extraction of almost all of the compressed file types that you’re likely to come across. The best thing is that you only need to remember one command to extract files, regardless of their format.</p> <p><br/></p> <h2 id="git-aliases">Git Aliases</h2> <p>Using Git for version control is obviously important for providing a history of any changes made, enabling easy tracking, reversing, and keeping track of modifications over time. These last few shortcuts make working with Git just a bit easier.</p> <p><br/></p> <h3 id="git-status">Git Status</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">gstatus</span><span class="o">=</span><span class="s1">'git status -sb'</span>
-</code></pre></div></div> <p>This alias provides a succinct summary of the Git status, showing changes in a brief format which I find easier and quicker to read than the normal output.</p> <p><br/></p> <h3 id="git-branch">Git Branch</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">gbranch</span><span class="o">=</span><span class="s2">"git checkout -b "</span>
-</code></pre></div></div> <p>You can use this shortcut to quickly create and switch to a new Git branch, making it a simple way to streamline branch management.</p> <p><br/></p> <h3 id="lazy-git-commit">Lazy Git Commit</h3> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>lazygit<span class="o">()</span> <span class="o">{</span>
+</code></pre></div></div>
+
+<p>Whether you’ve generated it yourself or you’ve downloaded it from a public database, lots of data is compressed to save space. This versatile function handles the extraction of almost all of the compressed file types that you’re likely to come across. The best thing is that you only need to remember one command to extract files, regardless of their format.</p>
+
+<p><br /></p>
+
+<h2 id="git-aliases">Git Aliases</h2>
+
+<p>Using Git for version control is obviously important for providing a history of any changes made, enabling easy tracking, reversing, and keeping track of modifications over time. These last few shortcuts make working with Git just a bit easier.</p>
+
+<p><br /></p>
+
+<h3 id="git-status">Git Status</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">gstatus</span><span class="o">=</span><span class="s1">'git status -sb'</span>
+</code></pre></div></div>
+
+<p>This alias provides a succinct summary of the Git status, showing changes in a brief format which I find easier and quicker to read than the normal output.</p>
+
+<p><br /></p>
+
+<h3 id="git-branch">Git Branch</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">alias </span><span class="nv">gbranch</span><span class="o">=</span><span class="s2">"git checkout -b "</span>
+</code></pre></div></div>
+
+<p>You can use this shortcut to quickly create and switch to a new Git branch, making it a simple way to streamline branch management.</p>
+
+<p><br /></p>
+
+<h3 id="lazy-git-commit">Lazy Git Commit</h3>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>lazygit<span class="o">()</span> <span class="o">{</span>
     git add <span class="nb">.</span>
     git commit <span class="nt">-m</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span>
     git push
 <span class="o">}</span>
-</code></pre></div></div> <p>The ultimate function for any time conscious bioinformatician! This stages all changes, commits them with a specified message, and pushes to the remote repository. It’s a super convenient way to quickly commit all your changes with a single command.</p> <p><br/></p> <p>By incorporating these aliases and functions into your <code class="language-plaintext highlighter-rouge">.bashrc</code> or <code class="language-plaintext highlighter-rouge">.bash_profile</code>, you can reduce the amount of typing and save time, working smarter not harder!</p> <p><br/></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"/> </a> </p>]]></content><author><name></name></author><category term="bioinformatics"/><category term="bash"/><summary type="html"><![CDATA[A collection of handy shortcuts to speed up your work on the command line.]]></summary></entry><entry><title type="html">Getting Started with the Bash Command Line</title><link href="https://rj-price.github.io/blog/2024/bash/" rel="alternate" type="text/html" title="Getting Started with the Bash Command Line"/><published>2024-08-17T00:00:00+00:00</published><updated>2024-08-17T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/bash</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/bash/"><![CDATA[<p>The Bash command line is an essential tool for bioinformaticians, programmers, and system administrators alike. It provides a powerful interface to interact with your computer, allowing you to perform a variety of tasks efficiently.</p> <p>Whether you’re managing files, running scripts, or configuring systems, mastering the Bash command line will greatly enhance your productivity. In this short guide, we’ll cover the basics of working with Bash to get you up and running as quickly as possible.</p> <p><br/></p> <h2 id="what-is-bash">What is Bash?</h2> <p>Bash (Bourne Again SHell) is a Unix shell and command language that is widely used as the default login shell on Linux and macOS systems. Bash allows users to execute commands, automate tasks using scripts, and manage system resources.</p> <p><br/></p> <h2 id="getting-started">Getting Started</h2> <p>To start using Bash, you need to open a terminal window:</p> <ul> <li><strong>Linux</strong>: Search for “Terminal” in your applications menu.</li> <li><strong>macOS</strong>: Open “Terminal” from the Applications &gt; Utilities folder.</li> <li><strong>Windows</strong>: Install a Unix-like environment like Git Bash or Windows Subsystem for Linux (WSL).</li> </ul> <p><br/></p> <h2 id="basic-commands">Basic Commands</h2> <p>Here are some basic commands to get you started:</p> <ol> <li><strong>Navigating Directories</strong> <ul> <li> <p><code class="language-plaintext highlighter-rouge">pwd</code> (print working directory): Displays the full path of the current directory.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">pwd</span>
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">ls</code> (list): Lists files and directories in the current directory.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">ls</span>
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">cd</code> (change directory): Changes the current directory.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">cd</span> /path/to/directory
-</code></pre></div> </div> </li> </ul> </li> <li><strong>File Operations</strong> <ul> <li> <p><code class="language-plaintext highlighter-rouge">touch</code>: Creates a new empty file with the specified name.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">touch </span>filename.txt
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">cp</code> (copy): Copies files or directories from source to destination.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">cp </span>source.txt destination.txt
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">mv</code> (move): Moves or renames files or directories from source to destination.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">mv </span>oldname.txt newname.txt
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">rm</code> (remove): Deletes files or directories.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">rm </span>filename.txt
-</code></pre></div> </div> </li> </ul> </li> <li><strong>Viewing and Editing Files</strong> <ul> <li> <p><code class="language-plaintext highlighter-rouge">cat</code> (concatenate): Prints the contents of a file to the terminal.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">cat </span>filename.txt
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">nano</code> or <code class="language-plaintext highlighter-rouge">vi</code>: Opens a file in a text editor.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  nano filename.txt
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">head</code> and <code class="language-plaintext highlighter-rouge">tail</code>: View specific number of lines <code class="language-plaintext highlighter-rouge">-n</code> from the start or end of a file.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">head</span> <span class="nt">-n</span> 50 filename.txt
+</code></pre></div></div>
+
+<p>The ultimate function for any time conscious bioinformatician! This stages all changes, commits them with a specified message, and pushes to the remote repository. It’s a super convenient way to quickly commit all your changes with a single command.</p>
+
+<p><br /></p>
+
+<p>By incorporating these aliases and functions into your <code class="language-plaintext highlighter-rouge">.bashrc</code> or <code class="language-plaintext highlighter-rouge">.bash_profile</code>, you can reduce the amount of typing and save time, working smarter not harder!</p>
+
+<p><br /></p>
+
+<h2 id="support">Support</h2>
+
+<p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p>
+
+<p style="text-align: center">
+    <a href="https://ko-fi.com/jordanprice" target="_blank">
+        <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>  
+</p>]]></content><author><name></name></author><category term="bioinformatics" /><category term="bash" /><summary type="html"><![CDATA[A collection of handy shortcuts to speed up your work on the command line.]]></summary></entry><entry><title type="html">Getting Started with the Bash Command Line</title><link href="https://rj-price.github.io/blog/2024/bash/" rel="alternate" type="text/html" title="Getting Started with the Bash Command Line" /><published>2024-08-17T00:00:00+00:00</published><updated>2024-08-17T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/bash</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/bash/"><![CDATA[<p>The Bash command line is an essential tool for bioinformaticians, programmers, and system administrators alike. It provides a powerful interface to interact with your computer, allowing you to perform a variety of tasks efficiently.</p>
+
+<p>Whether you’re managing files, running scripts, or configuring systems, mastering the Bash command line will greatly enhance your productivity. In this short guide, we’ll cover the basics of working with Bash to get you up and running as quickly as possible.</p>
+
+<p><br /></p>
+
+<h2 id="what-is-bash">What is Bash?</h2>
+
+<p>Bash (Bourne Again SHell) is a Unix shell and command language that is widely used as the default login shell on Linux and macOS systems. Bash allows users to execute commands, automate tasks using scripts, and manage system resources.</p>
+
+<p><br /></p>
+
+<h2 id="getting-started">Getting Started</h2>
+
+<p>To start using Bash, you need to open a terminal window:</p>
+
+<ul>
+  <li><strong>Linux</strong>: Search for “Terminal” in your applications menu.</li>
+  <li><strong>macOS</strong>: Open “Terminal” from the Applications &gt; Utilities folder.</li>
+  <li><strong>Windows</strong>: Install a Unix-like environment like Git Bash or Windows Subsystem for Linux (WSL).</li>
+</ul>
+
+<p><br /></p>
+
+<h2 id="basic-commands">Basic Commands</h2>
+
+<p>Here are some basic commands to get you started:</p>
+
+<ol>
+  <li><strong>Navigating Directories</strong>
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">pwd</code> (print working directory): Displays the full path of the current directory.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">pwd</span>
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">ls</code> (list): Lists files and directories in the current directory.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">ls</span>
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">cd</code> (change directory): Changes the current directory.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">cd</span> /path/to/directory
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>File Operations</strong>
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">touch</code>: Creates a new empty file with the specified name.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">touch </span>filename.txt
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">cp</code> (copy): Copies files or directories from source to destination.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">cp </span>source.txt destination.txt
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">mv</code> (move): Moves or renames files or directories from source to destination.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">mv </span>oldname.txt newname.txt
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">rm</code> (remove): Deletes files or directories.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">rm </span>filename.txt
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Viewing and Editing Files</strong>
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">cat</code> (concatenate): Prints the contents of a file to the terminal.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">cat </span>filename.txt
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">nano</code> or <code class="language-plaintext highlighter-rouge">vi</code>: Opens a file in a text editor.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  nano filename.txt
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">head</code> and <code class="language-plaintext highlighter-rouge">tail</code>: View specific number of lines <code class="language-plaintext highlighter-rouge">-n</code> from the start or end of a file.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">head</span> <span class="nt">-n</span> 50 filename.txt
   <span class="nb">tail</span> <span class="nt">-n</span> 50 filename.txt
-</code></pre></div> </div> </li> </ul> </li> <li><strong>Managing Directories</strong> <ul> <li> <p><code class="language-plaintext highlighter-rouge">mkdir</code> (make directory): Creates a new directory with the specified name.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">mkdir </span>new_directory
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">rmdir</code> (remove directory): Deletes an empty directory.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">rmdir </span>directory_name
-</code></pre></div> </div> </li> </ul> </li> <li><strong>System Information</strong> <ul> <li> <p><code class="language-plaintext highlighter-rouge">whoami</code>: Displays the current user.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">whoami</span>
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">uname -a</code>: Displays system information.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">uname</span> <span class="nt">-a</span>
-</code></pre></div> </div> </li> </ul> </li> <li><strong>Getting Help</strong> <ul> <li> <p><code class="language-plaintext highlighter-rouge">man</code> (manual): Displays the manual page for a command.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  man <span class="nb">ls</span>
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">-help</code>: Provides a brief description of how to use a command.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">ls</span> <span class="nt">--help</span>
-</code></pre></div> </div> </li> </ul> </li> </ol> <p><br/></p> <h2 id="redirection-and-pipes">Redirection and Pipes</h2> <p>One of the main advantages of using Bash is that it allows you to redirect the output of commands and chain multiple commands together using pipes.</p> <ol> <li><strong>Redirection</strong> <ul> <li> <p><code class="language-plaintext highlighter-rouge">&gt;</code>: Redirects output to a file, overwriting the file if it exists.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">echo</span> <span class="s2">"Hello, World!"</span> <span class="o">&gt;</span> output.txt
-</code></pre></div> </div> </li> <li> <p><code class="language-plaintext highlighter-rouge">&gt;&gt;</code>: Redirects output to a file, appending to the file if it exists.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">echo</span> <span class="s2">"Hello again!"</span> <span class="o">&gt;&gt;</span> output.txt
-</code></pre></div> </div> </li> </ul> </li> <li><strong>Pipes</strong> <ul> <li> <p><code class="language-plaintext highlighter-rouge">|</code>: Passes the output of one command as input to another command.</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">ls</span> | <span class="nb">grep</span> <span class="s2">"filename"</span>
-</code></pre></div> </div> </li> </ul> </li> </ol> <p><br/></p> <h2 id="useful-tips-and-tricks">Useful Tips and Tricks</h2> <ol> <li><strong>Tab Completion</strong> <ul> <li>Press <code class="language-plaintext highlighter-rouge">Tab</code> to autocomplete file and directory names.</li> </ul> </li> <li><strong>Command History</strong> <ul> <li>Use the <code class="language-plaintext highlighter-rouge">Up</code> and <code class="language-plaintext highlighter-rouge">Down</code> arrow keys to navigate through previous commands.</li> </ul> </li> <li><strong>Special Characters</strong> <ul> <li><code class="language-plaintext highlighter-rouge">.</code>: Current directory</li> <li><code class="language-plaintext highlighter-rouge">..</code>: Parent directory</li> <li><code class="language-plaintext highlighter-rouge">~</code>: Home directory</li> <li><code class="language-plaintext highlighter-rouge">/</code>: Root directory</li> </ul> </li> <li><strong>Aliases</strong> <ul> <li> <p>Create shortcuts for frequently used commands by adding aliases to your <code class="language-plaintext highlighter-rouge">.bashrc</code> or <code class="language-plaintext highlighter-rouge">.bash_profile</code>.</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  alias ll='ls -la'
-</code></pre></div> </div> </li> </ul> </li> <li><strong>Environment Variables</strong> <ul> <li> <p>Set and use environment variables to store and reuse information.</p> <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  export MY_VAR="Hello"
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Managing Directories</strong>
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">mkdir</code> (make directory): Creates a new directory with the specified name.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">mkdir </span>new_directory
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">rmdir</code> (remove directory): Deletes an empty directory.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">rmdir </span>directory_name
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>System Information</strong>
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">whoami</code>: Displays the current user.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">whoami</span>
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">uname -a</code>: Displays system information.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">uname</span> <span class="nt">-a</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Getting Help</strong>
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">man</code> (manual): Displays the manual page for a command.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  man <span class="nb">ls</span>
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">-help</code>: Provides a brief description of how to use a command.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">ls</span> <span class="nt">--help</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<p><br /></p>
+
+<h2 id="redirection-and-pipes">Redirection and Pipes</h2>
+
+<p>One of the main advantages of using Bash is that it allows you to redirect the output of commands and chain multiple commands together using pipes.</p>
+
+<ol>
+  <li><strong>Redirection</strong>
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">&gt;</code>: Redirects output to a file, overwriting the file if it exists.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">echo</span> <span class="s2">"Hello, World!"</span> <span class="o">&gt;</span> output.txt
+</code></pre></div>        </div>
+      </li>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">&gt;&gt;</code>: Redirects output to a file, appending to the file if it exists.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">echo</span> <span class="s2">"Hello again!"</span> <span class="o">&gt;&gt;</span> output.txt
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Pipes</strong>
+    <ul>
+      <li>
+        <p><code class="language-plaintext highlighter-rouge">|</code>: Passes the output of one command as input to another command.</p>
+
+        <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  <span class="nb">ls</span> | <span class="nb">grep</span> <span class="s2">"filename"</span>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<p><br /></p>
+
+<h2 id="useful-tips-and-tricks">Useful Tips and Tricks</h2>
+
+<ol>
+  <li><strong>Tab Completion</strong>
+    <ul>
+      <li>Press <code class="language-plaintext highlighter-rouge">Tab</code> to autocomplete file and directory names.</li>
+    </ul>
+  </li>
+  <li><strong>Command History</strong>
+    <ul>
+      <li>Use the <code class="language-plaintext highlighter-rouge">Up</code> and <code class="language-plaintext highlighter-rouge">Down</code> arrow keys to navigate through previous commands.</li>
+    </ul>
+  </li>
+  <li><strong>Special Characters</strong>
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">.</code>: Current directory</li>
+      <li><code class="language-plaintext highlighter-rouge">..</code>: Parent directory</li>
+      <li><code class="language-plaintext highlighter-rouge">~</code>: Home directory</li>
+      <li><code class="language-plaintext highlighter-rouge">/</code>: Root directory</li>
+    </ul>
+  </li>
+  <li><strong>Aliases</strong>
+    <ul>
+      <li>
+        <p>Create shortcuts for frequently used commands by adding aliases to your <code class="language-plaintext highlighter-rouge">.bashrc</code> or <code class="language-plaintext highlighter-rouge">.bash_profile</code>.</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  alias ll='ls -la'
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+  <li><strong>Environment Variables</strong>
+    <ul>
+      <li>
+        <p>Set and use environment variables to store and reuse information.</p>
+
+        <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  export MY_VAR="Hello"
   echo $MY_VAR
-</code></pre></div> </div> </li> </ul> </li> </ol> <p><br/></p> <h2 id="summary">Summary</h2> <p>The Bash command line is a powerful tool that can significantly enhance your efficiency and productivity. By mastering directory navigation, file manipulation and understanding redirection and pipes you’ll be well on your way to becoming proficient in using Bash. Whether you’re managing files, automating tasks, or configuring systems, the command line is an indispensable part of your toolkit.</p> <p><br/></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"/> </a> </p>]]></content><author><name></name></author><category term="bioinformatics"/><category term="bash"/><summary type="html"><![CDATA[A quick and easy guide to help getting started with using the command line.]]></summary></entry><entry><title type="html">Getting Started with BLAST on the Command Line</title><link href="https://rj-price.github.io/blog/2024/blast/" rel="alternate" type="text/html" title="Getting Started with BLAST on the Command Line"/><published>2024-07-15T00:00:00+00:00</published><updated>2024-07-15T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/blast</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/blast/"><![CDATA[<p>Bioinformatics relies heavily on sequence identification by comparing nucleotide or protein sequences against known databases. One of the most popular tools for this purpose is BLAST (Basic Local Alignment Search Tool).</p> <p>In this blog post, we’ll explore the basics of using BLAST on the command line, focusing on the two most common types of searches: <code class="language-plaintext highlighter-rouge">blastn</code> and <code class="language-plaintext highlighter-rouge">blastp</code>. We’ll also cover how to perform searches against the NCBI databases, as well as creating and searching a custom local database.</p> <p><br/></p> <h2 id="what-is-blast">What is BLAST?</h2> <p>BLAST is a powerful algorithm and software suite from NCBI that allows you to compare a query sequence against a database of sequences to find regions of similarity. This can help identify homologous genes, infer functional and evolutionary relationships, and discover new genes.</p> <p><br/></p> <h2 id="types-of-blast-searches">Types of BLAST Searches</h2> <p>There are several types of BLAST searches, the two most common are:</p> <ol> <li><strong>blastn</strong>: Compares a nucleotide query sequence against a nucleotide sequence database.</li> <li><strong>blastp</strong>: Compares an amino acid query sequence against a protein sequence database.</li> </ol> <p><br/></p> <h2 id="setting-up-blast">Setting Up BLAST</h2> <p>To get started, you’ll need to install the BLAST+ command line tools. You can either download the source files from the <a href="https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/">NCBI BLAST+ download page</a> or install them though <a href="https://anaconda.org/bioconda/blast">conda</a>.</p> <p>If using the source files, make sure that you extract the files and add the BLAST directory to your system’s PATH to use the BLAST commands from any directory.</p> <p><br/></p> <h2 id="running-blast-searches-against-ncbi-databases">Running BLAST Searches Against NCBI Databases</h2> <h3 id="1-using-blastn">1. Using <code class="language-plaintext highlighter-rouge">blastn</code></h3> <p>Let’s start with a <code class="language-plaintext highlighter-rouge">blastn</code> example. Suppose you have a nucleotide sequence in a file called <code class="language-plaintext highlighter-rouge">gene.fasta</code> and you want to identify the closest matching hits to your gene of interest in the NCBI nucleotide database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastn <span class="nt">-query</span> gene.fasta <span class="nt">-remote</span> <span class="nt">-db</span> nt <span class="nt">-out</span> results_blastn.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
-</code></pre></div></div> <p>This command performs a nucleotide BLAST search of your nucleotide sequence <code class="language-plaintext highlighter-rouge">-query gene.fasta</code> against the NCBI nucleotide database <code class="language-plaintext highlighter-rouge">-remote -db nt</code> and saves the results with an E-value lower than <code class="language-plaintext highlighter-rouge">1e-6</code> in the output file <code class="language-plaintext highlighter-rouge">results_blastn.txt</code> formatted as a table <code class="language-plaintext highlighter-rouge">-outfmt 6</code>.</p> <p><br/></p> <h3 id="2-using-blastp">2. Using <code class="language-plaintext highlighter-rouge">blastp</code></h3> <p>Next, we’ll run a <code class="language-plaintext highlighter-rouge">blastp</code> search with a protein sequence file called <code class="language-plaintext highlighter-rouge">protein.fasta</code> to identify the best hits in the NCBI non-redundant protein database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastp <span class="nt">-query</span> protein.fasta <span class="nt">-remote</span> <span class="nt">-db</span> nr <span class="nt">-out</span> results_blastp.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
-</code></pre></div></div> <p>This performs a protein BLAST search of your protein sequence <code class="language-plaintext highlighter-rouge">-query protein.fasta</code> against the NCBI non-redundant protein database <code class="language-plaintext highlighter-rouge">-remote -db nr</code> and saves the results with an E-value lower than <code class="language-plaintext highlighter-rouge">1e-6</code> in the output file <code class="language-plaintext highlighter-rouge">results_blastp.txt</code> formatted as a table <code class="language-plaintext highlighter-rouge">-outfmt 6</code>.</p> <p><br/></p> <h2 id="creating-and-searching-a-custom-local-database">Creating and Searching a Custom Local Database</h2> <p>Sometimes, you may want to perform searches against a custom database. For example, you may have a known gene that you’d like to identify the homolog of in a <em>de novo</em> assembly. Here’s how you can create and search a local custom BLAST database.</p> <h3 id="1-creating-a-custom-database">1. Creating a Custom Database</h3> <p>First, gather your sequences in a FASTA file, for example, <code class="language-plaintext highlighter-rouge">my_sequences.fasta</code>.</p> <p>To create a nucleotide database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>makeblastdb <span class="nt">-in</span> my_sequences.fasta <span class="nt">-dbtype</span> nucl <span class="nt">-out</span> my_custom_db
-</code></pre></div></div> <p>For a protein database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>makeblastdb <span class="nt">-in</span> my_sequences.fasta <span class="nt">-dbtype</span> prot <span class="nt">-out</span> my_custom_db
-</code></pre></div></div> <p><br/></p> <h3 id="2-running-a-blast-search-against-the-custom-database">2. Running a BLAST Search Against the Custom Database</h3> <p>Now, you can run BLAST searches against your custom database. For example, using <code class="language-plaintext highlighter-rouge">blastn</code> with your custom nucleotide database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastn <span class="nt">-query</span> gene.fasta <span class="nt">-db</span> my_custom_db <span class="nt">-out</span> custom_results_blastn.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
-</code></pre></div></div> <p>Or using <code class="language-plaintext highlighter-rouge">blastp</code> with your custom protein database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastp <span class="nt">-query</span> protein.fasta <span class="nt">-db</span> my_custom_db <span class="nt">-out</span> custom_results_blastp.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
-</code></pre></div></div> <p><br/></p> <h2 id="interpreting-blast-results">Interpreting BLAST Results</h2> <p>BLAST results help determine the potential function of your query sequence by identifying similar sequences in known databases. When using the <code class="language-plaintext highlighter-rouge">-outfmt 6</code> flag to output the results in a tabular format, the data in the columns are represented by the following headers:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
-</code></pre></div></div> <p>1.  <strong>qseqid:</strong> Identifier of the query sequence.</p> <p>2.  <strong>sseqid:</strong> Identifier of the subject sequence that matches your query.</p> <p>3.  <strong>pident:</strong> Percentage of identical matches between the query and subject sequences.</p> <p>4.  <strong>length:</strong> Total alignment length between the query and subject sequences.</p> <p>5.  <strong>mismatch:</strong> Number of positions that are mismatches.</p> <p>6.  <strong>gapopen:</strong> Number of gap openings in the alignment.</p> <p>7.  <strong>qstart:</strong> Start position of the alignment for the query sequence.</p> <p>8.  <strong>qend:</strong> End position of the alignment for the query sequence.</p> <p>9.  <strong>sstart:</strong> Start position of the alignment for the subject sequence.</p> <p>10.  <strong>send:</strong> End position of the alignment for the subject sequence.</p> <p>11.  <strong>evalue:</strong> The number of expected hits of similar quality (lower is better).</p> <p>12.  <strong>bitscore:</strong> The higher the bit-score, the better the sequence similarity.</p> <p><br/></p> <h2 id="summary">Summary</h2> <p>BLAST is an essential tool in bioinformatics for sequence identification and comparison. By understanding how to use <code class="language-plaintext highlighter-rouge">blastn</code> and <code class="language-plaintext highlighter-rouge">blastp</code>, and knowing how to create and search a custom database, you can leverage BLAST to gain significant insights into your sequences. Whether you are searching the NCBI databases or your custom datasets, BLAST provides the versatility and power needed for effective sequence analysis.</p> <p>To learn more about the functions and features of the BLAST+ command line tools, take a look at the <a href="https://www.ncbi.nlm.nih.gov/books/NBK279690/">User Manual</a> or use the <code class="language-plaintext highlighter-rouge">-help</code> flag to learn more about the possible arguments for each search.</p> <p><br/></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"/> </a> </p>]]></content><author><name></name></author><category term="bioinformatics"/><category term="blast"/><summary type="html"><![CDATA[A guide to help getting started with using the basic functions of BLAST on the command line.]]></summary></entry></feed>
+</code></pre></div>        </div>
+      </li>
+    </ul>
+  </li>
+</ol>
+
+<p><br /></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>The Bash command line is a powerful tool that can significantly enhance your efficiency and productivity. By mastering directory navigation, file manipulation and understanding redirection and pipes you’ll be well on your way to becoming proficient in using Bash. Whether you’re managing files, automating tasks, or configuring systems, the command line is an indispensable part of your toolkit.</p>
+
+<p><br /></p>
+
+<h2 id="support">Support</h2>
+
+<p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p>
+
+<p style="text-align: center">
+    <a href="https://ko-fi.com/jordanprice" target="_blank">
+        <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>  
+</p>]]></content><author><name></name></author><category term="bioinformatics" /><category term="bash" /><summary type="html"><![CDATA[A quick and easy guide to help getting started with using the command line.]]></summary></entry><entry><title type="html">Getting Started with BLAST on the Command Line</title><link href="https://rj-price.github.io/blog/2024/blast/" rel="alternate" type="text/html" title="Getting Started with BLAST on the Command Line" /><published>2024-07-15T00:00:00+00:00</published><updated>2024-07-15T00:00:00+00:00</updated><id>https://rj-price.github.io/blog/2024/blast</id><content type="html" xml:base="https://rj-price.github.io/blog/2024/blast/"><![CDATA[<p>Bioinformatics relies heavily on sequence identification by comparing nucleotide or protein sequences against known databases. One of the most popular tools for this purpose is BLAST (Basic Local Alignment Search Tool).</p>
+
+<p>In this blog post, we’ll explore the basics of using BLAST on the command line, focusing on the two most common types of searches: <code class="language-plaintext highlighter-rouge">blastn</code> and <code class="language-plaintext highlighter-rouge">blastp</code>. We’ll also cover how to perform searches against the NCBI databases, as well as creating and searching a custom local database.</p>
+
+<p><br /></p>
+
+<h2 id="what-is-blast">What is BLAST?</h2>
+
+<p>BLAST is a powerful algorithm and software suite from NCBI that allows you to compare a query sequence against a database of sequences to find regions of similarity. This can help identify homologous genes, infer functional and evolutionary relationships, and discover new genes.</p>
+
+<p><br /></p>
+
+<h2 id="types-of-blast-searches">Types of BLAST Searches</h2>
+
+<p>There are several types of BLAST searches, the two most common are:</p>
+
+<ol>
+  <li><strong>blastn</strong>: Compares a nucleotide query sequence against a nucleotide sequence database.</li>
+  <li><strong>blastp</strong>: Compares an amino acid query sequence against a protein sequence database.</li>
+</ol>
+
+<p><br /></p>
+
+<h2 id="setting-up-blast">Setting Up BLAST</h2>
+
+<p>To get started, you’ll need to install the BLAST+ command line tools. You can either download the source files from the <a href="https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/">NCBI BLAST+ download page</a> or install them though <a href="https://anaconda.org/bioconda/blast">conda</a>.</p>
+
+<p>If using the source files, make sure that you extract the files and add the BLAST directory to your system’s PATH to use the BLAST commands from any directory.</p>
+
+<p><br /></p>
+
+<h2 id="running-blast-searches-against-ncbi-databases">Running BLAST Searches Against NCBI Databases</h2>
+
+<h3 id="1-using-blastn">1. Using <code class="language-plaintext highlighter-rouge">blastn</code></h3>
+
+<p>Let’s start with a <code class="language-plaintext highlighter-rouge">blastn</code> example. Suppose you have a nucleotide sequence in a file called <code class="language-plaintext highlighter-rouge">gene.fasta</code> and you want to identify the closest matching hits to your gene of interest in the NCBI nucleotide database:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastn <span class="nt">-query</span> gene.fasta <span class="nt">-remote</span> <span class="nt">-db</span> nt <span class="nt">-out</span> results_blastn.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
+</code></pre></div></div>
+
+<p>This command performs a nucleotide BLAST search of your nucleotide sequence <code class="language-plaintext highlighter-rouge">-query gene.fasta</code> against the NCBI nucleotide database <code class="language-plaintext highlighter-rouge">-remote -db nt</code>  and saves the results with an E-value lower than <code class="language-plaintext highlighter-rouge">1e-6</code> in the output file <code class="language-plaintext highlighter-rouge">results_blastn.txt</code> formatted as a table <code class="language-plaintext highlighter-rouge">-outfmt 6</code>.</p>
+
+<p><br /></p>
+
+<h3 id="2-using-blastp">2. Using <code class="language-plaintext highlighter-rouge">blastp</code></h3>
+
+<p>Next, we’ll run a <code class="language-plaintext highlighter-rouge">blastp</code> search with a protein sequence file called <code class="language-plaintext highlighter-rouge">protein.fasta</code> to identify the best hits in the NCBI non-redundant protein database:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastp <span class="nt">-query</span> protein.fasta <span class="nt">-remote</span> <span class="nt">-db</span> nr <span class="nt">-out</span> results_blastp.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
+</code></pre></div></div>
+
+<p>This performs a protein BLAST search of your protein sequence <code class="language-plaintext highlighter-rouge">-query protein.fasta</code> against the NCBI non-redundant protein database <code class="language-plaintext highlighter-rouge">-remote -db nr</code>  and saves the results with an E-value lower than <code class="language-plaintext highlighter-rouge">1e-6</code> in the output file <code class="language-plaintext highlighter-rouge">results_blastp.txt</code> formatted as a table <code class="language-plaintext highlighter-rouge">-outfmt 6</code>.</p>
+
+<p><br /></p>
+
+<h2 id="creating-and-searching-a-custom-local-database">Creating and Searching a Custom Local Database</h2>
+
+<p>Sometimes, you may want to perform searches against a custom database. For example, you may have a known gene that you’d like to identify the homolog of in a <em>de novo</em> assembly. Here’s how you can create and search a local custom BLAST database.</p>
+
+<h3 id="1-creating-a-custom-database">1. Creating a Custom Database</h3>
+
+<p>First, gather your sequences in a FASTA file, for example, <code class="language-plaintext highlighter-rouge">my_sequences.fasta</code>.</p>
+
+<p>To create a nucleotide database:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>makeblastdb <span class="nt">-in</span> my_sequences.fasta <span class="nt">-dbtype</span> nucl <span class="nt">-out</span> my_custom_db
+</code></pre></div></div>
+
+<p>For a protein database:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>makeblastdb <span class="nt">-in</span> my_sequences.fasta <span class="nt">-dbtype</span> prot <span class="nt">-out</span> my_custom_db
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h3 id="2-running-a-blast-search-against-the-custom-database">2. Running a BLAST Search Against the Custom Database</h3>
+
+<p>Now, you can run BLAST searches against your custom database. For example, using <code class="language-plaintext highlighter-rouge">blastn</code> with your custom nucleotide database:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastn <span class="nt">-query</span> gene.fasta <span class="nt">-db</span> my_custom_db <span class="nt">-out</span> custom_results_blastn.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
+</code></pre></div></div>
+
+<p>Or using <code class="language-plaintext highlighter-rouge">blastp</code> with your custom protein database:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastp <span class="nt">-query</span> protein.fasta <span class="nt">-db</span> my_custom_db <span class="nt">-out</span> custom_results_blastp.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
+</code></pre></div></div>
+
+<p><br /></p>
+
+<h2 id="interpreting-blast-results">Interpreting BLAST Results</h2>
+
+<p>BLAST results help determine the potential function of your query sequence by identifying similar sequences in known databases. When using the <code class="language-plaintext highlighter-rouge">-outfmt 6</code> flag to output the results in a tabular format, the data in the columns are represented by the following headers:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
+</code></pre></div></div>
+
+<p>1.  <strong>qseqid:</strong> Identifier of the query sequence.</p>
+
+<p>2.  <strong>sseqid:</strong> Identifier of the subject sequence that matches your query.</p>
+
+<p>3.  <strong>pident:</strong> Percentage of identical matches between the query and subject sequences.</p>
+
+<p>4.  <strong>length:</strong> Total alignment length between the query and subject sequences.</p>
+
+<p>5.  <strong>mismatch:</strong> Number of positions that are mismatches.</p>
+
+<p>6.  <strong>gapopen:</strong> Number of gap openings in the alignment.</p>
+
+<p>7.  <strong>qstart:</strong> Start position of the alignment for the query sequence.</p>
+
+<p>8.  <strong>qend:</strong> End position of the alignment for the query sequence.</p>
+
+<p>9.  <strong>sstart:</strong> Start position of the alignment for the subject sequence.</p>
+
+<p>10.  <strong>send:</strong> End position of the alignment for the subject sequence.</p>
+
+<p>11.  <strong>evalue:</strong> The number of expected hits of similar quality (lower is better).</p>
+
+<p>12.  <strong>bitscore:</strong> The higher the bit-score, the better the sequence similarity.</p>
+
+<p><br /></p>
+
+<h2 id="summary">Summary</h2>
+
+<p>BLAST is an essential tool in bioinformatics for sequence identification and comparison. By understanding how to use <code class="language-plaintext highlighter-rouge">blastn</code> and <code class="language-plaintext highlighter-rouge">blastp</code>, and knowing how to create and search a custom database, you can leverage BLAST to gain significant insights into your sequences. Whether you are searching the NCBI databases or your custom datasets, BLAST provides the versatility and power needed for effective sequence analysis.</p>
+
+<p>To learn more about the functions and features of the BLAST+ command line tools, take a look at the <a href="https://www.ncbi.nlm.nih.gov/books/NBK279690/">User Manual</a> or use the <code class="language-plaintext highlighter-rouge">-help</code> flag to learn more about the possible arguments for each search.</p>
+
+<p><br /></p>
+
+<h2 id="support">Support</h2>
+
+<p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p>
+
+<p style="text-align: center">
+    <a href="https://ko-fi.com/jordanprice" target="_blank">
+        <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com" />
+    </a>  
+</p>]]></content><author><name></name></author><category term="bioinformatics" /><category term="blast" /><summary type="html"><![CDATA[A guide to help getting started with using the basic functions of BLAST on the command line.]]></summary></entry></feed>
