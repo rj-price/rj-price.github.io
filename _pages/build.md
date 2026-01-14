@@ -16,6 +16,7 @@ permalink: /build/
             --mc-stone: #4a4a4a;
             --mc-light: #f4f4f4;
             --mc-dark: #1a1a1a;
+            --mc-gold: #ffcc00;
         }
 
         body {
@@ -37,12 +38,6 @@ permalink: /build/
             border: 3px solid var(--mc-stone);
         }
 
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            text-shadow: 2px 2px #000;
-        }
-
         .filter-container {
             display: flex;
             justify-content: center;
@@ -61,17 +56,10 @@ permalink: /build/
             transition: all 0.3s ease;
             font-weight: bold;
             text-transform: uppercase;
-            font-size: 0.9rem;
-        }
-
-        .filter-btn:hover {
-            background-color: var(--mc-green);
-            transform: translateY(-2px);
         }
 
         .filter-btn.active {
             background-color: var(--mc-green);
-            box-shadow: 0 0 15px rgba(56, 135, 60, 0.5);
         }
 
         .grid {
@@ -82,20 +70,32 @@ permalink: /build/
             margin: 0 auto;
         }
 
+        /* Card Styles */
         .card {
             background-color: #2a2a2a;
             border-radius: 10px;
-            padding: 20px;
+            padding: 25px;
             border-bottom: 4px solid var(--mc-stone);
-            transition: transform 0.3s ease;
+            transition: all 0.3s ease;
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        .card:hover {
-            transform: scale(1.02);
+        /* Completed State */
+        .card.completed {
+            opacity: 0.5;
+            border-bottom-color: var(--mc-gold);
+            background-color: #1e1e1e;
+        }
+
+        .card.completed h3 {
+            text-decoration: line-through;
+            color: #888;
         }
 
         .card h3 {
-            margin-top: 0;
+            margin: 10px 0;
             color: var(--mc-green);
         }
 
@@ -104,19 +104,35 @@ permalink: /build/
             background: #444;
             padding: 3px 8px;
             border-radius: 3px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            align-self: flex-start;
         }
 
-        .hidden {
-            display: none;
+        /* Custom Checkbox */
+        .checkbox-container {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            user-select: none;
+            padding-top: 15px;
+            border-top: 1px solid #3d3d3d;
         }
+
+        .checkbox-container input {
+            cursor: pointer;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--mc-green);
+        }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
 <header>
-    <h1>Long-term Survival Projects</h1>
+    <h1>Minecraft Survival Project Tracker</h1>
     <p>What shall we build today, traveller?</p>
 </header>
 
@@ -125,77 +141,139 @@ permalink: /build/
     <button class="filter-btn" onclick="filterSelection('farms')">Resource Farms</button>
     <button class="filter-btn" onclick="filterSelection('mega')">Mega Builds</button>
     <button class="filter-btn" onclick="filterSelection('infra')">Infrastructure</button>
-    <button class="filter-btn" onclick="filterSelection('aesthetic')">Aesthetic</button>
 </div>
 
-<div class="grid">
-    <div class="card farms">
+<div class="grid" id="projectGrid">
+    <div class="card farms" id="p1">
         <span class="category-tag">Farm</span>
         <h3>Guardian Drainage</h3>
-        <p>Drain an entire Ocean Monument and turn it into a high-efficiency XP and prismarine farm.</p>
+        <p>Drain an entire Ocean Monument for prismarine and XP.</p>
+        <label class="checkbox-container">
+            <input type="checkbox" onchange="toggleProject('p1')"> Finished
+        </label>
     </div>
-    <div class="card farms">
-        <span class="category-tag">Farm</span>
-        <h3>Wither Rose Forest</h3>
-        <p>Set up a farm in the End or the Wither to collect roses for black dye and future wither skeleton farms.</p>
-    </div>
-
-    <div class="card mega">
+    <div class="card mega" id="p2">
         <span class="category-tag">Mega Build</span>
         <h3>The Floating Archipelago</h3>
-        <p>Build a series of floating islands connected by chains, each housing a different biome or farm.</p>
+        <p>Build a series of floating islands connected by massive chains.</p>
+        <label class="checkbox-container">
+            <input type="checkbox" onchange="toggleProject('p2')"> Finished
+        </label>
     </div>
-    <div class="card mega">
+    <div class="card infra" id="p3">
+        <span class="category-tag">Infrastructure</span>
+        <h3>Nether Hub 2.0</h3>
+        <p>A grand central station in the Nether with blue ice pathways.</p>
+        <label class="checkbox-container">
+            <input type="checkbox" onchange="toggleProject('p3')"> Finished
+        </label>
+    </div>
+    <div class="card farms" id="p4">
+        <span class="category-tag">Farm</span>
+        <h3>Wither Rose Forest</h3>
+        <p>Automate Wither Rose collection.</p>
+        <label class="checkbox-container">
+            <input type="checkbox" onchange="toggleProject('p4')"> Finished
+        </label>
+    </div>
+    <div class="card mega" id="p5">
         <span class="category-tag">Mega Build</span>
         <h3>Cyberpunk Crater City</h3>
         <p>Dig a massive perimeter and build a neon-lit, vertical city inside the hole.</p>
+        <label class="checkbox-container">
+            <input type="checkbox" onchange="toggleProject('p5')"> Finished
+        </label>
     </div>
-
-    <div class="card infra">
-        <span class="category-tag">Infrastructure</span>
-        <h3>Nether Hub 2.0</h3>
-        <p>Create a grand, safe central station in the Nether with blue ice pathways for rapid boat travel.</p>
-    </div>
-    <div class="card infra">
+    <div class="card infra" id="p6">
         <span class="category-tag">Infrastructure</span>
         <h3>Global Map Room</h3>
         <p>A 50x50 map wall showing your entire explored world, housed in a glass-domed observatory.</p>
+        <label class="checkbox-container">
+            <input type="checkbox" onchange="toggleProject('p6')"> Finished
+        </label>
     </div>
-
-    <div class="card aesthetic">
-        <span class="category-tag">Aesthetic</span>
-        <h3>Abandoned overgrown Ruin</h3>
-        <p>Build a majestic cathedral or library, then strategically destroy parts of it to look reclaimed by nature.</p>
+    <div class="card farms" id="p7">
+        <span class="category-tag">Farm</span>
+        <h3>Automated Bee Farm</h3>
+        <p>Create a large-scale automated bee farm for honey and pollination.</p>
+        <label class="checkbox-container">
+            <input type="checkbox" onchange="toggleProject('p7')"> Finished
+        </label>
     </div>
-    <div class="card aesthetic">
-        <span class="category-tag">Aesthetic</span>
+    <div class="card mega" id="p8">
+        <span class="category-tag">Mega Build</span>
+        <h3>Abandoned overgrown Ruins</h3>
+        <p>Construct a sprawling ancient ruin overtaken by nature.</p>
+        <label class="checkbox-container">
+            <input type="checkbox" onchange="toggleProject('p8')"> Finished
+        </label>
+    </div>
+    <div class="card mega" id="p9">
+        <span class="category-tag">Mega Build</span>
         <h3>Custom Biome Transform</h3>
-        <p>Take a desert or plains area and manually turn every block into a custom 'Alien' or 'Autumnal' forest.</p>
+        <p>ake a desert or plains area and manually turn every block into a custom 'Alien' or 'Autumnal' forest.</p>
+        <label class="checkbox-container">
+            <input type="checkbox" onchange="toggleProject('p9')"> Finished
+        </label>
     </div>
 </div>
 
 <script>
+    // Filtering Logic
     function filterSelection(c) {
-        var x, i;
-        x = document.getElementsByClassName("card");
+        let x = document.getElementsByClassName("card");
         if (c == "all") c = "";
-        for (i = 0; i < x.length; i++) {
+        for (let i = 0; i < x.length; i++) {
             x[i].classList.add("hidden");
-            if (x[i].className.indexOf(c) > -1) {
-                x[i].classList.remove("hidden");
-            }
+            if (x[i].className.indexOf(c) > -1) x[i].classList.remove("hidden");
         }
         
-        // Handle button active state
-        var btns = document.getElementsByClassName("filter-btn");
-        for (var i = 0; i < btns.length; i++) {
+        // UI Active Button state
+        let btns = document.getElementsByClassName("filter-btn");
+        for (let i = 0; i < btns.length; i++) {
             btns[i].classList.remove("active");
-            if (btns[i].textContent.toLowerCase().includes(c) || (c === "" && btns[i].textContent === "Show All")) {
-                // This is a simple logic for the demo
-            }
         }
         event.currentTarget.classList.add("active");
     }
+
+    // Toggle and Save Logic
+    function toggleProject(id) {
+        const card = document.getElementById(id);
+        const checkbox = card.querySelector('input');
+        
+        if (checkbox.checked) {
+            card.classList.add('completed');
+        } else {
+            card.classList.remove('completed');
+        }
+        
+        saveProgress();
+    }
+
+    function saveProgress() {
+        const completions = {};
+        document.querySelectorAll('.card').forEach(card => {
+            completions[card.id] = card.querySelector('input').checked;
+        });
+        localStorage.setItem('mcProjects', JSON.stringify(completions));
+    }
+
+    function loadProgress() {
+        const saved = JSON.parse(localStorage.getItem('mcProjects'));
+        if (saved) {
+            for (const id in saved) {
+                const card = document.getElementById(id);
+                if (card) {
+                    const checkbox = card.querySelector('input');
+                    checkbox.checked = saved[id];
+                    if (saved[id]) card.classList.add('completed');
+                }
+            }
+        }
+    }
+
+    // Load progress on startup
+    window.onload = loadProgress;
 </script>
 
 </body>
