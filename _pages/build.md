@@ -1,10 +1,10 @@
 ---
 layout: none
-permalink: /build
+title: build
+nav: false
+permalink: /build/
 ---
 
-<!DOCTYPE html>
-<html lang="en-GB">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
