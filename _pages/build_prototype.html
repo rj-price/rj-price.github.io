@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html lang="en-GB">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minecraft Survival World Tracker</title>
+    <title>Minecraft Survival Project Tracker</title>
     <style>
         :root {
             --mc-green: #38873c;
@@ -130,8 +131,7 @@
 <body>
 
 <header>
-    <h1>Survival World Mastery</h1>
-    <p>Tracking the legacy of your world.</p>
+    <h1>Minecraft Survival Project Tracker</h1>
 </header>
 
 <div class="progress-container">
@@ -154,52 +154,60 @@
 <script>
     const projects = [
         // CATEGORY: COMBAT/EXPLORATION
-        { id: 'c1', cat: 'combat', title: 'Raid Bastion', done: true },
-        { id: 'c2', cat: 'combat', title: 'Full Netherite Gear', done: true },
-        { id: 'c3', cat: 'combat', title: 'Find Stronghold', done: true },
-        { id: 'c4', cat: 'combat', title: 'Defeat the Dragon', done: true },
-        { id: 'c5', cat: 'combat', title: 'Get Wings & Shulker Boxes', done: true },
-        { id: 'c6', cat: 'combat', title: 'Raid Ocean Monument', done: false },
-        { id: 'c7', cat: 'combat', title: 'Raid Pillager Outpost', done: true },
-        { id: 'c8', cat: 'combat', title: 'Raid Ancient City', done: false },
-        { id: 'c9', cat: 'combat', title: 'Explore Desert Temple', done: true },
-        { id: 'c10', cat: 'combat', title: 'Summon & Fight Wither', done: true },
-        { id: 'c11', cat: 'combat', title: 'Build a Beacon', done: true },
-        { id: 'c12', cat: 'combat', title: 'Cheese Withers for Beacons', done: false },
-        { id: 'c13', cat: 'combat', title: 'Get All Frogs', done: true },
-        { id: 'c14', cat: 'combat', title: 'Get Sniffers', done: true },
-        { id: 'c15', cat: 'combat', title: 'Excavate Trail Ruins', done: false },
+        { id: 'c1', cat: 'combat', title: 'Raid Bastion', desc: '', done: true },
+        { id: 'c2', cat: 'combat', title: 'Full Netherite Gear', desc: '', done: true },
+        { id: 'c3', cat: 'combat', title: 'Find Stronghold', desc: '', done: true },
+        { id: 'c4', cat: 'combat', title: 'Defeat the Dragon', desc: '', done: true },
+        { id: 'c5', cat: 'combat', title: 'Get Wings & Shulker Boxes', desc: '', done: true },
+        { id: 'c6', cat: 'combat', title: 'Raid Ocean Monument', desc: '', done: false },
+        { id: 'c7', cat: 'combat', title: 'Raid Pillager Outpost', desc: '', done: true },
+        { id: 'c8', cat: 'combat', title: 'Raid Ancient City', desc: '', done: false },
+        { id: 'c9', cat: 'combat', title: 'Explore Desert Temple', desc: '', done: true },
+        { id: 'c10', cat: 'combat', title: 'Summon & Fight Wither', desc: '', done: true },
+        { id: 'c11', cat: 'combat', title: 'Build a Beacon', desc: '', done: true },
+        { id: 'c12', cat: 'combat', title: 'Cheese Withers for Beacons', desc: '', done: false },
+        { id: 'c13', cat: 'combat', title: 'Get All Frogs', desc: '', done: true },
+        { id: 'c14', cat: 'combat', title: 'Get Sniffers', desc: '', done: true },
+        { id: 'c15', cat: 'combat', title: 'Excavate Trail Ruins', desc: '', done: false },
 
         // CATEGORY: FARMS
-        { id: 'f1', cat: 'farm', title: 'Super Smelter', done: false },
-        { id: 'f2', cat: 'farm', title: 'Auto Craft/Compost Iron Farm', done: true },
-        { id: 'f3', cat: 'farm', title: 'Creeper Farm', done: true },
-        { id: 'f4', cat: 'farm', title: 'Flower & Dye Farm', done: false },
-        { id: 'f5', cat: 'farm', title: 'Triple Spider XP Farm', done: true },
-        { id: 'f6', cat: 'farm', title: 'Pumpkin/Melon (Auto Craft)', done: false },
-        { id: 'f7', cat: 'farm', title: 'Sugar Cane Farm', done: true },
-        { id: 'f8', cat: 'farm', title: 'Paper Auto Crafter', done: true },
-        { id: 'f9', cat: 'farm', title: 'Cactus Smelter Repairer', done: true },
-        { id: 'f10', cat: 'farm', title: 'Kelp Bonemeal/Fuel Farm', done: false },
-        { id: 'f11', cat: 'farm', title: 'Wool Farm', done: true },
-        { id: 'f12', cat: 'farm', title: 'Bamboo Farm', done: true },
-        { id: 'f13', cat: 'farm', title: 'Automatic Carrot Farm', done: false },
-        { id: 'f14', cat: 'farm', title: 'Gold Farm', done: true },
-        { id: 'f15', cat: 'farm', title: 'Automate Gold Output', done: false },
-        { id: 'f16', cat: 'farm', title: 'Slime Farm', done: true },
-        { id: 'f17', cat: 'farm', title: 'Breeze Farm', done: false },
-        { id: 'f18', cat: 'farm', title: 'Guardian Farm', done: false },
-        { id: 'f19', cat: 'farm', title: 'Bastion Frog Light Farm', done: false },
-        { id: 'f20', cat: 'farm', title: 'Sniffer Sanctuary (Cart Collection)', done: false },
+        { id: 'f1', cat: 'farm', title: 'Super Smelter', desc: '', done: false },
+        { id: 'f2', cat: 'farm', title: 'Auto Craft/Compost Iron Farm', desc: '', done: true },
+        { id: 'f3', cat: 'farm', title: 'Creeper Farm', desc: '', done: true },
+        { id: 'f4', cat: 'farm', title: 'Flower & Dye Farm', desc: '', done: false },
+        { id: 'f5', cat: 'farm', title: 'Triple Spider XP Farm', desc: '', done: true },
+        { id: 'f6', cat: 'farm', title: 'Pumpkin/Melon (Auto Craft)', desc: '', done: false },
+        { id: 'f7', cat: 'farm', title: 'Sugar Cane Farm', desc: '', done: true },
+        { id: 'f8', cat: 'farm', title: 'Paper Auto Crafter', desc: '', done: true },
+        { id: 'f9', cat: 'farm', title: 'Cactus Smelter Repairer', desc: '', done: true },
+        { id: 'f10', cat: 'farm', title: 'Kelp Bonemeal/Fuel Farm', desc: '', done: false },
+        { id: 'f11', cat: 'farm', title: 'Wool Farm', desc: '', done: true },
+        { id: 'f12', cat: 'farm', title: 'Bamboo Farm', desc: '', done: true },
+        { id: 'f13', cat: 'farm', title: 'Automatic Carrot Farm', desc: '', done: false },
+        { id: 'f14', cat: 'farm', title: 'Gold Farm', desc: '', done: true },
+        { id: 'f15', cat: 'farm', title: 'Automate Gold Output', desc: '', done: false },
+        { id: 'f16', cat: 'farm', title: 'Slime Farm', desc: '', done: true },
+        { id: 'f17', cat: 'farm', title: 'Breeze Farm', desc: '', done: false },
+        { id: 'f18', cat: 'farm', title: 'Guardian Farm', desc: 'Drain an entire Ocean Monument for prismarine and XP.', done: false },
+        { id: 'f19', cat: 'farm', title: 'Bastion Frog Light Farm', desc: '', done: false },
+        { id: 'f20', cat: 'farm', title: 'Sniffer Sanctuary (Cart Collection)', desc: '', done: false },
+        { id: 'f21', cat: 'farm', title: 'Automatic Bee Farm', desc: 'Create an automated bee farm for honeycomb and honey blocks.', done: false },
 
         // CATEGORY: BUILDING
-        { id: 'b1', cat: 'build', title: 'Barn & Silo', done: true },
-        { id: 'b2', cat: 'build', title: 'Build Bridge', done: false },
-        { id: 'b3', cat: 'build', title: 'Decorate Industrial Zone', done: false },
-        { id: 'b4', cat: 'build', title: 'Water Features (Lake/Waterfall)', done: false },
-        { id: 'b5', cat: 'build', title: 'Lighthouse', done: false },
-        { id: 'b6', cat: 'build', title: 'Custom Trees', done: false },
-        { id: 'b7', cat: 'build', title: 'Villager District', done: false }
+        { id: 'b1', cat: 'build', title: 'Barn & Silo', desc: '', done: true },
+        { id: 'b2', cat: 'build', title: 'Build Bridge', desc: '', done: false },
+        { id: 'b3', cat: 'build', title: 'Decorate Industrial Zone', desc: '', done: false },
+        { id: 'b4', cat: 'build', title: 'Water Features (Lake/Waterfall)', desc: '', done: false },
+        { id: 'b5', cat: 'build', title: 'Lighthouse', desc: '', done: false },
+        { id: 'b6', cat: 'build', title: 'Custom Trees', desc: '', done: false },
+        { id: 'b7', cat: 'build', title: 'Villager District', desc: '', done: false },
+        { id: 'b8', cat: 'build', title: 'Floating Archipelago', desc: 'Build a series of floating islands connected by massive chains.', done: false },
+        { id: 'b9', cat: 'build', title: 'Nether Hub', desc: 'A grand central station in the Nether with blue ice pathways.', done: false },
+        { id: 'b10', cat: 'build', title: 'Cyberpunk Crater City', desc: 'Dig a massive perimeter and build a neon-lit, vertical city inside the hole.', done: false },
+        { id: 'b11', cat: 'build', title: 'Global Map Room', desc: 'A 50x50 map wall showing your entire explored world, housed in a glass-domed observatory.', done: false },
+        { id: 'b12', cat: 'build', title: 'Abandoned overgrown Ruins', desc: 'Construct a sprawling ancient ruin overtaken by nature.', done: false },
+        { id: 'b13', cat: 'build', title: 'Custom Biome Transform', desc: 'Take a desert or plains area and manually turn every block into a custom Alien or Autumnal forest.', done: false },
+
     ];
 
     function init() {
@@ -214,6 +222,7 @@
             card.innerHTML = `
                 <span class="category-tag">${p.cat}</span>
                 <h3>${p.title}</h3>
+                <p>${p.desc}</p>
                 <label class="checkbox-container">
                     <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggle('${p.id}')"> Finished
                 </label>
@@ -262,4 +271,5 @@
 </script>
 
 </body>
+
 </html>

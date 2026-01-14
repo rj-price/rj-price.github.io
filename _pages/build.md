@@ -204,13 +204,13 @@ permalink: /build/
         { id: 'b4', cat: 'build', title: 'Water Features (Lake/Waterfall)', desc: '', done: false },
         { id: 'b5', cat: 'build', title: 'Lighthouse', desc: '', done: false },
         { id: 'b6', cat: 'build', title: 'Custom Trees', desc: '', done: false },
-        { id: 'b7', cat: 'build', title: 'Villager District', desc: '', done: false }
+        { id: 'b7', cat: 'build', title: 'Villager District', desc: '', done: false },
         { id: 'b8', cat: 'build', title: 'Floating Archipelago', desc: 'Build a series of floating islands connected by massive chains.', done: false },
         { id: 'b9', cat: 'build', title: 'Nether Hub', desc: 'A grand central station in the Nether with blue ice pathways.', done: false },
         { id: 'b10', cat: 'build', title: 'Cyberpunk Crater City', desc: 'Dig a massive perimeter and build a neon-lit, vertical city inside the hole.', done: false },
         { id: 'b11', cat: 'build', title: 'Global Map Room', desc: 'A 50x50 map wall showing your entire explored world, housed in a glass-domed observatory.', done: false },
         { id: 'b12', cat: 'build', title: 'Abandoned overgrown Ruins', desc: 'Construct a sprawling ancient ruin overtaken by nature.', done: false },
-        { id: 'b13', cat: 'build', title: 'Custom Biome Transform', desc: 'Take a desert or plains area and manually turn every block into a custom 'Alien' or 'Autumnal' forest.', done: false },
+        { id: 'b13', cat: 'build', title: 'Custom Biome Transform', desc: 'Take a desert or plains area and manually turn every block into a custom Alien or Autumnal forest.', done: false },
 
     ];
 
