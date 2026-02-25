@@ -2,7 +2,7 @@
 layout: page
 title: Fusarium Plant Pathogens - Comparative Genomics
 description: Uncovering the molecular toolkit of lettuce wilt pathogens.
-img: assets/img/fola_00.jpg
+img: assets/img/fola_00.webp
 importance: 1
 category: current
 ---
@@ -21,7 +21,7 @@ This research also uncovered evidence for two distinct variants existing within 
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/fola_01.jpg" title="Synteny between Fola1 and Fola4 accessory genomes" class="img-fluid" %}
+        {% include figure.liquid loading="eager" path="assets/img/fola_01.webp" title="Synteny between Fola1 and Fola4 accessory genomes" class="img-fluid" %}
     </div>
 </div>
 <div class="caption">
@@ -42,7 +42,7 @@ These discoveries pinpoint specific genes that likely determine the different vi
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/fola_02.jpg" title="Effector repertoires of Fola isolates" class="img-fluid" %}
+        {% include figure.liquid loading="eager" path="assets/img/fola_02.webp" title="Effector repertoires of Fola isolates" class="img-fluid" %}
     </div>
 </div>
 <div class="caption">

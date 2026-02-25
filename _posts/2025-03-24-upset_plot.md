@@ -123,7 +123,7 @@ The resulting Upset plot revealed a minimal overlap in differentially expressed 
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/upset_plot_all.jpg" title="Upset plot" class="img-fluid" %}
+        {% include figure.liquid loading="eager" path="assets/img/upset_plot_all.webp" title="Upset plot" class="img-fluid" %}
     </div>
 </div>
 <div class="caption">

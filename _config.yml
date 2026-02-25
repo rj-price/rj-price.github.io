@@ -216,8 +216,6 @@ exclude:
   - INSTALL.md
   - LICENSE
   - lighthouse_results/
-  - package.json
-  - package-lock.json
   - purgecss.config.js
   - vendor
 keep_files:
@@ -351,6 +349,7 @@ imagemagick:
     - assets/img/
   input_formats:
     - ".jpg"
+    - ".webp"
     - ".jpeg"
     - ".png"
     - ".tiff"

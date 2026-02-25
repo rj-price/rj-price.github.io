@@ -2,7 +2,7 @@
 layout: page
 title: Mycoprotein - Molecular Genetics
 description: Collaborative project with Quorn producer, Marlow Foods Ltd.
-img: assets/img/cvariant_00.jpg
+img: assets/img/cvariant_00.webp
 importance: 2
 category: current
 ---
@@ -17,7 +17,7 @@ This dense, irregular growth pattern negatively affects the texture of the final
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/cvariant_01.jpg" title="Fusarium venenatum colonies on agar plates" class="img-fluid" %}
+        {% include figure.liquid loading="eager" path="assets/img/cvariant_01.webp" title="Fusarium venenatum colonies on agar plates" class="img-fluid" %}
     </div>
 </div>
 <div class="caption">
@@ -34,7 +34,7 @@ We identified this gene as the F. venenatum ortholog of LRG1, a protein known to
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/cvariant_02.jpg" title="Missense mutations in LRG1" class="img-fluid" %}
+        {% include figure.liquid loading="eager" path="assets/img/cvariant_02.webp" title="Missense mutations in LRG1" class="img-fluid" %}
     </div>
 </div>
 <div class="caption">
@@ -51,7 +51,7 @@ By identifying the mutation of the FvLRG1 gene as the causal event for C-variant
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/cvariant_03.jpg" title="CRISPR base editing transformants" class="img-fluid" %}
+        {% include figure.liquid loading="eager" path="assets/img/cvariant_03.webp" title="CRISPR base editing transformants" class="img-fluid" %}
     </div>
 </div>
 <div class="caption">

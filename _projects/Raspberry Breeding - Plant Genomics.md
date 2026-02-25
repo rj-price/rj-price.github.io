@@ -2,7 +2,7 @@
 layout: page
 title: Raspberry Breeding - Plant Genomics
 description: Enhancing raspberry breeding through cultivar genomics.
-img: assets/img/raspberry_00.jpg
+img: assets/img/raspberry_00.webp
 importance: 2
 category: previous
 ---
@@ -27,7 +27,7 @@ This approach is particularly effective at resolving complex, highly repetitive 
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/raspberry_01.jpg" title="Circos plot of Malling Jewel and Anitra" class="img-fluid" %}
+        {% include figure.liquid loading="eager" path="assets/img/raspberry_01.webp" title="Circos plot of Malling Jewel and Anitra" class="img-fluid" %}
     </div>
 </div>
 <div class="caption">
@@ -51,7 +51,7 @@ This work not only solves a long-standing question in raspberry genetics but als
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.liquid loading="eager" path="assets/img/raspberry_02.jpg" title="Schematic of Ans gene" class="img-fluid" %}
+        {% include figure.liquid loading="eager" path="assets/img/raspberry_02.webp" title="Schematic of Ans gene" class="img-fluid" %}
     </div>
 </div>
 <div class="caption">
