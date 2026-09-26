@@ -3,8 +3,8 @@ layout: page
 title: Mycoprotein - Molecular Genetics
 description: Collaborative project with Quorn producer, Marlow Foods Ltd.
 img: assets/img/cvariant_00.webp
-importance: 2
-category: current
+importance: 1
+category: previous
 ---
 
 <br>
