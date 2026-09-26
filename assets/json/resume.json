@@ -1,23 +1,17 @@
 {
   "basics": {
     "name": "Jordan Price",
-    "label": "Bioinformatician and Molecular Biologist",
-    "summary": "I am currently a senior specialist in Plant Pathology department of NIAB, Cambridge, UK. My current work is focussed on functional and comparative genomics of fungi important for food, viticulture and agriculture.",
+    "label": "Bioinformatician and AI Engineer",
+    "summary": "Bioinformatics and Data Platform Lead at NIAB, Cambridge, UK. I build reproducible genomics pipelines and AI-assisted research tools, with a research background in fungal functional and comparative genomics.",
     "email": "jordan.price@niab.com",
-    "website": "https://rj-price.github.io/",
+    "website": "https://rjprice.bio/",
     "location": {
       "address": "NIAB",
       "postalCode": "CB3 0LE",
       "city": "Cambridge",
       "countryCode": "UK"
     },
-    "profiles": [
-      {
-        "network": "Twitter",
-        "username": "DrRJordanPrice",
-        "url": "https://twitter.com/DrRJordanPrice"
-      }
-    ]
+    "profiles": []
   },
   "education": [
     {
@@ -45,11 +39,18 @@
   ],
   "work": [
     {
+      "name": "NIAB, Crop Improvement, Cambridge",
+      "position": "Bioinformatics and Data Platform Lead",
+      "startDate": "2026",
+      "endDate": "Present",
+      "summary": "Leading the bioinformatics and data platform for the Crop Improvement group: shared pipelines, data standards and self-service tools for genomics and multi-scale omics."
+    },
+    {
       "name": "NIAB, Plant Pathology, Cambridge",
       "position": "Senior Specialist",
       "startDate": "2022",
-      "endDate": "Present",
-      "summary": "Junior group leader working on collaborative project with Quorn. Utilizing whole genome sequencing and variant analysis pipelines, together with CRISPR based deletion and base editing, and phenotypic characterization."
+      "endDate": "2026",
+      "summary": "Led the BBSRC-funded collaboration with Marlow Foods (Quorn), identifying the genetic cause of the C-variant phenotype in Fusarium venenatum through whole-genome sequencing and CRISPR editing. Comparative genomics of Fusarium pathogens, genome assembly of soft fruit and rust fungi, and development of Nextflow pipelines and AI research tools."
     },
     {
       "name": "NIAB, Cambridge Crop Research, Cambridge",
@@ -82,11 +83,22 @@
   ],
   "skills": [
     {
+      "name": "Technical",
+      "keywords": [
+        "Python, Bash, R",
+        "Nextflow pipelines",
+        "Genome assembly & annotation (long-read, polyploid, phased)",
+        "Comparative & population genomics",
+        "LLM agents, RAG & model evaluation",
+        "Docker, HPC (SLURM), CI"
+      ]
+    },
+    {
       "name": "Reviewer",
       "keywords": [
-        "PLOS Genetics", 
-        "Plant Pathology", 
-        "PLOS ONE", 
+        "PLOS Genetics",
+        "Plant Pathology",
+        "PLOS ONE",
         "Synthetic and Systems Biotechnology",
         "GFI Research Grants"
       ]
@@ -103,5 +115,3 @@
     }
   ]
 }
-
-  

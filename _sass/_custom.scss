@@ -1,0 +1,7 @@
+// Site-specific style overrides
+
+// Project card titles default to h2 size, which wraps long titles over several lines.
+.projects .card .card-title {
+  font-size: 1.35rem;
+  line-height: 1.3;
+}

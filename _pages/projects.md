@@ -2,10 +2,10 @@
 layout: page
 title: projects
 permalink: /projects/
-description: Some of the past and present research projects I've worked on.
+description: Research projects, plus the pipelines and AI tools I build and maintain.
 nav: true
 nav_order: 3
-display_categories: [current, previous]
+display_categories: [current, software, previous]
 horizontal: false
 ---
 
@@ -22,14 +22,14 @@ horizontal: false
   <!-- Generate cards for each project -->
   {% if page.horizontal %}
   <div class="container">
-    <div class="row row-cols-2">
+    <div class="row row-cols-1 row-cols-md-2">
     {% for project in sorted_projects %}
       {% include projects_horizontal.liquid %}
     {% endfor %}
     </div>
   </div>
   {% else %}
-  <div class="grid">
+  <div class="row row-cols-1 row-cols-md-3">
     {% for project in sorted_projects %}
       {% include projects.liquid %}
     {% endfor %}
@@ -48,14 +48,14 @@ horizontal: false
 {% if page.horizontal %}
 
   <div class="container">
-    <div class="row row-cols-2">
+    <div class="row row-cols-1 row-cols-md-2">
     {% for project in sorted_projects %}
       {% include projects_horizontal.liquid %}
     {% endfor %}
     </div>
   </div>
   {% else %}
-  <div class="grid">
+  <div class="row row-cols-1 row-cols-md-3">
     {% for project in sorted_projects %}
       {% include projects.liquid %}
     {% endfor %}
