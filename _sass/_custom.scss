@@ -1,5 +1,68 @@
 // Site-specific style overrides
 
+// Palette: deep teal accent with a warm off-white background.
+:root {
+  --global-theme-color: #0f766e;
+  --global-hover-color: #115e59;
+  --global-bg-color: #fbfaf7;
+  --global-code-bg-color: rgba(15, 118, 110, 0.06);
+}
+
+html[data-theme="dark"] {
+  --global-theme-color: #2dd4bf;
+  --global-hover-color: #5eead4;
+  --global-bg-color: #16181c;
+}
+
+// Typography: IBM Plex in place of the default Roboto (loaded via google_fonts in _config.yml).
+body {
+  font-family: "IBM Plex Sans", sans-serif;
+  font-weight: 400;
+}
+
+h1,
+h2,
+h3,
+.post-title {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+code,
+pre,
+kbd {
+  font-family: "IBM Plex Mono", monospace;
+}
+
+// Links: underline on hover with a bit of breathing room.
+a {
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  text-decoration-thickness: 2px;
+}
+
+// Thin accent bar across the top of the navbar.
+.navbar {
+  border-top: 3px solid var(--global-theme-color);
+}
+
+// Softer cards with a subtle lift on hover.
+.card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
 // Project card titles default to h2 size, which wraps long titles over several lines.
 .projects .card .card-title {
   font-size: 1.35rem;
