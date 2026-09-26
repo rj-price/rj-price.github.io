@@ -1,25 +1,421 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> Getting Started with BLAST on the Command Line | Dr. R. Jordan Price </title> <meta name="author" content="R. Jordan Price"> <meta name="description" content="A guide to help getting started with using the basic functions of BLAST on the command line."> <meta name="keywords" content="bioinformatics, bioinformatician, computational-biology, molecular-biology, functional-genomics, ai-engineer"> <meta property="og:site_name" content="Dr. R. Jordan Price"> <meta property="og:type" content="article"> <meta property="og:title" content="Dr. R. Jordan Price | Getting Started with BLAST on the Command Line"> <meta property="og:url" content="https://rj-price.github.io/blog/2024/blast/"> <meta property="og:description" content="A guide to help getting started with using the basic functions of BLAST on the command line."> <meta property="og:locale" content="en"> <meta name="twitter:card" content="summary"> <meta name="twitter:title" content="Getting Started with BLAST on the Command Line"> <meta name="twitter:description" content="A guide to help getting started with using the basic functions of BLAST on the command line."> <script type="application/ld+json">
+<!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title> Getting Started with BLAST on the Command Line | Dr. R. Jordan Price </title> <meta name="author" content="R. Jordan Price"> <meta name="description" content="A guide to help getting started with using the basic functions of BLAST on the command line."> <meta name="keywords" content="bioinformatics, bioinformatician, computational-biology, molecular-biology, functional-genomics, ai-engineer"> <meta property="og:site_name" content="Dr. R. Jordan Price"> <meta property="og:type" content="article"> <meta property="og:title" content="Dr. R. Jordan Price | Getting Started with BLAST on the Command Line"> <meta property="og:url" content="https://rjprice.bio/blog/2024/blast/"> <meta property="og:description" content="A guide to help getting started with using the basic functions of BLAST on the command line."> <meta property="og:image" content="https://rjprice.bio/assets/img/prof_pic.webp"> <meta property="og:locale" content="en"> <meta name="twitter:card" content="summary"> <meta name="twitter:title" content="Getting Started with BLAST on the Command Line"> <meta name="twitter:description" content="A guide to help getting started with using the basic functions of BLAST on the command line."> <meta name="twitter:image" content="https://rjprice.bio/assets/img/prof_pic.webp"> <script type="application/ld+json">
     {
         "author":
         {
             "@type": "Person",
             "name": "R. Jordan Price"
         },
-        "url": "https://rj-price.github.io/blog/2024/blast/",
+        "url": "https://rjprice.bio/blog/2024/blast/",
         "@type": "BlogPosting",
         "description": "A guide to help getting started with using the basic functions of BLAST on the command line.",
         "headline": "Getting Started with BLAST on the Command Line",
         
-        "sameAs": ["https://scholar.google.com/citations?user=Jc2K0ZQAAAAJ", "https://github.com/rj-price", "https://www.linkedin.com/in/jordan-price-95429784"],
+        "sameAs": [null,"https://github.com/rj-price","https://www.linkedin.com/in/jordan-price-95429784","https://scholar.google.com/citations?user=Jc2K0ZQAAAAJ"],
         
         "name": "R. Jordan Price",
         "@context": "https://schema.org"
     }
-  </script> <link rel="stylesheet" href="/assets/css/bootstrap.min.css?a4b3f509e79c54a512b890d73235ef04"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="/assets/css/academicons.min.css?f0b7046b84e425c55f3463ac249818f5"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%F0%9F%A7%AC&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?d41d8cd98f00b204e9800998ecf8427e"> <link rel="canonical" href="https://rj-price.github.io/blog/2024/blast/"> <script src="/assets/js/theme.js?a5ca4084d3b81624bcfa01156dae2b8e"></script> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-native.css?5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>initTheme();</script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> Dr. R. Jordan Price </a> <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse text-right" id="navbarNav"> <ul class="navbar-nav ml-auto flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">about </a> </li> <li class="nav-item "> <a class="nav-link" href="/news/">news </a> </li> <li class="nav-item "> <a class="nav-link" href="/projects/">projects </a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">publications </a> </li> <li class="nav-item "> <a class="nav-link" href="/blog/">blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/cv/">cv </a> </li> <li class="toggle-container"> <button id="light-toggle" title="Change theme"> <i class="ti ti-sun-moon" id="light-toggle-system"></i> <i class="ti ti-moon-filled" id="light-toggle-dark"></i> <i class="ti ti-sun-filled" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="post"> <header class="post-header"> <h1 class="post-title">Getting Started with BLAST on the Command Line</h1> <p class="post-meta"> July 15, 2024 </p> <p class="post-tags"> <a href="/blog/2024"> <i class="fa-solid fa-calendar fa-sm"></i> 2024 </a>   ·   <a href="/blog/tag/bioinformatics"> <i class="fa-solid fa-hashtag fa-sm"></i> bioinformatics</a>   <a href="/blog/tag/blast"> <i class="fa-solid fa-hashtag fa-sm"></i> blast</a>   </p> </header> <article class="post-content"> <div id="markdown-content"> <p>Bioinformatics relies heavily on sequence identification by comparing nucleotide or protein sequences against known databases. One of the most popular tools for this purpose is BLAST (Basic Local Alignment Search Tool).</p> <p>In this blog post, we’ll explore the basics of using BLAST on the command line, focusing on the two most common types of searches: <code class="language-plaintext highlighter-rouge">blastn</code> and <code class="language-plaintext highlighter-rouge">blastp</code>. We’ll also cover how to perform searches against the NCBI databases, as well as creating and searching a custom local database.</p> <p><br></p> <h2 id="what-is-blast">What is BLAST?</h2> <p>BLAST is a powerful algorithm and software suite from NCBI that allows you to compare a query sequence against a database of sequences to find regions of similarity. This can help identify homologous genes, infer functional and evolutionary relationships, and discover new genes.</p> <p><br></p> <h2 id="types-of-blast-searches">Types of BLAST Searches</h2> <p>There are several types of BLAST searches, the two most common are:</p> <ol> <li> <strong>blastn</strong>: Compares a nucleotide query sequence against a nucleotide sequence database.</li> <li> <strong>blastp</strong>: Compares an amino acid query sequence against a protein sequence database.</li> </ol> <p><br></p> <h2 id="setting-up-blast">Setting Up BLAST</h2> <p>To get started, you’ll need to install the BLAST+ command line tools. You can either download the source files from the <a href="https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/" rel="external nofollow noopener" target="_blank">NCBI BLAST+ download page</a> or install them though <a href="https://anaconda.org/bioconda/blast" rel="external nofollow noopener" target="_blank">conda</a>.</p> <p>If using the source files, make sure that you extract the files and add the BLAST directory to your system’s PATH to use the BLAST commands from any directory.</p> <p><br></p> <h2 id="running-blast-searches-against-ncbi-databases">Running BLAST Searches Against NCBI Databases</h2> <h3 id="1-using-blastn">1. Using <code class="language-plaintext highlighter-rouge">blastn</code> </h3> <p>Let’s start with a <code class="language-plaintext highlighter-rouge">blastn</code> example. Suppose you have a nucleotide sequence in a file called <code class="language-plaintext highlighter-rouge">gene.fasta</code> and you want to identify the closest matching hits to your gene of interest in the NCBI nucleotide database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastn <span class="nt">-query</span> gene.fasta <span class="nt">-remote</span> <span class="nt">-db</span> nt <span class="nt">-out</span> results_blastn.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
+  </script> <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https:; style-src 'self' 'unsafe-inline' https:; img-src 'self' data: https:; font-src 'self' data: https:; media-src 'self' https:; frame-src 'self' https:; connect-src 'self' https:;"> <style>
+  :root {
+    --max-content-width: 800px;
+  }
+</style> <link rel="stylesheet" href="/assets/css/tailwind.css?v=50c64c15cbb9fd1ce6056fdb8bcb4b62"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.2.0/css/all.min.css" integrity="sha256-MVopmdyC2tYTiJ8wlktf0uh0v4NgT+vNdyVFepi7Q0c=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.5/css/academicons.min.css" integrity="sha256-SzrCOBJbGVFMahewkgjwnApaV2+av1DwMAA+/QGLyZw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://cdn.jsdelivr.net/npm/scholar-icons@1.0.3/css/scholar-icons.css" integrity="sha256-VY3hHVj/hNX3fYG6wtbA6TcKJQl7+FthzGSyIB64klY=" crossorigin="anonymous"> <link defer rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons&amp;display=swap"> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-github.css?v=591dab5a4e56573bf4ef7fd332894c99" media="" id="highlight_theme_light"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%F0%9F%A7%AC&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css?v=3116ba77db9ee1581d05bb3e86fbf7f1"> <link rel="canonical" href="https://rjprice.bio/blog/2024/blast/"> <script src="/assets/js/theme.js?v=5286c3e4c334d0ecb8fc0c40ff4fa7ec"></script> <link defer rel="stylesheet" href="/assets/css/jekyll-pygments-themes-native.css?v=5847e5ed4a4568527aa6cfab446049ca" media="none" id="highlight_theme_dark"> <script>
+    initTheme();
+  </script> </head> <body class="fixed-top-nav sticky-bottom-footer"> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top" role="navigation"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/"> Dr. R. Jordan Price </a> <button class="navbar-toggler collapsed navbar-toggler-main" type="button" data-nav-toggle="navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse navbar-collapse-main" id="navbarNav"> <ul class="navbar-nav navbar-menu-list flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">about </a> </li> <li class="nav-item "> <a class="nav-link" href="/news/">news </a> </li> <li class="nav-item "> <a class="nav-link" href="/projects/">projects </a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">publications </a> </li> <li class="nav-item active"> <a class="nav-link" href="/blog/">blog </a> </li> <li class="nav-item "> <a class="nav-link" href="/cv/">cv </a> </li> <li class="nav-item"> <button id="search-toggle" type="button" title="Search" aria-label="Open search"> <span class="nav-link">ctrl k <i class="fa-solid fa-magnifying-glass"></i></span> </button> </li> <li class="toggle-container"> <button id="light-toggle" type="button" title="Change theme" aria-label="Change color theme"> <i class="fa-half-sun-moon" id="light-toggle-system"></i> <i class="fa-solid fa-moon" id="light-toggle-dark"></i> <i class="fa-solid fa-sun" id="light-toggle-light"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5" role="main"> <div class="post"> <header class="post-header"> <h1 class="post-title">Getting Started with BLAST on the Command Line</h1> <p class="post-meta"> Created on July 15, 2024 </p> <p class="post-tags"> <a href="/blog/2024"> <i class="fa-solid fa-calendar fa-sm"></i> 2024 </a>   ·   <a href="/blog/tag/bioinformatics"> <i class="fa-solid fa-hashtag fa-sm"></i> bioinformatics</a>   <a href="/blog/tag/blast"> <i class="fa-solid fa-hashtag fa-sm"></i> blast</a> </p> </header> <article class="post-content"> <div id="markdown-content"> <p>Bioinformatics relies heavily on sequence identification by comparing nucleotide or protein sequences against known databases. One of the most popular tools for this purpose is BLAST (Basic Local Alignment Search Tool).</p> <p>In this blog post, we’ll explore the basics of using BLAST on the command line, focusing on the two most common types of searches: <code class="language-plaintext highlighter-rouge">blastn</code> and <code class="language-plaintext highlighter-rouge">blastp</code>. We’ll also cover how to perform searches against the NCBI databases, as well as creating and searching a custom local database.</p> <p><br></p> <h2 id="what-is-blast">What is BLAST?</h2> <p>BLAST is a powerful algorithm and software suite from NCBI that allows you to compare a query sequence against a database of sequences to find regions of similarity. This can help identify homologous genes, infer functional and evolutionary relationships, and discover new genes.</p> <p><br></p> <h2 id="types-of-blast-searches">Types of BLAST Searches</h2> <p>There are several types of BLAST searches, the two most common are:</p> <ol> <li> <strong>blastn</strong>: Compares a nucleotide query sequence against a nucleotide sequence database.</li> <li> <strong>blastp</strong>: Compares an amino acid query sequence against a protein sequence database.</li> </ol> <p><br></p> <h2 id="setting-up-blast">Setting Up BLAST</h2> <p>To get started, you’ll need to install the BLAST+ command line tools. You can either download the source files from the <a href="https://ftp.ncbi.nlm.nih.gov/blast/executables/blast+/LATEST/" rel="external nofollow noopener" target="_blank">NCBI BLAST+ download page</a> or install them though <a href="https://anaconda.org/bioconda/blast" rel="external nofollow noopener" target="_blank">conda</a>.</p> <p>If using the source files, make sure that you extract the files and add the BLAST directory to your system’s PATH to use the BLAST commands from any directory.</p> <p><br></p> <h2 id="running-blast-searches-against-ncbi-databases">Running BLAST Searches Against NCBI Databases</h2> <h3 id="1-using-blastn">1. Using <code class="language-plaintext highlighter-rouge">blastn</code> </h3> <p>Let’s start with a <code class="language-plaintext highlighter-rouge">blastn</code> example. Suppose you have a nucleotide sequence in a file called <code class="language-plaintext highlighter-rouge">gene.fasta</code> and you want to identify the closest matching hits to your gene of interest in the NCBI nucleotide database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastn <span class="nt">-query</span> gene.fasta <span class="nt">-remote</span> <span class="nt">-db</span> nt <span class="nt">-out</span> results_blastn.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
 </code></pre></div></div> <p>This command performs a nucleotide BLAST search of your nucleotide sequence <code class="language-plaintext highlighter-rouge">-query gene.fasta</code> against the NCBI nucleotide database <code class="language-plaintext highlighter-rouge">-remote -db nt</code> and saves the results with an E-value lower than <code class="language-plaintext highlighter-rouge">1e-6</code> in the output file <code class="language-plaintext highlighter-rouge">results_blastn.txt</code> formatted as a table <code class="language-plaintext highlighter-rouge">-outfmt 6</code>.</p> <p><br></p> <h3 id="2-using-blastp">2. Using <code class="language-plaintext highlighter-rouge">blastp</code> </h3> <p>Next, we’ll run a <code class="language-plaintext highlighter-rouge">blastp</code> search with a protein sequence file called <code class="language-plaintext highlighter-rouge">protein.fasta</code> to identify the best hits in the NCBI non-redundant protein database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastp <span class="nt">-query</span> protein.fasta <span class="nt">-remote</span> <span class="nt">-db</span> nr <span class="nt">-out</span> results_blastp.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
 </code></pre></div></div> <p>This performs a protein BLAST search of your protein sequence <code class="language-plaintext highlighter-rouge">-query protein.fasta</code> against the NCBI non-redundant protein database <code class="language-plaintext highlighter-rouge">-remote -db nr</code> and saves the results with an E-value lower than <code class="language-plaintext highlighter-rouge">1e-6</code> in the output file <code class="language-plaintext highlighter-rouge">results_blastp.txt</code> formatted as a table <code class="language-plaintext highlighter-rouge">-outfmt 6</code>.</p> <p><br></p> <h2 id="creating-and-searching-a-custom-local-database">Creating and Searching a Custom Local Database</h2> <p>Sometimes, you may want to perform searches against a custom database. For example, you may have a known gene that you’d like to identify the homolog of in a <em>de novo</em> assembly. Here’s how you can create and search a local custom BLAST database.</p> <h3 id="1-creating-a-custom-database">1. Creating a Custom Database</h3> <p>First, gather your sequences in a FASTA file, for example, <code class="language-plaintext highlighter-rouge">my_sequences.fasta</code>.</p> <p>To create a nucleotide database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>makeblastdb <span class="nt">-in</span> my_sequences.fasta <span class="nt">-dbtype</span> nucl <span class="nt">-out</span> my_custom_db
 </code></pre></div></div> <p>For a protein database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>makeblastdb <span class="nt">-in</span> my_sequences.fasta <span class="nt">-dbtype</span> prot <span class="nt">-out</span> my_custom_db
 </code></pre></div></div> <p><br></p> <h3 id="2-running-a-blast-search-against-the-custom-database">2. Running a BLAST Search Against the Custom Database</h3> <p>Now, you can run BLAST searches against your custom database. For example, using <code class="language-plaintext highlighter-rouge">blastn</code> with your custom nucleotide database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastn <span class="nt">-query</span> gene.fasta <span class="nt">-db</span> my_custom_db <span class="nt">-out</span> custom_results_blastn.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
 </code></pre></div></div> <p>Or using <code class="language-plaintext highlighter-rouge">blastp</code> with your custom protein database:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>blastp <span class="nt">-query</span> protein.fasta <span class="nt">-db</span> my_custom_db <span class="nt">-out</span> custom_results_blastp.txt <span class="nt">-evalue</span> 1e-6 <span class="nt">-outfmt</span> 6
 </code></pre></div></div> <p><br></p> <h2 id="interpreting-blast-results">Interpreting BLAST Results</h2> <p>BLAST results help determine the potential function of your query sequence by identifying similar sequences in known databases. When using the <code class="language-plaintext highlighter-rouge">-outfmt 6</code> flag to output the results in a tabular format, the data in the columns are represented by the following headers:</p> <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore
-</code></pre></div></div> <p>1.  <strong>qseqid:</strong> Identifier of the query sequence.</p> <p>2.  <strong>sseqid:</strong> Identifier of the subject sequence that matches your query.</p> <p>3.  <strong>pident:</strong> Percentage of identical matches between the query and subject sequences.</p> <p>4.  <strong>length:</strong> Total alignment length between the query and subject sequences.</p> <p>5.  <strong>mismatch:</strong> Number of positions that are mismatches.</p> <p>6.  <strong>gapopen:</strong> Number of gap openings in the alignment.</p> <p>7.  <strong>qstart:</strong> Start position of the alignment for the query sequence.</p> <p>8.  <strong>qend:</strong> End position of the alignment for the query sequence.</p> <p>9.  <strong>sstart:</strong> Start position of the alignment for the subject sequence.</p> <p>10.  <strong>send:</strong> End position of the alignment for the subject sequence.</p> <p>11.  <strong>evalue:</strong> The number of expected hits of similar quality (lower is better).</p> <p>12.  <strong>bitscore:</strong> The higher the bit-score, the better the sequence similarity.</p> <p><br></p> <h2 id="summary">Summary</h2> <p>BLAST is an essential tool in bioinformatics for sequence identification and comparison. By understanding how to use <code class="language-plaintext highlighter-rouge">blastn</code> and <code class="language-plaintext highlighter-rouge">blastp</code>, and knowing how to create and search a custom database, you can leverage BLAST to gain significant insights into your sequences. Whether you are searching the NCBI databases or your custom datasets, BLAST provides the versatility and power needed for effective sequence analysis.</p> <p>To learn more about the functions and features of the BLAST+ command line tools, take a look at the <a href="https://www.ncbi.nlm.nih.gov/books/NBK279690/" rel="external nofollow noopener" target="_blank">User Manual</a> or use the <code class="language-plaintext highlighter-rouge">-help</code> flag to learn more about the possible arguments for each search.</p> <p><br></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice" rel="external nofollow noopener" target="_blank">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank" rel="external nofollow noopener"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"> </a> </p> </div> </article> <br> <hr> <br> <ul class="list-disc pl-8"></ul> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/blog/2025/snp_tree/">Reconstructing a Phylogenetic Tree Using SNP Information from WGS Data</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/blog/2024/bash/">Getting Started with the Bash Command Line</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/blog/2025/eda_app/">A Streamlit App for Rapid Exploratory Data Analysis and Visualisation</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/blog/2024/jellyfish/">Estimating Genome Size Using Jellyfish and GenomeScope2</a> </li> <li class="my-2"> <a class="text-pink-700 underline font-semibold hover:text-pink-800" href="/blog/2024/venn/">4-Way Venn Diagram of Overlapping Gene Expression in R</a> </li> </div> </div> <footer class="fixed-bottom" role="contentinfo"> <div class="container mt-0"> © Copyright 2026 R. Jordan Price. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. </div> </footer> <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> <script src="/assets/js/bootstrap.bundle.min.js"></script> <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js" type="text/javascript"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/js/zoom.js?85ddb88934d28b74e78031fd54cf8308"></script> <script src="/assets/js/no_defer.js?5d75c11f89cd96294bf5e6dd1ee1bb30"></script> <script defer src="/assets/js/common.js?fcfacfb8c6281f5e68d5a7d348186eb1"></script> <script defer src="/assets/js/copy_code.js?12775fdf7f95e901d7119054556e495f" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?d9f17b6adc2311cbabd747f4538bb15f"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script type="text/javascript">window.MathJax={tex:{tags:"ams"}};</script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script> <script defer src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script> <script type="text/javascript">function progressBarSetup(){"max"in document.createElement("progress")?(initializeProgressElement(),$(document).on("scroll",function(){progressBar.attr({value:getCurrentScrollPosition()})}),$(window).on("resize",initializeProgressElement)):(resizeProgressBar(),$(document).on("scroll",resizeProgressBar),$(window).on("resize",resizeProgressBar))}function getCurrentScrollPosition(){return $(window).scrollTop()}function initializeProgressElement(){let e=$("#navbar").outerHeight(!0);$("body").css({"padding-top":e}),$("progress-container").css({"padding-top":e}),progressBar.css({top:e}),progressBar.attr({max:getDistanceToScroll(),value:getCurrentScrollPosition()})}function getDistanceToScroll(){return $(document).height()-$(window).height()}function resizeProgressBar(){progressBar.css({width:getWidthPercentage()+"%"})}function getWidthPercentage(){return getCurrentScrollPosition()/getDistanceToScroll()*100}const progressBar=$("#progress");window.onload=function(){setTimeout(progressBarSetup,50)};</script> </body> </html>
+</code></pre></div></div> <p>1.  <strong>qseqid:</strong> Identifier of the query sequence.</p> <p>2.  <strong>sseqid:</strong> Identifier of the subject sequence that matches your query.</p> <p>3.  <strong>pident:</strong> Percentage of identical matches between the query and subject sequences.</p> <p>4.  <strong>length:</strong> Total alignment length between the query and subject sequences.</p> <p>5.  <strong>mismatch:</strong> Number of positions that are mismatches.</p> <p>6.  <strong>gapopen:</strong> Number of gap openings in the alignment.</p> <p>7.  <strong>qstart:</strong> Start position of the alignment for the query sequence.</p> <p>8.  <strong>qend:</strong> End position of the alignment for the query sequence.</p> <p>9.  <strong>sstart:</strong> Start position of the alignment for the subject sequence.</p> <p>10.  <strong>send:</strong> End position of the alignment for the subject sequence.</p> <p>11.  <strong>evalue:</strong> The number of expected hits of similar quality (lower is better).</p> <p>12.  <strong>bitscore:</strong> The higher the bit-score, the better the sequence similarity.</p> <p><br></p> <h2 id="summary">Summary</h2> <p>BLAST is an essential tool in bioinformatics for sequence identification and comparison. By understanding how to use <code class="language-plaintext highlighter-rouge">blastn</code> and <code class="language-plaintext highlighter-rouge">blastp</code>, and knowing how to create and search a custom database, you can leverage BLAST to gain significant insights into your sequences. Whether you are searching the NCBI databases or your custom datasets, BLAST provides the versatility and power needed for effective sequence analysis.</p> <p>To learn more about the functions and features of the BLAST+ command line tools, take a look at the <a href="https://www.ncbi.nlm.nih.gov/books/NBK279690/" rel="external nofollow noopener" target="_blank">User Manual</a> or use the <code class="language-plaintext highlighter-rouge">-help</code> flag to learn more about the possible arguments for each search.</p> <p><br></p> <h2 id="support">Support</h2> <p>If you find this blog post helpful, please consider <a href="https://ko-fi.com/jordanprice" rel="external nofollow noopener" target="_blank">buying me a coffee on Ko-fi</a>. Your support is very much appreciated!</p> <p style="text-align: center"> <a href="https://ko-fi.com/jordanprice" target="_blank" rel="external nofollow noopener"> <img height="36" style="border:0px;height:36px;" src="https://storage.ko-fi.com/cdn/kofi2.png?v=3" border="0" alt="Buy Me a Coffee at ko-fi.com"> </a> </p> </div> </article> <br> <hr> <br> <h2 class="text-3xl font-semibold mb-4 mt-12">Enjoy Reading This Article?</h2> <p class="mb-2">Here are some more articles you might like to read next:</p> <ul class="list-disc pl-7 my-3 space-y-2 marker:text-[var(--global-theme-color)]"> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="https://blog.google/technology/ai/google-gemini-update-flash-ai-assistant-io-2024/" target="_blank" rel="noopener noreferrer">Google Gemini updates: Flash 1.5, Gemma 2 and Project Astra</a> <svg width="1rem" height="1rem" viewbox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="https://medium.com/@al-folio/displaying-external-posts-on-your-al-folio-blog-b60a1d241a0a?source=rss-17feae71c3c4------2" target="_blank" rel="noopener noreferrer">Displaying External Posts on Your al-folio Blog</a> <svg width="1rem" height="1rem" viewbox="0 0 30 30" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"> <path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path> </svg> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2025/upset_plot/">Visualising Differentially Expressed Genes with Upset Plots</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2025/eda_app/">A Streamlit App for Rapid Exploratory Data Analysis and Visualisation</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2025/snp_tree/">Reconstructing a Phylogenetic Tree Using SNP Information from WGS Data</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2024/heatmap/">Visualising Gene Expression with a Heatmap using Python</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2024/jellyfish/">Estimating Genome Size Using Jellyfish and GenomeScope2</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2024/venn/">4-Way Venn Diagram of Overlapping Gene Expression in R</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2024/dotfiles/">Useful Bash Aliases and Functions</a> </li> <li class="leading-relaxed"> <a class="underline decoration-1 hover:text-[var(--global-hover-color)]" href="/blog/2024/bash/">Getting Started with the Bash Command Line</a> </li> </ul> </div> </div> <footer class="sticky-bottom mt-5" role="contentinfo"> <div class="container"> © Copyright 2026 R. Jordan Price. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. </div> </footer> <script>
+  window.alFolio = {
+    compatBootstrap: false
+  };
+</script> <script src="/assets/js/nav-toggle.js?v=141bd79a73ebc0f0b6ea58e440ae79fc"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@5.0.0/imagesloaded.pkgd.min.js" integrity="sha256-htrLFfZJ6v5udOG+3kNLINIKh2gvoKqwEhHYfTTMICc=" crossorigin="anonymous"></script> <script defer src="/assets/js/masonry.js?v=e49affc7bd2646f6acdad1dbe02c2359" type="text/javascript"></script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.2/es5/tex-mml-chtml.js" integrity="sha256-MASABpB4tYktI2Oitl4t+78w/lyA+D7b/s9GEP0JOGI=" crossorigin="anonymous"></script> <script src="/assets/al_math/js/mathjax-setup.js"></script> <script src="/assets/js/tooltips-setup.js?v=fe487e99db6c43751e6e7bdb2d6a0611"></script> <script src="/assets/js/no_defer.js?v=53b1b1a645525975c963ce8bf8bfefcf"></script> <script defer src="/assets/js/common.js?v=87baac90f765f2f3362dcf6aaf312a8a"></script> <script defer src="/assets/js/copy_code.js?v=c8a01c11a92744d44b093fc3bda915df" type="text/javascript"></script> <script defer src="/assets/js/jupyter_new_tab.js?v=896d254890d9b47f0281f63bfccf0dee"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.1.0/dist/medium-zoom.min.js" integrity="sha256-ZgMyDAIYDYGxbcpJcfUnYwNevG/xi9OHKaR/8GK+jWc=" crossorigin="anonymous"></script> <script defer src="/assets/al_img_tools/js/zoom.js"></script> <script defer src="/assets/js/progress-bar.js?v=499464c5c63ced6cf7ad62509f1e2610" type="text/javascript"></script> <script src="https://cdn.jsdelivr.net/npm/vanilla-back-to-top@7.2.1/dist/vanilla-back-to-top.min.js" integrity="sha256-uMJJ3EoTyfRBoTbR+lrfu1uRQ87RZG8AR3cVNuQVeFg=" crossorigin="anonymous"></script> <script>
+    addBackToTop();
+  </script> <script type="module" src="/assets/al_search/js/search/ninja-keys.min.js"></script> <ninja-keys hidebreadcrumbs noautoloadmdicons placeholder="Type to start searching"></ninja-keys> <script src="/assets/al_search/js/search-setup.js"></script> <script>
+// get the ninja-keys element
+const ninja = document.querySelector('ninja-keys');
+
+// add the home and posts menu items
+ninja.data = [{
+    id: "nav-about",
+    title: "about",
+    section: "Navigation",
+    handler: () => {
+      window.location.href = "/";
+    },
+  },{id: "nav-news",
+          title: "news",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/news/";
+          },
+        },{id: "nav-projects",
+          title: "projects",
+          description: "Research projects, plus the pipelines and AI tools I build and maintain.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/projects/";
+          },
+        },{id: "nav-publications",
+          title: "publications",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/publications/";
+          },
+        },{id: "nav-blog",
+          title: "blog",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/blog/";
+          },
+        },{id: "nav-cv",
+          title: "cv",
+          description: "",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/cv/";
+          },
+        },{id: "post-visualising-differentially-expressed-genes-with-upset-plots",
+        
+          title: "Visualising Differentially Expressed Genes with Upset Plots",
+        
+        description: "A guide to plotting an upset plot of differentially expressed genes (DEGs) in R.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/upset_plot/";
+          
+        },
+      },{id: "post-a-streamlit-app-for-rapid-exploratory-data-analysis-and-visualisation",
+        
+          title: "A Streamlit App for Rapid Exploratory Data Analysis and Visualisation",
+        
+        description: "A how to guide for using my EDA web app for quick data analysis and visualisation.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/eda_app/";
+          
+        },
+      },{id: "post-reconstructing-a-phylogenetic-tree-using-snp-information-from-wgs-data",
+        
+          title: "Reconstructing a Phylogenetic Tree Using SNP Information from WGS Data",
+        
+        description: "A guide to generating a phylogenetic tree from whole genome sequencing data.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2025/snp_tree/";
+          
+        },
+      },{id: "post-visualising-gene-expression-with-a-heatmap-using-python",
+        
+          title: "Visualising Gene Expression with a Heatmap using Python",
+        
+        description: "A guide to plotting a heatmap of differentially expressed genes (DEGs) in Python.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2024/heatmap/";
+          
+        },
+      },{id: "post-estimating-genome-size-using-jellyfish-and-genomescope2",
+        
+          title: "Estimating Genome Size Using Jellyfish and GenomeScope2",
+        
+        description: "A guide to estimating genome size using k-mer distributions.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2024/jellyfish/";
+          
+        },
+      },{id: "post-4-way-venn-diagram-of-overlapping-gene-expression-in-r",
+        
+          title: "4-Way Venn Diagram of Overlapping Gene Expression in R",
+        
+        description: "A guide to visualising the overlap between differentially expressed genes (DEGs) in R.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2024/venn/";
+          
+        },
+      },{id: "post-useful-bash-aliases-and-functions",
+        
+          title: "Useful Bash Aliases and Functions",
+        
+        description: "A collection of handy shortcuts to speed up your work on the command line.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2024/dotfiles/";
+          
+        },
+      },{id: "post-getting-started-with-the-bash-command-line",
+        
+          title: "Getting Started with the Bash Command Line",
+        
+        description: "A quick and easy guide to help getting started with using the command line.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2024/bash/";
+          
+        },
+      },{id: "post-getting-started-with-blast-on-the-command-line",
+        
+          title: "Getting Started with BLAST on the Command Line",
+        
+        description: "A guide to help getting started with using the basic functions of BLAST on the command line.",
+        section: "Posts",
+        handler: () => {
+          
+            window.location.href = "/blog/2024/blast/";
+          
+        },
+      },{id: "post-google-gemini-updates-flash-1-5-gemma-2-and-project-astra",
+        
+          title: 'Google Gemini updates: Flash 1.5, Gemma 2 and Project Astra <svg width="1.2rem" height="1.2rem" top=".5rem" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+        
+        description: "We’re sharing updates across our Gemini family of models and a glimpse of Project Astra, our vision for the future of AI assistants.",
+        section: "Posts",
+        handler: () => {
+          
+            window.open("https://blog.google/technology/ai/google-gemini-update-flash-ai-assistant-io-2024/", "_blank");
+          
+        },
+      },{id: "post-displaying-external-posts-on-your-al-folio-blog",
+        
+          title: 'Displaying External Posts on Your al-folio Blog <svg width="1.2rem" height="1.2rem" top=".5rem" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg"><path d="M17 13.5v6H5v-12h6m3-3h6v6m0-6-9 9" class="icon_svg-stroke" stroke="#999" stroke-width="1.5" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round"></path></svg>',
+        
+        description: "",
+        section: "Posts",
+        handler: () => {
+          
+            window.open("https://medium.com/@al-folio/displaying-external-posts-on-your-al-folio-blog-b60a1d241a0a?source=rss-17feae71c3c4------2", "_blank");
+          
+        },
+      },{id: "news-pleased-to-announce-that-i-have-been-promoted-to-senior-specialist-in-the-plant-pathology-department-at-niab",
+          title: 'Pleased to announce that I have been promoted to Senior Specialist in the...',
+          description: "",
+          section: "News",},{id: "news-new-fungal-genomics-paper-published",
+          title: 'New fungal genomics paper published',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/2022-12-27/";
+            },},{id: "news-raspberry-genome-paper-published",
+          title: 'Raspberry genome paper published',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/2023-05-16/";
+            },},{id: "news-attended-the-festival-of-genomics-amp-biodata-2024-in-london-a-fascinating-insight-into-the-diverse-and-innovative-research-happening-in-the-genomics-and-multi-omics-fields",
+          title: 'Attended The Festival of Genomics &amp;amp; Biodata 2024 in London, a fascinating insight...',
+          description: "",
+          section: "News",},{id: "news-invited-to-act-as-external-examiner-for-university-of-nottingham-phd-student-kamil-szepe-https-www-nottingham-ac-uk-research-beacons-of-excellence-future-food-meet-the-team-future-proteins-kamil-szepe-index-aspx-who-passed-with-minor-corrections-following-an-enjoyable-discussion-around-his-work-on-improving-the-amino-acid-profile-of-mycoprotein",
+          title: 'Invited to act as External Examiner for University of Nottingham PhD student [Kamil...',
+          description: "",
+          section: "News",},{id: "news-attended-the-microbiology-society-https-microbiologysociety-org-annual-conference-2024-in-edinburgh-and-chaired-two-sessions-that-i-had-helped-to-organise-as-part-of-the-eukaryotic-division",
+          title: 'Attended the [Microbiology Society](https://microbiologysociety.org/) Annual Conference 2024 in Edinburgh, and chaired two sessions...',
+          description: "",
+          section: "News",},{id: "news-fungal-comparative-genomics-pre-print-published",
+          title: 'Fungal comparative genomics pre-print published',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/2024-04-13/";
+            },},{id: "news-strawberry-transformation-pre-print-published",
+          title: 'Strawberry transformation pre-print published',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/2024-07-02/";
+            },},{id: "news-attended-the-bspp-https-www-bspp-org-uk-plant-pathology-2024-conference-in-oxford",
+          title: 'Attended the [BSPP](https://www.bspp.org.uk/) Plant Pathology 2024 conference in Oxford.',
+          description: "",
+          section: "News",},{id: "news-dr-chinedu-charles-nwafor-visited-from-university-of-benin-nigeria",
+          title: 'Dr Chinedu Charles Nwafor visited from University of Benin, Nigeria',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/2024-09-18/";
+            },},{id: "news-our-fusarium-oxysporum-f-sp-lactucae-fola-comparative-genomics-and-transcriptomics-paper-has-been-published-in-frontiers-in-plant-science-https-doi-org-10-3389-fpls-2024-1415534",
+          title: 'Our _Fusarium oxysporum_ f.sp. _lactucae_ (Fola) comparative genomics and transcriptomics paper has been...',
+          description: "",
+          section: "News",},{id: "news-our-paper-on-the-effects-of-developmental-regulators-on-strawberry-regeneration-has-just-been-published-in-plant-methods-https-doi-org-10-1186-s13007-024-01270-8",
+          title: 'Our paper on the effects of developmental regulators on strawberry regeneration has just...',
+          description: "",
+          section: "News",},{id: "news-new-mycoprotein-pre-print-available",
+          title: 'New mycoprotein pre-print available',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/2024-12-23/";
+            },},{id: "news-eda-dashboard-web-app-published",
+          title: 'EDA Dashboard web app published',
+          description: "",
+          section: "News",handler: () => {
+              window.location.href = "/news/2025-02-02/";
+            },},{id: "news-happy-to-announce-that-our-research-into-apricot-coloured-raspberries-is-now-published-in-plos-one-https-doi-org-10-1371-journal-pone-0318692",
+          title: 'Happy to announce that our research into apricot-coloured raspberries is now published in...',
+          description: "",
+          section: "News",},{id: "news-our-latest-research-on-the-genetic-basis-of-highly-branched-c-variant-mutants-in-fusarium-venenatum-has-just-been-published-in-fungal-biology-and-biotechnology-https-doi-org-10-1186-s40694-025-00195-8",
+          title: 'Our latest research on the genetic basis of highly branched C-variant mutants in...',
+          description: "",
+          section: "News",},{id: "news-attended-the-microbiology-society-https-microbiologysociety-org-annual-conference-2025-in-liverpool-and-chaired-the-quot-from-microbes-to-meals-quot-session-that-i-helped-to-organise-as-part-of-the-eukaryotic-division",
+          title: 'Attended the [Microbiology Society](https://microbiologysociety.org/) Annual Conference 2025 in Liverpool, and chaired the &amp;quot;From...',
+          description: "",
+          section: "News",},{id: "news-this-week-i-have-rima-gnaim-from-the-ledesma-amaro-lab-https-rlalab-org-visiting-to-learn-all-about-f-venenatum-transformation",
+          title: 'This week I have Rima Gnaim from the [Ledesma-Amaro lab](https://rlalab.org/) visiting to learn...',
+          description: "",
+          section: "News",},{id: "news-congratulations-to-phd-student-finlay-bourquin-who-has-submitted-her-thesis-titled-quot-understanding-resistance-to-botrytis-cinerea-in-strawberries-quot",
+          title: 'Congratulations to PhD student Finlay Bourquin who has submitted her thesis titled &amp;quot;Understanding...',
+          description: "",
+          section: "News",},{id: "news-an-advance-version-of-our-review-paper-quot-getting-to-the-route-the-evolution-of-nitrogen-fixing-nodules-https-doi-org-10-1146-annurev-cellbio-101123-093247-quot-has-just-been-published-in-annual-review-of-cell-and-developmental-biology",
+          title: 'An advance version of our review paper, &amp;quot;[Getting to the Route: The Evolution...',
+          description: "",
+          section: "News",},{id: "news-university-of-warwick-student-lowri-wigley-starts-her-bspp-undergraduate-summer-studentship-https-www-bspp-org-uk-funds-vacation-investigating-the-presence-of-helitron-transposable-elements-in-lettuce-infecting-fusarium-oxysporum",
+          title: 'University of Warwick student Lowri Wigley starts her [BSPP Undergraduate Summer Studentship](https://www.bspp.org.uk/funds/vacation/) investigating...',
+          description: "",
+          section: "News",},{id: "news-attended-the-british-mycological-society-https-www-britmycolsoc-org-uk-annual-meeting-where-i-presented-our-recent-work-https-doi-org-10-1186-s40694-025-00195-8-on-the-c-variant-phenotype-in-the-mycoprotein-fungus-fusarium-venenatum",
+          title: 'Attended the [British Mycological Society](https://www.britmycolsoc.org.uk/) Annual Meeting, where I presented our [recent work](https://doi.org/10.1186/s40694-025-00195-8)...',
+          description: "",
+          section: "News",},{id: "news-i-will-be-attending-the-british-society-for-plant-pathology-https-www-bspp-org-uk-annual-conference-where-i-39-ll-be-presenting-a-poster-https-rjprice-bio-assets-pdf-bspp25-poster-pdf-on-our-comparative-genomics-work-on-the-lettuce-pathogen-fusarium-oxysporum-f-sp-lactucae",
+          title: 'I will be attending the [British Society for Plant Pathology](https://www.bspp.org.uk/) Annual Conference, where...',
+          description: "",
+          section: "News",},{id: "news-matt-shaw-phd-student-from-the-university-of-kent-is-joining-my-lab-for-a-12-week-placement-where-he-39-ll-be-working-on-phenotypic-and-genotypic-characterisation-of-fusarium-wheat-isolates-from-the-field",
+          title: 'Matt Shaw, PhD student from the University of Kent, is joining my lab...',
+          description: "",
+          section: "News",},{id: "news-university-of-cambridge-mphil-student-gideon-darko-started-in-the-lab-today-he-39-ll-be-characterising-biocontrol-activity-of-yeasts-against-common-plant-fungal-pathogens",
+          title: 'University of Cambridge MPhil student Gideon Darko started in the lab today. He&amp;#39;ll...',
+          description: "",
+          section: "News",},{id: "news-i-developed-a-new-nextflow-pipeline-for-the-crop-transformation-team-this-week-polysnip-nf-https-github-com-rj-price-polysnip-nf-was-designed-to-quantify-crispr-mediated-mutations-in-polyploid-genomes",
+          title: 'I developed a new Nextflow pipeline for the Crop Transformation team this week....',
+          description: "",
+          section: "News",},{id: "news-i-39-m-in-belfast-this-week-attending-the-microbiology-society-https-microbiologysociety-org-annual-conference-2026-where-i-39-ll-be-chairing-the-plant-pathogen-interactions-session",
+          title: 'I&amp;#39;m in Belfast this week, attending the [Microbiology Society](https://microbiologysociety.org/) Annual Conference 2026, where...',
+          description: "",
+          section: "News",},{id: "news-our-paper-on-the-genomic-basis-of-resistance-breaking-in-the-lettuce-wilt-pathogen-fusarium-oxysporum-f-sp-lactucae-has-been-submitted-to-new-phytologist-the-analysis-code-is-on-github-https-github-com-rj-price-novel-fola-analysis",
+          title: 'Our paper on the genomic basis of resistance breaking in the lettuce wilt...',
+          description: "",
+          section: "News",},{id: "news-from-1-october-i-39-m-starting-a-new-role-as-bioinformatics-and-data-platform-lead-in-niab-39-s-crop-improvement-group-my-team-will-build-shared-pipelines-data-standards-and-self-service-tools-for-genomics-and-multi-scale-omics-across-the-institute",
+          title: 'From 1 October I&amp;#39;m starting a new role as Bioinformatics and Data Platform...',
+          description: "",
+          section: "News",},{id: "projects-candida-albicans-pathogen-epigenomics",
+          title: 'Candida albicans - Pathogen Epigenomics',
+          description: "Link to the Buscaino lab&#39;s website.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/Candida%20-%20Pathogen%20Epigenomics/";
+            },},{id: "projects-colony-analyser-image-segmentation",
+          title: 'Colony Analyser - Image Segmentation',
+          description: "A deep-learning web app for measuring fungal colonies from plate images.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/Colony%20Analyser%20-%20Image%20Segmentation/";
+            },},{id: "projects-ensa-symbiosis-genomics",
+          title: 'ENSA - Symbiosis Genomics',
+          description: "Link to the ENSA (Enabling Nutrient Symbioses in Agriculture) project page.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/ENSA%20-%20Symbiosis%20Genomics/";
+            },},{id: "projects-fungi-wiki-agent-grounded-rag",
+          title: 'Fungi Wiki Agent - Grounded RAG',
+          description: "A citation-backed mycology assistant over a ~500K-word fungal textbook.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/Fungi%20Wiki%20Agent%20-%20Grounded%20RAG/";
+            },},{id: "projects-fusarium-plant-pathogens-comparative-genomics",
+          title: 'Fusarium Plant Pathogens - Comparative Genomics',
+          description: "Uncovering the molecular toolkit of lettuce wilt pathogens.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/Fusarium%20Plant%20Pathogens%20-%20Comparative%20Genomics/";
+            },},{id: "projects-mycoprotein-molecular-genetics",
+          title: 'Mycoprotein - Molecular Genetics',
+          description: "Collaborative project with Quorn producer, Marlow Foods Ltd.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/Mycoprotein%20-%20Molecular%20Genetics/";
+            },},{id: "projects-nano-assembler-fungal-genome-assembly",
+          title: 'Nano Assembler - Fungal Genome Assembly',
+          description: "Nextflow pipeline for Oxford Nanopore genome assembly, QC and variant calling.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/Nano%20Assembler%20-%20Fungal%20Genome%20Assembly/";
+            },},{id: "projects-polysnip-nf-crispr-genotyping",
+          title: 'PolySNiP-nf - CRISPR Genotyping',
+          description: "Nextflow pipeline that quantifies CRISPR-induced mutations in polyploid crop genomes from amplicon data.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/PolySNiP-nf%20-%20CRISPR%20Genotyping/";
+            },},{id: "projects-raspberry-breeding-plant-genomics",
+          title: 'Raspberry Breeding - Plant Genomics',
+          description: "Enhancing raspberry breeding through cultivar genomics.",
+          section: "Projects",handler: () => {
+              window.location.href = "/projects/Raspberry%20Breeding%20-%20Plant%20Genomics/";
+            },},{
+        id: 'social-cv',
+        title: 'CV',
+        section: 'Socials',
+        handler: () => {
+          window.open("/assets/pdf/rjp_cv.pdf", "_blank");
+        },
+      },{
+        id: 'social-email',
+        title: 'email',
+        section: 'Socials',
+        handler: () => {
+          window.open("mailto:%6A%6F%72%64%61%6E.%70%72%69%63%65@%6E%69%61%62.%63%6F%6D", "_blank");
+        },
+      },{
+        id: 'social-github',
+        title: 'GitHub',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://github.com/rj-price", "_blank");
+        },
+      },{
+        id: 'social-linkedin',
+        title: 'LinkedIn',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://www.linkedin.com/in/jordan-price-95429784", "_blank");
+        },
+      },{
+        id: 'social-scholar',
+        title: 'Google Scholar',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://scholar.google.com/citations?user=Jc2K0ZQAAAAJ", "_blank");
+        },
+      },{
+        id: 'social-rss',
+        title: 'RSS Feed',
+        section: 'Socials',
+        handler: () => {
+          window.open("/feed.xml", "_blank");
+        },
+      },{
+      id: 'light-theme',
+      title: 'Change theme to light',
+      description: 'Change the theme of the site to Light',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("light");
+      },
+    },
+    {
+      id: 'dark-theme',
+      title: 'Change theme to dark',
+      description: 'Change the theme of the site to Dark',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("dark");
+      },
+    },
+    {
+      id: 'system-theme',
+      title: 'Use system default theme',
+      description: 'Change the theme of the site to System Default',
+      section: 'Theme',
+      handler: () => {
+        setThemeSetting("system");
+      },
+    },];
+
+</script> <script src="/assets/al_search/js/shortcut-key.js"></script> </body> </html>
