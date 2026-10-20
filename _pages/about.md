@@ -25,11 +25,16 @@ latest_posts:
 
 Hi! I'm Jordan 👋
 
-I am a molecular biologist turned bioinformatician and AI engineer based in Cambridge, UK. I lead the Bioinformatics and Data Platform in NIAB's Crop Improvement group, where my team builds shared pipelines and tools for genomics and multi-scale omics. My work spans fungal biotechnology, functional genomics, computational biology, and applied AI. I build bioinformatics pipelines, genome analysis workflows, and AI-assisted research tools that help turn complex biological data and literature into useful scientific insight.
+I am a molecular biologist turned bioinformatician and AI engineer based in Cambridge, UK. I lead the Bioinformatics Team at Niab, where I work on fungal and plant genomics and build computational tools for research groups across the institute.
+
+My research focuses on the comparative genomics of pathogenic _Fusarium_ species, in particular those that infect lettuce (_F. oxysporum_ f. sp. _lactucae_) and cereals (_F. graminearum_ and _F. culmorum_). Current projects include designing dsRNAs for RNAi-based control of _Fusarium_ and _Phytophthora_ on the Innovate UK mycoDOT project, assembling tetraploid honeyberry (_Lonicera caerulea_) genomes, and a pan-genome survey of NLR resistance genes in common bean.
 
 What I work on:
-- Functional and comparative genomics
-- Fungal biotechnology and microbial genomics
-- Genome assembly, annotation, and analysis
-- Reproducible bioinformatics pipelines
-- AI-assisted research tools and natural-language interfaces to data
+- Long-read sequencing (PacBio, Oxford Nanopore) for genome assembly, haplotype phasing, structural variation and base modifications
+- Genome annotation, comparative genomics and phylogenomics
+- Transposable elements and accessory chromosomes
+- Multi-omics integration (RNA-seq, DNA methylation)
+- RNAi target selection and dsRNA design
+- Custom analyses for complex biological questions and non-standard study designs
+- Building, deploying and running pipelines (Nextflow, SLURM/HPC)
+- LLM-based applications for research
