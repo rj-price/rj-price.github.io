@@ -5,5 +5,6 @@ cv_pdf: /assets/pdf/rjp_cv.pdf # path to your CV PDF file
 email: jordan.price@niab.com # your email address
 github_username: rj-price # your GitHub user name
 linkedin_username: jordan-price-95429784 # your LinkedIn user name
+bluesky_url: https://bsky.app/profile/rjordanprice.bsky.social # your Bluesky profile URL
 scholar_userid: Jc2K0ZQAAAAJ # your Google Scholar ID
 rss_icon: true # comment this line to hide the RSS icon
