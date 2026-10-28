@@ -36,7 +36,13 @@ The differences were particularly clear within a critical family of effectors kn
 - SIX8: This gene is completely absent in Fola1 but is present and highly expressed by Fola4 during lettuce infection. Its presence is a key genetic marker for Race 4.
 - SIX14: While present in the genomes of both races, the copies in Fola1 have been disrupted and silenced by the insertion of mobile genetic elements (transposons). In contrast, the single copy in Fola4 is undamaged and highly expressed during infection, making its activity another key differentiator between the races.
 
-These discoveries pinpoint specific genes that likely determine the different virulence profiles of Fola1 and Fola4, providing clear targets for molecular diagnostics and informing the development of new resistant lettuce varieties. Building on this foundation, our ongoing research is expanding this comparative genomics approach to include all four known Fola races, as well as unique field variants. This broader analysis aims to map the pathogen's full diversity, helping us to better predict its evolution and develop more durable disease management strategies.
+These discoveries pinpoint specific genes that likely determine the different virulence profiles of Fola1 and Fola4, providing clear targets for molecular diagnostics and informing the development of new resistant lettuce varieties.
+
+<br>
+
+We then extended this approach to all four known Fola races and to recent resistance-breaking field variants, sequencing ten isolates with long reads. This produced the first genome assemblies for Fola2 and Fola3, and identified a highly divergent isolate from France as a putative new race, FolaX. The results are available as a [preprint on bioRxiv](https://www.biorxiv.org/content/10.64898/2026.09.30.755575v1).
+
+Fola turned out to be polyphyletic, with the ability to infect lettuce arising independently in several distinct F. oxysporum lineages. Even so, all lineages share a near-identical set of effectors, which points to extensive horizontal gene transfer between them. Resistance-breaking variants within established races are explained by copy number changes and targeted deletions, such as loss of the SIX8/PSE1 locus in Fola4+. FolaX has a divergent core genome and a chimeric accessory genome, likely assembled from several Fola lineages through segmental chromosome transfer. Because Fola's effector repertoire changes this readily, breeding for durable resistance will need to account for it.
 
 <br>
 
