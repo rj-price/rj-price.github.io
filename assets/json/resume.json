@@ -97,23 +97,7 @@
     },
     {
       "name": "Reviewer",
-      "keywords": [
-        "PLOS Genetics",
-        "Plant Pathology",
-        "PLOS ONE",
-        "Synthetic and Systems Biotechnology",
-        "GFI Research Grants"
-      ]
-    },
-    {
-      "name": "Membership",
-      "keywords": [
-        "Elected Member of Eukaryotic Division of the Microbiology Society",
-        "Royal Society of Biology",
-        "British Mycological Society",
-        "Microbiology Society",
-        "British Society for Plant Pathology"
-      ]
+      "keywords": ["PLOS Genetics", "Plant Pathology", "PLOS ONE", "Synthetic and Systems Biotechnology", "GFI Research Grants"]
     }
   ]
 }

@@ -3,8 +3,14 @@ github_users:
 
 github_repos:
   - rj-price/fungi-wiki-agent
+  - rj-price/research_gaps
+  - rj-price/sql_agent
+  - rj-price/eda_dashboard
+  - rj-price/rust-assembler-nf
   - rj-price/PolySNiP-nf
+  - rj-price/snp-tree-nf
   - rj-price/nano-assembler-nf
+  - rj-price/YAAPi-nf
   - rj-price/novel_fola_analysis
   - rj-price/ont_assembly_starter
   - rj-price/rnaseq_starter
